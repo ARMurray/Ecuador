@@ -8,7 +8,7 @@ This is a repository where we will put the code we create for our work in and re
 ### Experiment #1
 Sensors in use:
 
-![Nothing](https://github.com/ARMurray/Ecuador/blob/master/images/Experiment_1_2.png "Experiments 1 & 2")
+![Nothing](https://github.com/ARMurray/Ecuador/blob/tester/images/Experiment_1_2.png "Experiments 1 & 2")
 
 ### Experiment #2
 Sensors in use:
