@@ -10,7 +10,7 @@ This is a repository where we will put the code we create for our work in and re
 ### Experiment #1
 Sensors in use:
 
-![Whiteboard]("https://github.com/ARMurray/Ecuador/blob/master/Images/Experiment_1_2.png")
+![Whiteboard](https://github.com/ARMurray/Ecuador/blob/master/images/Experiment_1_2.png "Experiments 1 & 2")
 
 
 ### Experiment #2
