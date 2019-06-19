@@ -6,7 +6,7 @@ library(tidyverse)
 # which are permanently installed inside of the 4 large weatherproof boxes
 
 # Enter the date you want to process in the format 'mmddyyyy'
-date <- '06132019'
+date <- '06182019'
 
 # Import the Vaisala data for the date specified above.
 V1 <- read.csv(here("FieldData",paste0("VB1_",date,".csv")))
