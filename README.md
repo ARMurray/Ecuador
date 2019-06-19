@@ -8,6 +8,7 @@ This is a repository where we will put the code we create for our work in and re
 ### Experiment #1
 Sensors in use:
 
+![Whiteboard](https://github.com/ARMurray/Ecuador/blob/testing/images/Experiment_1_2.png "Experiments 1 & 2")
 
 ### Experiment #2
 Sensors in use:
