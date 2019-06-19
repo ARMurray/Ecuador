@@ -1,5 +1,6 @@
 library(here)
 
+
 # Import the Vaisala data for a specific day
 V1 <- read.csv(here("Field Data", "VB1-6_13.csv"))
 V2 <- read.csv(here("Field Data", "VB2-6_13.csv"))
@@ -20,3 +21,7 @@ V3$DateTime <- as.POSIXct(V3$DateTime, format = "%m/%d/%Y %H:%M:%S")
 V4$DateTime <-paste0(V4$Date, " ", V4$Time)
 V4$DateTime <- as.POSIXct(V4$DateTime, format = "%m/%d/%Y %H:%M:%S")
 
+git config --global user.email "yancyestacio@yahoo.com" 
+git config --global user.name "yancyestacio"
+
+git config --list
