@@ -1,3 +1,4 @@
+setwd("C:/Users/aestacio/Downloads/EcuadorFieldData/Ecuador/FieldData/DO")
 library(here)
 library(readxl)
 
