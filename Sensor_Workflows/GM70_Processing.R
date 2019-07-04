@@ -2,23 +2,20 @@ library(here)
 library(ggplot2)
 library(tidyverse)
 
-# This script is for the processing of data collected from the 4 vaisalas
-# which are permanently installed inside of the 4 large weatherproof boxes
+# This script is for the processing of data collected from the GM70 Handheld Vaisala 
 
 # Enter the date you want to process in the format 'mmddyyyy'
-date <- '06182019'
+date <- '07042019'
 
 # Enter Coordinates for each sensor
-VB1_Lat <- "Input latitude in decimal degrees"
-VB1_Lon <- "Input Longitude in decimal degrees"
+GM70_Lat <- "Input latitude in decimal degrees"
+GM70_Lon <- "Input Longitude in decimal degrees"
 
 
 
 # Import the Vaisala data for the date specified above.
-V1 <- read.csv(here("FieldData/Vaisala",paste0("VB1_",date,".csv")))
-V2 <- read.csv(here("FieldData/Vaisala",paste0("VB2_",date,".csv")))
-V3 <- read.csv(here("FieldData/Vaisala",paste0("VB3_",date,".csv")))
-V4 <- read.csv(here("FieldData/Vaisala",paste0("VB4_",date,".csv")))
+GM70 <- read.csv(here("FieldData/GM70HandheldVaisala",paste0("GM70_",date,".csv")))
+
 
 # Convert time to POSIXct in a new column called "DateTime"
 V1 <- V1[1:5000,]
