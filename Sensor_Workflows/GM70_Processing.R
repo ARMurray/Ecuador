@@ -11,8 +11,6 @@ date <- '07042019'
 GM70_Lat <- "Input latitude in decimal degrees"
 GM70_Lon <- "Input Longitude in decimal degrees"
 
-
-
 # Import the Vaisala data for the date specified above.
 GM70 <- read.csv(here("FieldData/GM70HandheldVaisala",paste0("GM70_",date,".csv")))
 
