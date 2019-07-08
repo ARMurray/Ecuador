@@ -12,8 +12,6 @@ date <- '06182019'
 VB1_Lat <- "Input latitude in decimal degrees"
 VB1_Lon <- "Input Longitude in decimal degrees"
 
-
-
 # Import the Vaisala data for the date specified above.
 V1 <- read.csv(here("FieldData/Vaisala",paste0("VB1_",date,".csv")))
 V2 <- read.csv(here("FieldData/Vaisala",paste0("VB2_",date,".csv")))
@@ -59,7 +57,6 @@ V4 <- V4[445:3169,]%>%
 dataMerge <- rbind(V1,V2,V3,V4)
 
 dataMerge$VID <- as.factor(dataMerge$VID)
-
 
 outPlot <- ggplot(dataMerge, aes(x = DateTime, y = Volts, group = VID))+
   geom_line(aes(col=VID))
