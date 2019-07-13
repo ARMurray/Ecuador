@@ -12,7 +12,7 @@ This is a repository where we will put the code we create for our work in and re
 
 | Sensor        | Station 1         | Station 2  | Station 3 | Station 4|
 | ------------- |:-------------:| -----:|
-| Vaisala (CO2) | &#x2611; | $1600 |
+| Vaisala (CO2) | &#9745; | $1600 |
 | HOBO EC       | centered      |   $12 |
 | HOBO DO | are neat      |    $1 |
 
