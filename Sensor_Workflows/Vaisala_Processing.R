@@ -6,13 +6,13 @@ library(tidyverse)
 # which are permanently installed inside of the 4 large weatherproof boxes
 
 # Enter the date you want to process in the format 'mmddyyyy'
-date <- '07112019'
+date <- '07122019'
 
 # Import the Vaisala data for the date specified above.
-V1 <- read.csv(here("FieldData/Vaisala",paste0("VB1_",date,".csv")))
-V2 <- read.csv(here("FieldData/Vaisala",paste0("VB2_",date,".csv")))
-V3 <- read.csv(here("FieldData/Vaisala",paste0("VB3_",date,".csv")))
-V4 <- read.csv(here("FieldData/Vaisala",paste0("VB4_",date,".csv")))
+V1 <- read.csv(here("FieldData/Vaisala",paste0("VB1_",date,"_1min.csv")))
+V2 <- read.csv(here("FieldData/Vaisala",paste0("VB2_",date,"_1min.csv")))
+V3 <- read.csv(here("FieldData/Vaisala",paste0("VB3_",date,"_1min.csv")))
+V4 <- read.csv(here("FieldData/Vaisala",paste0("VB4_",date,"_1min.csv")))
 
 # Convert time to POSIXct in a new column called "DateTime"
 V1$DateTime <- paste0(V1$Date," ",V1$Time)
@@ -49,3 +49,4 @@ dataMerge$VID <- as.factor(dataMerge$VID)
 outPlot <- ggplot(dataMerge, aes(x = DateTime, y = PPM, group = VID))+
   geom_line(aes(col=VID))
 outPlot
+
