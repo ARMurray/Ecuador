@@ -47,10 +47,10 @@ Start in the stream near the ranger station and move upstream. At each point we 
 + Measure stream width
 + Measure velocity with Golden Rod
 + Measure depth in the middle (divide by 2 to get avg depth)
-+ Take a reading with the handhel Vaisala
-
-
-
++ Measure slope with range finder
++ Take a reading with the handheld Vaisala
++ Take GPS Reading 
++ Mark whether the point is covered by vegetation or open to the sky
 
 ### Experiment #3
 ![alt text](https://github.com/ARMurray/Ecuador/blob/master/images/VasialaXeosFD.png "Flux Experimental Design")
