@@ -10,11 +10,11 @@ This is a repository where we will put the code we create for our work in and re
 ### Experiment #1
 4 Permanent Stations
 
-| Sensor        | Station 1         | Station 2  | Station 3 | Station 4|
-| ------------- |:-------------:| -----:|
-| Vaisala (CO2) | &#9745; | $1600 |
-| HOBO EC       | centered      |   $12 |
-| HOBO DO | are neat      |    $1 |
+| Sensor        | Station 1 | Station 2 | Station 3 | Station 4 |
+| ------------- |:---------:| ---------:| ----------| --------- |
+| Vaisala (CO2) | &#9745;   | &#9745;   | &#9745;   | &#9745;   |
+| HOBO EC       | &#9745;   |   &#9745; |           | &#9745;   |
+| HOBO DO       | &#9745;   | &#9745;   |           | &#9745;   |
 
 Add 2 transects for eosFD
 
