@@ -3,40 +3,21 @@ library(ggplot2)
 library(tidyverse)
 
 # This script is for the processing of data collected from the GM70 Handheld Vaisala 
+fileList <- list.files(here::here("FieldData/GM70HandheldVaisala"))
 
-# Enter the date you want to process in the format 'mmddyyyy'
-date <- '07042019'
+allData <- data.frame()
 
-# Enter Coordinates for each sensor
-GM70_Lat <- "Input latitude in decimal degrees"
-GM70_Lon <- "Input Longitude in decimal degrees"
+for(i in 1:length(fileList)){
+  file <- fileList[i]
+  data <- read.csv(here::here("FieldData/GM70HandheldVaisala",file))
+  allData <- rbind(allData,data)
+}
 
-# Import the Vaisala data for the date specified above.
-GM70 <- read.csv(here("FieldData/GM70HandheldVaisala",paste0("GM70_",date,".csv")))
+colnames(allData) <- c("DateTime","CO2_PPM")
+allData$DateTime <- as.POSIXct(allData$DateTime, format = "%m/%d/%Y %H:%M:%S")
 
-#change co2..ppm column name to just ppm
+allData <- allData[complete.cases(allData), ]
 
-GM70$ppm <- GM70$CO2..ppm
-<<<<<<< HEAD
+allData <- arrange(allData,DateTime)
 
-# Convert time to POSIXct in a new column called "DateTime"
-GM70$DateTime <- paste0(GM70$X)
-GM70$DateTime <- as.POSIXct(GM70$DateTime, format = "%m/%d/%Y %H:%M:%S")
-GM70 <- GM70%>%
-  select(DateTime, ppm)
-
-=======
-
-# Convert time to POSIXct in a new column called "DateTime"
-GM70$DateTime <- paste0(GM70$X)
-GM70$DateTime <- as.POSIXct(GM70$DateTime, format = "%m/%d/%Y %H:%M:%S")
-GM70 <- GM70%>%
-  select(DateTime, ppm)
-
->>>>>>> a8d2ba9bb9526e0ca29596c4a680d62e6156f96c
-
-
-outPlot <- ggplot(GM70, aes(x = DateTime, y = ppm))+ 
-  geom_point()+
-  geom_line()
-outPlot
+write.csv(allData,here::here("data_4_analysis/GM70",paste0("GM70_All_Data.csv")))
