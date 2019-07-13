@@ -43,7 +43,7 @@ Faq = k[pCO2aq - pCO2air] K h
 #### Procedure
 Start in the stream near the ranger station and move upstream. At each point we will:
 + Insert the eosFD into the stream bed
-**Immediately downstream of the eosFD**
++ **Immediately downstream of the eosFD**
 + Measure stream width
 + Measure depth in the middle (divide by 2 to get avg depth)
 + Take a reading with the handhel Vaisala
