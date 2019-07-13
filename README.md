@@ -13,6 +13,23 @@ This is a repository where we will put the code we create for our work in and re
 + Vaisala
 + HOBO Electrical Conductivity
 + HOBO Dissolved Oxygen
++ HOBO Level Logger
+
+#### Station #2
++ Vaisala
++ HOBO Electrical Conductivity
++ HOBO Dissolved Oxygen
++ HOBO Level Logger
+
+#### Station #3
++ Vaisala
++ HOBO Level Logger
+
+#### Station #4
++ Vaisala
++ HOBO Electrical Conductivity
++ HOBO Dissolved Oxygen
++ HOBO Level Logger
 
 Sensors in use:
 
