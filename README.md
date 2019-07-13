@@ -11,7 +11,7 @@ This is a repository where we will put the code we create for our work in and re
 4 Permanent Stations
 
 | Sensor        | Station 1 | Station 2 | Station 3 | Station 4 |
-| ------------- |:---------:| ---------:| ----------| --------- |
+| :-----------: |:---------:| ---------:| :--------:| :-------: |
 | Vaisala (CO2) | &#9745;   | &#9745;   | &#9745;   | &#9745;   |
 | HOBO EC       | &#9745;   |   &#9745; |           | &#9745;   |
 | HOBO DO       | &#9745;   | &#9745;   |           | &#9745;   |
