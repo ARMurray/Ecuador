@@ -65,3 +65,7 @@ Sensors in use:
 + Specific
 + Sensors
 + Here
+
+
+
+**Add Soil Vaisala colocated to each of the Permanent stations**
