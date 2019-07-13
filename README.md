@@ -9,6 +9,15 @@ This is a repository where we will put the code we create for our work in and re
 
 ### Experiment #1
 4 Permanent Stations
+
+| Sensor        | Station 1         | Station 2  | Station 3 | Station 4|
+| ------------- |:-------------:| -----:|
+| Vaisala (CO2) | &#x2611; | $1600 |
+| HOBO EC       | centered      |   $12 |
+| HOBO DO | are neat      |    $1 |
+
+Add 2 transects for eosFD
+
 #### Station 1
 + Vaisala
 + HOBO Electrical Conductivity
