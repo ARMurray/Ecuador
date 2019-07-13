@@ -8,6 +8,12 @@ This is a repository where we will put the code we create for our work in and re
 ## Study Designs
 
 ### Experiment #1
+4 Permanent Stations
++ Station 1
+++ Vaisala
+++ HOBO Electrical Conductivity
+++ HOBO Dissolved Oxygen
+
 Sensors in use:
 
 ![Whiteboard](https://github.com/ARMurray/Ecuador/blob/master/images/Experiment_1_2.png "Experiments 1 & 2")
