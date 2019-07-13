@@ -45,8 +45,10 @@ Start in the stream near the ranger station and move upstream. At each point we 
 + Insert the eosFD into the stream bed
 + **Immediately downstream of the eosFD**
 + Measure stream width
++ Measure velocity with Golden Rod
 + Measure depth in the middle (divide by 2 to get avg depth)
 + Take a reading with the handhel Vaisala
+
 
 
 
