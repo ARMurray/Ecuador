@@ -1,6 +1,7 @@
 # Electrical Conductivity
 library(here)
 library(ggplot2)
+install.packages('colorspace')
 library(dplyr)
 library(plotly)
 library(lubridate)
