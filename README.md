@@ -51,6 +51,7 @@ Start in the stream near the ranger station and move upstream. At each point we 
 + Take a reading with the handheld Vaisala
 + Take GPS Reading 
 + Mark whether the point is covered by vegetation or open to the sky
++ **LAST THING: Pull air sample from eosFD collar**
 
 ### Experiment #3
 ![alt text](https://github.com/ARMurray/Ecuador/blob/master/images/VasialaXeosFD.png "Flux Experimental Design")
