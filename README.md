@@ -19,35 +19,35 @@ This is a repository where we will put the code we create for our work in and re
 
 Add 2 transects for eosFD
 
-#### Station 1
-+ Vaisala
-+ HOBO Electrical Conductivity
-+ HOBO Dissolved Oxygen
-+ HOBO Level Logger
-
-#### Station #2
-+ Vaisala
-+ HOBO Electrical Conductivity
-+ HOBO Dissolved Oxygen
-+ HOBO Level Logger
-
-#### Station #3
-+ Vaisala
-+ HOBO Level Logger
-
-#### Station #4
-+ Vaisala
-+ HOBO Electrical Conductivity
-+ HOBO Dissolved Oxygen
-+ HOBO Level Logger
-
-Sensors in use:
-
 ![Whiteboard](https://github.com/ARMurray/Ecuador/blob/master/images/Experiment_1_2.png "Experiments 1 & 2")
 
 
 ### Experiment #2
-Sensors in use:
+#### Finding the gas transfer velocity
+
+Faq = k[pCO2aq - pCO2air] K h
+
++ Faq comes from eosFD
++ pCO2aq comes from handheld Vaisala
++ pCO2air use either 380 or could use eosFD but wont change much either way
++ K600 = V x S ^.89+-.0020 x D x 503    (V = velocity, D = Depth, S = slope in degrees)
+
+#### Sensors
++ eosFD
++ Handheld Vaisala
++ Golden Rod
+
+#### Other Equipment
++ Tape Measure
+
+#### Procedure
+Start in the stream near the ranger station and move upstream. At each point we will:
++ Insert the eosFD into the stream bed
+**Immediately downstream of the eosFD**
++ Measure stream width
++ Measure depth in the middle (divide by 2 to get avg depth)
++ Take a reading with the handhel Vaisala
+
 
 
 ### Experiment #3
