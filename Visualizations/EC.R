@@ -3,12 +3,13 @@ library(here)
 library(ggplot2)
 install.packages('colorspace')
 library(dplyr)
+install.packages('assertthat')
 library(plotly)
 library(lubridate)
 
 date <- "07122019"
 
-EC1 <- read.csv(here("FieldData/EC",paste0("EC1_",date,".csv")),skip = 1)
+EC1 <- read.csv(here("FieldData/EC", paste0("EC_1_", date ,".csv")), skip = 1)
 EC1 <- EC1[,2:4]
 
 colnames(EC1) <- c("DateTime","EC","tempF")
