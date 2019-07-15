@@ -93,6 +93,4 @@ for(n in 1:nrow(allDOdata)){
 
 allDOdata$Temp_C <- temp_C$X12.0222222222222
 
-plot <- ggplot(allDOdata, aes(x = Temp_C, y = DO_mg_L))+
-  geom_point(aes(group = Station, col = Station))
-plot
+write.csv(allDOdata, here("data_4_analysis/DO.csv"))
