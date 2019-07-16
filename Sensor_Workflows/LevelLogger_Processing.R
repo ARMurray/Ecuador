@@ -1,7 +1,15 @@
 library(here)
 
-date <- "06182019"
+date <- "07152019"
 
-data <- read.csv(here("FieldData", paste0("lvllgr", date, "rogersroad.csv")), skip = 11)
+# LEvel Logger #1
 
-write.csv(data, here("Outputs", paste0("lvllgr", date, "rogersroad.csv")))
+data <- read.csv(here("FieldData/LevelLogger", paste0("lvllgr01", paste0(date,".csv"))), skip = 11)
+
+data$DateTime <- paste0(data$Date," ",data$Time)
+data$DateTime <- as.POSIXct(data$DateTime, format = "%m/%d/%Y %I:%M:%OS %p")
+
+lvl <- data%>%
+  select(DateTime, LEVEL, TEMPERATURE)
+
+write.csv(lvl, here("Outputs", paste0("lvllgr", date, ".csv")))
