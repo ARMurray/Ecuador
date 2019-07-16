@@ -20,3 +20,20 @@ C6 <- C6 %>% select(DateTime, Turbidity_NTU, "Chlorophylla_ug/L", Phycocyanin_pp
 C6$DateTime <- as.POSIXct(as.character(C6$DateTime), format = "%m/%d/%Y %H:%M")
 
 
+
+### Get a list of all the DO1 files
+C6_Files <- list.files(here::here("FieldData/C6"),pattern = 'C6_')
+
+
+### Create an empty data frame
+allC6Data <- data.frame()
+
+### Combine all C6 data
+for(i in 1:length(C6_Files)){
+  file <- C6_Files[i]
+  data <- read.csv(here::here("FieldData/C6",file),skip = 9,
+                   header = FALSE)
+  data <- data[,2:4]
+  colnames(data) <- c("DateTime","DO_mg_L","Temp_C")
+  allDO1Data <- rbind(allDO1Data,data)
+}
