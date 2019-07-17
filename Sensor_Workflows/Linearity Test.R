@@ -1,39 +1,37 @@
 library(tidyverse)
 
 #Uploading Picarro Table 1 and Organizing Variables
-Picarro1<-read.table("C:/Users/Nehemiah/Documents/CarbonShed Lab/Data/Linearity Tests/Picarro0611_1753_1823.txt", header=TRUE)
-view(Picarro1)
+Picarro1<-read.table("C:/Users/nehemiah/Documents/CarbonShed Lab/Linearity Test 2/Picarro0715_1837_1907.txt", header=TRUE)
 Time<-Picarro1$TIME
 CO2<-Picarro1$X12CO2
+Delta<-Picarro1$Delta_Raw_iCO2
+
 #Separating Time and CO2 for Times we Need
-Time[1277:1376]
-view(CO2[1277:1376])
-CO2[1277:1376]
+write.csv(Time[400:835], row.names = FALSE)
+write.csv(CO2[400:835], row.names = FALSE)
+write.csv(Delta[400:835], row.names = FALSE)
 
 #Uploading Picarro table 2 and Organizing Variables
-Picarro3<-read.table("C:/Users/Nehemiah/Documents/CarbonShed Lab/Data/Picarro0611_1853_1923.txt", header = TRUE)
-Time<-Picarro3$TIME
-CO2<-Picarro3$X12CO2
-view(Time)
+Picarro2<-read.table("C:/Users/nehemiah/Documents/CarbonShed Lab/Linearity Test 2/Picarro0715_1907_1937.txt", header = TRUE)
+Time<-Picarro2$TIME
+CO2<-Picarro2$X12CO2
+Delta<-Picarro2$Delta_Raw_iCO2
 
 #Rewriting Times as .Csv File
-write.csv(Time, row.names = FALSE)
-write.csv(Time[1:363], row.names = FALSE
+write.csv(Time[2001:2063], row.names = FALSE)
+write.csv(CO2[2001:2063], row.names = FALSE)
+write.csv(Delta[2001:2063], row.names = FALSE)
 
-write.csv(CO2[364:1362], row.names = FALSE)
-view(CO2)
-write.csv(CO2[1:363],row.names = FALSE)
-write.csv(Time[1:363],row.names = FALSE,column1=0)
-write.csv(Time[364:1362],row.names = FALSE)
-
-#Plotting Time Vs. 12 CO2
-plot<-ggplot(Picarro3)+geom_point(aes(x=Time,y= CO2))
-plot
+#Uploading Picarro 3
+Picarro3<-read.table("C:/Users/nehemiah/Documents/CarbonShed Lab/Linearity Test 2/Picarro0715_1937_2007.txt", header= TRUE)
+Time<-Picarro3$TIME
+CO2<-Picarro3$X12CO2
+Delta<-Picarro3$Delta_Raw_iCO2
 
 #Uploading Delta CO2 Column for Picarro 1 and Converting to .csv File
-Delta<-Picarro1$Delta_Raw_iCO2
-Time<-Picarro1$TIME
-write.csv(Delta[1277:1376],row.names = FALSE)
+write.csv(Time[1001:1108], row.names = FALSE)
+write.csv(CO2[1001:1108], row.names = FALSE)
+write.csv(Delta[1001:1108], row.names = FALSE)
 
 #Uploading Picarro Table 2 and converting Delta to .csv File
 Picarro2<-read.table("C:/Users/Nehemiah/Documents/CarbonShed Lab/Data/Linearity Tests/Picarro0611_1823_1853.txt", header=TRUE)
