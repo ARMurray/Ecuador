@@ -1,5 +1,5 @@
-#install.packages("tmaptools")
-#install.packages("here")
+install.packages("tmaptools")
+install.packages("here")
 library(tmaptools)
 library(ggplot2)
 library(here)
@@ -27,4 +27,4 @@ GPS1 <- GPS1[-c(3,5,13,16), ]
 GPS1$name <- as.character(GPS1$name)
 GPS1$name[12] <- "WPUD9"
 
-write.csv(GPS1,here("FieldData/GPS/GPS_070519.csv"))
+write_shape(GPS1,here("FieldData/GPS/GPS_070519"))
