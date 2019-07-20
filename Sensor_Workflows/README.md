@@ -16,7 +16,7 @@ All four sensors were deployed on Tuesday July 9, 2019. Sensors were initially c
 
 We attempt to collect data from the sensors as often as possible (almost every weekday). Additionally we do not delete data as the capacity of the dataloggers exceeds the needs of our entire field season. After each collection, data is stored in the ~Ecuador/FieldData/Vaisala/ folder. In acknowledgement of the fact that at times the data logger was cleared (necessitating multiple files to be included) and the fact the multiple files will include identical rows of data, this script is designed to iterate through all of the available files, merge them together, and then to delete duplicates. This method ensures total inclusion of all collected data while keeping the dataset tidy. The cost of this method is computation time required, which should be negligible considering the amount of data we are processing (not that much computationally speaking). Each sensor is processed individually and then merged together at the end to create a comprehensive dataset.
 
-At the end of the script, a file is written to '~Ecuador/Outputs/Vaisala_Stations_AllData.csv' This file is in long format and contains all data collected from the Vaisalla stations.
+At the end of the script, a file is written to '~Ecuador/data_4_analysis/Vaisala_Stations_AllData.csv' This file is in long format and contains all data collected from the Vaisalla stations.
 
 
 **Vaisala_Flux.r:**
