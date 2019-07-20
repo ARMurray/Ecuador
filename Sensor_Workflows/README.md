@@ -14,6 +14,8 @@ All four sensors were deployed on Tuesday July 9, 2019. Sensors were initially c
 + Sensor 3: +17.5 (add 17.5 ppm to reading)
 + Sensor 4: +17.5 (add 17.5 ppm to reading)
 
+We attempt to collect data from the sensors as often as possible (almost every weekday). Additionally we do not delete data as the capacity of the dataloggers exceeds the needs of our entire field season. After each collection, data is stored in the ~Ecuador/FieldData/Vaisala/ folder. In acknowledgement of the fact that at times the data logger was cleared (necessitating multiple files to be included) and the fact the multiple files will include identical rows of data, this script is designed to iterate through all of the available files, merge them together, and then to delete duplicates. This method ensures total inclusion of all collected data while keeping the dataset tidy. The cost of this method is computation time required, which should be negligible considering the amount of data we are processing (not that much computationally speaking). Each sensor is processed individually and then merged together at the end to create a comprehensive dataset.
+
 
 **Vaisala_Flux.r:**
 This script converts vaisala readings to flux
