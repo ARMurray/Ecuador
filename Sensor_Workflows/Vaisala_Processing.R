@@ -5,9 +5,6 @@ library(tidyverse)
 # This script is for the processing of data collected from the 4 vaisalas
 # which are permanently installed inside of the 4 large weatherproof boxes
 
-# Enter the date you want to process in the format 'mmddyyyy'
-#date <- '07162019'
-
 # Import the Vaisala data for the date specified above.
 V1Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB1")
 V2Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB2")
@@ -89,4 +86,4 @@ outPlot <- ggplot(VMerge, aes(x = DateTime, y = PPM, group = VID))+
   geom_point(aes(col=VID), size = .5)
 outPlot
 
-write.csv(VMerge, here("Outputs/Vasaila_Stations_AllData.csv"))
+write.csv(VMerge, here("data_4_analysis/Vaisala_Stations_AllData.csv"))
