@@ -22,14 +22,14 @@ library(dplyr)
 
 #Let's import it one by one 
 
-date <- '070619'
+date <- '071819'
 
 GPS1 <- read_shape(here("FieldData/GPS", paste0("GPS_",date,".shp")))
 
 GPS1$name <- as.character(GPS1$name)
-GPS1$name[16] <- "STR6"
+GPS1$name[13] <- "STR49"
 
-GPS1$Category <- "GeneralGeog"
-GPS1$Category[12] <- "WestCatchment"
+GPS1$Category <- "Synoptics"
+GPS1$Category[3] <- "GeneralGeog"
 
 write_shape(GPS1,here("FieldData/GPS", paste0("GPS_",date, ".shp")))
