@@ -140,30 +140,3 @@ syn35 <- select(syn35,DateTime, Flux_eos2)
 kable(head(syn35), format = "markdown", row.names = FALSE)
 
 ```
-
-Average Flux of Each Site
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-syn1avg <- mean(syn1$Flux_eos2)
-syn5avg <- mean(syn5$Flux_eos2)
-syn8avg <- mean(syn8$Flux_eos2)
-syn11avg <- mean(syn11$Flux_eos2)
-syn14avg <- mean(syn14$Flux_eos2)
-waterfallavg <- mean(waterfall$Flux_eos2)
-syn20avg <- mean(syn20$Flux_eos2)
-syn23avg <- mean(syn23$Flux_eos2)
-syn29avg <- mean(syn29$Flux_eos2)
-syn35avg <- mean(syn35$Flux_eos2)
-
-a <- data.frame(AverageFlux = c(syn1avg,syn5avg,syn8avg,syn11avg,syn14avg,waterfallavg,syn20avg,syn23avg,syn29avg,syn35avg))
-rownames(a) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
-kable(a, format = "markdown", row.names = TRUE)
-
-avgplot <- ggplot(a)+
-  geom_point(aes(x= 1:10, y= AverageFlux), color = "blue", size = 5) 
-avgplot <- avgplot + scale_x_continuous(breaks=1:10, labels=c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")) +
-labs(x = "Synoptic Site", y = "Average FLux")
-        
-
-avgplot
-
-```
