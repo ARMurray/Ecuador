@@ -2,8 +2,6 @@ library(here)
 library(ggplot2)
 library(dplyr)
 
-
-
 ### Get a list of all the C6 files
 C6_Files <- list.files(here::here("FieldData/C6"),pattern = 'C6_')
 
