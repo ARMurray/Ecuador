@@ -33,3 +33,28 @@ GPS1$Category <- "Synoptics"
 GPS1$Category[3] <- "GeneralGeog"
 
 write_shape(GPS1,here("FieldData/GPS", paste0("GPS_",date, ".shp")))
+
+#now let's put everything in one file and separate them by category
+
+
+### Get a list of all the files
+gps_Files <- list.files(here::here("FieldData/GPS"),pattern = '.shp')
+
+#create an empty data.frame
+allgeogData <- data.frame()
+
+
+### Combine all geog data
+for(i in 1:length(gps_Files)){
+  file <- gps_Files[i]
+  data <- read_shape(here::here("FieldData/GPS",file))
+   allgeogData <- rbind(allgeogData,data)
+}
+
+#ok let's try this another way. 
+
+GPS1 <- read_shape(here("FieldData/GPS/GPS_071019.shp"))
+GPS2 <- read_shape(here("FieldData/GPS/GPS_070919.shp"))
+GPS3 <- read_shape(here("FieldData/GPS/GPS_070519.shp"))
+
+allgeogdata <- rbind(GPS1, GPS2,GPS3)
