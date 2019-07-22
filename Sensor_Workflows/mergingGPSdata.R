@@ -22,14 +22,17 @@ library(dplyr)
 
 #Let's import it one by one 
 
-date <- '071819'
+date <- '071019'
 
 GPS1 <- read_shape(here("FieldData/GPS", paste0("GPS_",date,".shp")))
+
+
+
 
 GPS1$name <- as.character(GPS1$name)
 GPS1$name[13] <- "STR49"
 
-GPS1$Category <- "Synoptics"
+GPS1$Category <- "WestCatchment"
 GPS1$Category[3] <- "GeneralGeog"
 
 write_shape(GPS1,here("FieldData/GPS", paste0("GPS_",date, ".shp")))
@@ -41,14 +44,14 @@ write_shape(GPS1,here("FieldData/GPS", paste0("GPS_",date, ".shp")))
 gps_Files <- list.files(here::here("FieldData/GPS"),pattern = '.shp')
 
 #create an empty data.frame
-allgeogData <- data.frame()
+allgeogData <- st_read(here::here("FieldData/GPS",gps_Files[1]))
 
 
 ### Combine all geog data
-for(i in 1:length(gps_Files)){
+for(i in 2:length(gps_Files)){
   file <- gps_Files[i]
-  data <- read_shape(here::here("FieldData/GPS",file))
-   allgeogData <- rbind(allgeogData,data)
+  data <- st_read(here::here("FieldData/GPS",file))
+  allgeogData <- rbind(allgeogData,data)
 }
 
 #ok let's try this another way. 
