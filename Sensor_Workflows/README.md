@@ -5,10 +5,10 @@ This script iterates through all of our Vaisala data that was collected at the f
 
 |Station| Longitude|Latitude|Serial|
 |:-----:|:--------:|:------:|:----:|
-|Station 1| 78.2004711°W | 0.3282020°S | Q98475 |
-+ Station 2: 78.2005673°W 0.3283348°S 
-+ Station 3: 78.2005817°W 0.3285909°S 
-+ Station 4: 78.2008610°W 0.3292638°S 
+|Station 1| 78.2004711°W | 0.3282020°S | Q98069 |
+|Station 2| 78.2005673°W | 0.3283348°S | Q98476 |
+|Station 3| 78.2005817°W | 0.3285909°S | Q98475 | 
+|Station 4| 78.2008610°W | 0.3292638°S | Q98478 | 
 
 All four sensors were deployed on Tuesday July 9, 2019. Sensors were initially colocated in order to establish a field calibration. The Vaisala sensors we use have a range of 0-10,000 ppm and a margin of error of 150 ppm. Sensors were colocated for thirty minutes to quantify measurement differences between sensors. To adjust for measurement differences we found the mean reading for all sensors and adjust readings from each sensor by the difference between the average reading accross all four and the average reading for each sensor individually. The following offsets were determined:
 
