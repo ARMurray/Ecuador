@@ -58,7 +58,7 @@ Phycocyanin spikes hard beginning at 4:00 am on July 15 and peaking at 7:15am th
 
 Filtering out this spike reveals this:
 
-```{r phycoFilt, echo=FALSE, warning=FALSE, fig.width=12}
+```{r phycoFilt, echo=TRUE, warning=FALSE, fig.width=12}
 phycoFilt <- data%>%
   filter(data$Phycocyanin_ppb < 50)
 
@@ -111,6 +111,7 @@ eos1 <- data%>%
 
 # Plot
 CO2vFlux <- ggplot()+
+  geom_bar(data = ppt, aes(x = Date, y = ppt_mm * 100), stat = "identity", alpha = 0.2, color = '#00aaff')+
   geom_point(data = CO2Filt, aes(x = DateTime, y = PPM, colour = VID))+
   geom_point(data=eos1, aes(x = DateTime, y = Flux_1*1000, colour = Sensor))+
   scale_y_continuous(sec.axis = sec_axis(~./1000, name = "micromols per square meter per second"))+
@@ -123,3 +124,5 @@ CO2vFlux
 
 ### Notes
 This plot suggests an almost 1:1 relationship between flux and dissolved CO2. Flux is multiplied by 1,000 for the purposes of visualization
+
+
