@@ -24,3 +24,16 @@ At the end of the script, a file is written to '~Ecuador/data_4_analysis/Vaisala
 
 **Vaisala_Flux.r:**
 This script converts vaisala readings to flux
+
+
+**Level Loggers**
+|Logger|Longitude|Latitude|Serial|
+|:----:|:-------:|:------:|:----:|
+|1| | | |
+|2| | | |
+|3| | | |
+|4| | | |
+|5| | | |
+|6| -78.199684 | -0.327155 | 0072020442 |
+|7| -78.198828 | -0.322832 | 0072020437 |
+|8| -78.200033 | -0.322655 | 0078020435 |
