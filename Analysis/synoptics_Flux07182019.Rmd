@@ -30,7 +30,7 @@ eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
 colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
                     "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
