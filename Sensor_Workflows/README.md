@@ -27,6 +27,7 @@ This script converts vaisala readings to flux
 
 
 **Level Loggers**
+
 |Logger|Longitude|Latitude|Serial|
 |:----:|:-------:|:------:|:----:|
 |1| | | |
