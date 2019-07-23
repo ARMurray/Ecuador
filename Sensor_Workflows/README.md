@@ -2,6 +2,7 @@
 
 **Vaisala_Processing.R**
 This script iterates through all of our Vaisala data that was collected at the four permanent stations within the stream located between the primary study wetland and the ranger station. The coordinates for each station are:
+
 |Station| Longitude|Latitude|Serial|
 |:-----:|:--------:|:------:|:----:|
 |Station 1| 78.2004711°W | 0.3282020°S | Q98475 |
