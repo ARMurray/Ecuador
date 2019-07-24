@@ -79,7 +79,8 @@ V4Data <- V4Data%>%
 
 # Combine data and make the ID field a factor so it is groupable
 VMerge <- rbind(V1Data,V2Data,V3Data,V4Data)%>%
-  filter(PPM > 100)
+  filter(PPM > 100)%>%
+  filter(PPM < 10000)
 
 # Make a simple plot
 outPlot <- ggplot(VMerge, aes(x = DateTime, y = PPM, group = VID))+
