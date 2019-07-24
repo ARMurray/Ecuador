@@ -59,4 +59,3 @@ write.csv(DeltaII[501:1480],row.names = FALSE)
 eos1<-eos1$eos1[50:135]
 
 
-

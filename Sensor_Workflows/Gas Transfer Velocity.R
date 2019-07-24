@@ -12,7 +12,9 @@ Dist<-st_distance(GPSPts[35,],GPSPts[34,])
 Dist                  
 
 #Finding Elevation
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 Elev<-GPSPts$ele[35]-GPSPts$ele[34]
 Elev
-
+```
 #Uploading 
