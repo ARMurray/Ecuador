@@ -1,5 +1,5 @@
 ---
-title: "Injection_Analyses"
+title: "Injection Analysis"
 author: "Andrew"
 date: "7/24/2019"
 output: html_document
@@ -9,16 +9,57 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(dplyr)
+library(ggplot2)
 ```
 
-## Injection Analysis
+
 Injection list
 
-|Date|Start|End|
-|:--:|:---:|:-:|
-|July 4|||
+|Date|Start|End|Notes|
+|:--:|:---:|:-:|:---:|
+|July 12|13:00|16:00|Started at 11:47 but had to be restarted since we had to reset sensors|
+|July 16|14:15|20:00|Night Injection|
+|July 22|16:25|19:45|Night Injection|
 
-```{r cars}
-summary(cars)
+```{r subset, echo=FALSE, warning=FALSE}
+data <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+data$DateTime <- as.POSIXct(data$DateTime)
+inj1 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-12 12:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-12 16:30:00"))
+
+ggplot(inj1, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #1 - July 12", x = "Time", y = "CO2 PPM", colour = "Sensor")
 ```
 
+```{r inj2, echo=FALSE, warning=FALSE}
+inj2 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-16 13:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-16 21:00:00"))
+
+ggplot(inj2, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #2 - July 16", x = "Time", y = "CO2 PPM", colour ="Sensor")
+```
+
+
+
+```{r inj3, echo=FALSE, warning=FALSE}
+inj3 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-22 13:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-22 21:00:00"))
+
+ggplot(inj3, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #3 - July 22", x = "Time", y = "CO2 PPM", colour = "Sensor")
+```
