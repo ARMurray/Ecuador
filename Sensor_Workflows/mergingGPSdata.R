@@ -54,10 +54,6 @@ for(i in 2:length(gps_Files)){
   allgeogData <- rbind(allgeogData,data)
 }
 
-#ok let's try this another way. 
+#Now save the dang thang 
 
-GPS1 <- read_shape(here("FieldData/GPS/GPS_071019.shp"))
-GPS2 <- read_shape(here("FieldData/GPS/GPS_070919.shp"))
-GPS3 <- read_shape(here("FieldData/GPS/GPS_070519.shp"))
-
-allgeogdata <- rbind(GPS1, GPS2,GPS3)
+write_shape(allgeogData,here("FieldData/GPS/allgeogdata.shp"))
