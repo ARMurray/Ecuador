@@ -3,7 +3,9 @@ library(ggplot2)
 library(dplyr)
 
 # *** SET THE DATE ***
-date<- "07152019"
+#date<- "07152019"
+
+# THE FIX FIE IS ALREADY IN POSIXct SO I NEED TO WORK THROUGH THAT!
 
 # Loop through all of the eosFD #1 files
 eos_1_Files <- list.files(path = here("FieldData/EosFD/"), pattern = "eos1")
@@ -31,6 +33,13 @@ eos_1_Data <- eos_1_Data%>%
 # Subset data so only records at 5 minute intervals are retained
 sub.1 <- subset(eos_1_Data, format(DateTime,'%OS')=='00')
 sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+# FIX eosFD #1 Time ERROR: Error starts at: 7/26 12:18 and goes to 7/31 1:28
+# 1:28 should actually be 13:48 so add 12 hours and 20 minutes
+
+
+
+
 
 ### Combine eosFD 2 data
 eos_2_Files <- list.files(path = here("FieldData/EosFD/"), pattern = "eos2")
