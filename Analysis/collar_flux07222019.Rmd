@@ -4,7 +4,7 @@ author: "Chloe"
 date: "Data from 7/22/2019 measurements"
 output: html_document
 ---
-
+wrong data, set to data from the 22nd
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # Plots and Analysis
@@ -40,16 +40,17 @@ colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO
 sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
 sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
 
+rownames(sub.2) <- NULL
+sub.2$Flux_eos2 <- as.numeric(as.character(sub.2$Flux_eos2))
 
-
-col1 <- sub.2[467:462,]
-col2 <- sub.2[465:469,]
-col3 <- sub.2[474:477,]
-col4 <- sub.2[483:487,]
-col5 <- sub.2[494:498,]
-col6 <- sub.2[502:507,]
-col7 <- sub.2[510:516,]
-col8 <- sub.2[510:516,]
+col1 <- sub.2[1758:1761,]
+col2 <- sub.2[1754:1757,]
+col3 <- sub.2[1748:1752,]
+col4 <- sub.2[1743:1746,]
+col5 <- sub.2[1711:1714,]
+col6 <- sub.2[1716:1719,]
+col7 <- sub.2[1726:1729,]
+col8 <- sub.2[1732:1735,]
 ```
 
 
@@ -136,3 +137,4 @@ labs(x = "Collar", y = "Average FLux")
 avgplot
 
 ```
+_
