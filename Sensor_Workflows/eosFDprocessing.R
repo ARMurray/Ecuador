@@ -2,10 +2,10 @@ library(here)
 library(ggplot2)
 library(dplyr)
 
-# *** SET THE DATE ***
-#date<- "07152019"
-
-# THE FIX FIE IS ALREADY IN POSIXct SO I NEED TO WORK THROUGH THAT!
+# Read in the July file which had to be fixed manually (Time error)
+july <- read.csv(here("FieldData/EosFD/Eos1_FIX_07312019.csv"))%>%
+  select(-X)
+july$DateTime <- as.POSIXct(july$DateTime)
 
 # Loop through all of the eosFD #1 files
 eos_1_Files <- list.files(path = here("FieldData/EosFD/"), pattern = "eos1")
@@ -30,16 +30,11 @@ eos_1_Data <- eos_1_Data%>%
   select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
          CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
 
+eos_1_Data <- rbind(july, eos_1_Data)
+
 # Subset data so only records at 5 minute intervals are retained
 sub.1 <- subset(eos_1_Data, format(DateTime,'%OS')=='00')
 sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
-
-# FIX eosFD #1 Time ERROR: Error starts at: 7/26 12:18 and goes to 7/31 1:28
-# 1:28 should actually be 13:48 so add 12 hours and 20 minutes
-
-
-
-
 
 ### Combine eosFD 2 data
 eos_2_Files <- list.files(path = here("FieldData/EosFD/"), pattern = "eos2")
@@ -69,7 +64,8 @@ sub.11 <- subset(eos_2_Data, format(DateTime,'%OS')=='00')
 sub.22 <- subset(sub.11, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
 
 # Merge the data into a single data frame
-bothEos <- merge(sub.2, sub.22,by="DateTime", all = TRUE)
+bothEos <- merge(sub.2, sub.22,by="DateTime", all = TRUE)%>%
+  distinct()
 
 # Export the data
 write.csv(bothEos,here("data_4_analysis/eosFD_Stream.csv"))
