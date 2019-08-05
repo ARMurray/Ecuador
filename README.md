@@ -73,5 +73,15 @@ Sensors in use:
 + Here
 
 
+**Level Loggers**
 
-**Add Soil Vaisala colocated to each of the Permanent stations**
+|Logger|Longitude|Latitude|Serial| Description |
+|:----:|:-------:|:------:|:----:|:-----------:|
+|1| 78.2004711°W | 0.3282020°S | | Station 1 |
+|2| 78.2005817°W | 0.3285909°S | | Station 3 |
+|3| | | | |
+|4| | | | |
+|5| | | | |
+|6| -78.199684 | -0.327155 | 0072020442 | by the hill |
+|7| -78.198828 | -0.322832 | 0072020437 | upper peatland downstream from lake |
+|8| -78.200033 | -0.322655 | 0078020435 | Above Big WaterFall |
