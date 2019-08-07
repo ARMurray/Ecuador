@@ -8,8 +8,8 @@ library(dplyr)
 # This script is for the processing of data collected from the GPS Garmen e20x 
 
 # Enter the date you want to process in the format 'mmddyyyy'
-date <- '10-JUL-19'
-date1 <- '071019'
+date <- '25-JUL-19'
+date1 <- '072519'
 
 # Import the GPS data for the date specified above.
 GPS1 <- read_GPX(here("FieldData/GPS/GPS1", paste0("Waypoints_",date,".gpx")), layers = "waypoints")
@@ -40,5 +40,10 @@ GPS1$name[3] <- "HighWaterfall"
 #Synoptics 
 
 
+GPS1$Category <- "WestCatchment"
+#GPS1$Category[3] <- "GeneralGeog"
+
 write_shape(GPS1,here("FieldData/GPS", paste0("GPS_",date1, ".shp")))
+
+GPsllv <- read_shape(here("FieldData/GPS/GPS_071719.shp"))
 
