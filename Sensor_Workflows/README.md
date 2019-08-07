@@ -30,11 +30,11 @@ This script converts vaisala readings to flux
 
 |Logger|Longitude|Latitude|Serial| Dexcription |
 |:----:|:-------:|:------:|:----:|:-----------:|
-|1| | | | |
-|2| | | | |
-|3| | | | |
-|4| | | | |
-|5| | | | |
+|1| | |0072020436 |Station 1 |
+|2| | |0072020421 |Station 3 |
+|3| | |0072020430 | |
+|4| | |0072020425 | |
+|5| | |0072020432 | |
 |6| -78.199684 | -0.327155 | 0072020442 | by the hill |
 |7| -78.198828 | -0.322832 | 0072020437 | upper peatland downstream from lake |
 |8| -78.200033 | -0.322655 | 0078020435 | Above Big WaterFall |
