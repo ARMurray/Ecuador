@@ -57,3 +57,16 @@ for(i in 2:length(gps_Files)){
 #Now save the dang thang 
 
 write_shape(allgeogData,here("FieldData/GPS/allgeogdata.shp"))
+
+
+
+
+allgeogData <- read_shape(here("FieldData/GPS/allgeogdata.shp"))
+#Ok now let's separate it into the indivual sections 
+
+Synoptics <- subset(allgeogData, Category == "Synoptics")
+
+
+#Now save
+
+write_shape(Synoptics, here("FieldData/GPS/Synoptics.shp"))
