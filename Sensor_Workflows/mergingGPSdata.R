@@ -64,9 +64,12 @@ write_shape(allgeogData,here("FieldData/GPS/allgeogdata.shp"))
 allgeogData <- read_shape(here("FieldData/GPS/allgeogdata.shp"))
 #Ok now let's separate it into the indivual sections 
 
-Synoptics <- subset(allgeogData, Category == "Synoptics")
+
+Name <- 'WestCatchment'
+Subs <- subset(allgeogData, Category == 'Levelandbarro')
+ 
 
 
 #Now save
 
-write_shape(Synoptics, here("FieldData/GPS/Synoptics.shp"))
+write_shape(Subs, here("FieldData/GPS/EOStransects.shp"))
