@@ -174,10 +174,11 @@ c(syn1sd,syn5sd,syn8sd,syn11sd,syn14sd,waterfallsd,syn20sd,syn23sd,syn29sd,syn35
 rownames(sd) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
 kable(sd, format = "markdown", row.names = TRUE)
 
+a <- cbind(a,sd)
 
 avgplot <- ggplot(a)+
- geom_errorbar(data=sd, mapping=aes(x= 1:10, ymin= a - sd, ymax= a + sd), width=0.2, size=1, color="blue") +  
-  geom_point(aes(x= 1:10, y= AverageFlux), color = "blue", size = 5) 
+ geom_errorbar(aes(x= 1:10,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +  
+  geom_point(aes(x= 1:10, y= AverageFlux), color = "blue", size = 2) 
 
 avgplot <- avgplot + scale_x_continuous(breaks=1:10, labels=c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")) +
 labs(x = "Synoptic Site", y = "Average FLux")
