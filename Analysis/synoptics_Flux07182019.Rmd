@@ -154,12 +154,31 @@ syn23avg <- mean(syn23$Flux_eos2)
 syn29avg <- mean(syn29$Flux_eos2)
 syn35avg <- mean(syn35$Flux_eos2)
 
+syn1sd <- sd(syn1$Flux_eos2)
+syn5sd <- sd(syn5$Flux_eos2)
+syn8sd <- sd(syn8$Flux_eos2)
+syn11sd <- sd(syn11$Flux_eos2)
+syn14sd <- sd(syn14$Flux_eos2)
+waterfallsd <- sd(waterfall$Flux_eos2)
+syn20sd <- sd(syn20$Flux_eos2)
+syn23sd <- sd(syn23$Flux_eos2)
+syn29sd <- sd(syn29$Flux_eos2)
+syn35sd <- sd(syn35$Flux_eos2)
+
 a <- data.frame(AverageFlux = c(syn1avg,syn5avg,syn8avg,syn11avg,syn14avg,waterfallavg,syn20avg,syn23avg,syn29avg,syn35avg))
 rownames(a) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
 kable(a, format = "markdown", row.names = TRUE)
 
+sd <- data.frame(StdDev=
+c(syn1sd,syn5sd,syn8sd,syn11sd,syn14sd,waterfallsd,syn20sd,syn23sd,syn29sd,syn35sd))
+rownames(sd) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
+kable(sd, format = "markdown", row.names = TRUE)
+
+
 avgplot <- ggplot(a)+
+ geom_errorbar(data=sd, mapping=aes(x= 1:10, ymin= a - sd, ymax= a + sd), width=0.2, size=1, color="blue") +  
   geom_point(aes(x= 1:10, y= AverageFlux), color = "blue", size = 5) 
+
 avgplot <- avgplot + scale_x_continuous(breaks=1:10, labels=c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")) +
 labs(x = "Synoptic Site", y = "Average FLux")
         
