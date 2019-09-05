@@ -124,12 +124,29 @@ col6avg <- mean(col6$Flux_eos2)
 col7avg <- mean(col7$Flux_eos2)
 col8avg <- mean(col8$Flux_eos2)
 
+col1sd <- sd(col1$Flux_eos2)
+col2sd <- sd(col2$Flux_eos2)
+col3sd <- sd(col3$Flux_eos2)
+col4sd <- sd(col4$Flux_eos2)
+col5sd <- sd(col5$Flux_eos2)
+col6sd <- sd(col6$Flux_eos2)
+col7sd <- sd(col7$Flux_eos2)
+col8sd <- sd(col8$Flux_eos2)
+
 a <- data.frame(AverageFlux = c(col1avg,col2avg,col3avg,col4avg,col5avg,col6avg,col7avg,col8avg ))
 rownames(a) <- c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8")
 kable(a, format = "markdown", row.names = TRUE)
 
+sd <- data.frame(StdDev=
+c(col1sd,col2sd,col3sd,col4sd,col5sd,col6sd,col7sd,col8sd))
+rownames(sd) <- c("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+
 avgplot <- ggplot(a)+
-  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 5) 
+ geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 5)
 avgplot <- avgplot + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8")) +
 labs(x = "Collar", y = "Average FLux")
         
