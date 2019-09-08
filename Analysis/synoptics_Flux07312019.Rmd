@@ -1,0 +1,189 @@
+---
+title: "Flux at Synoptic Points"
+author: "Chloe"
+date: "7/31/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Plots and Analysis
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+
+```
+
+## Plots and Analysis
+
+```{r readData, echo=FALSE}
+#flux of synoptics 
+
+date<- "08012019"
+
+
+
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y%H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_08022019.csv")))
+eos1$Year <- paste0("20",eos1$Year)
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos1 <- eos1%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos1) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+
+syn1 <- eos2[2:6,]
+syn5 <- eos2[8:11,]
+syn8 <- eos2[13:17,]
+syn11 <- eos2[19:22,]
+syn14 <- eos2[27:30,]
+waterfall <- eos1[36:39,]
+syn20 <- eos1[44:47,]
+syn23 <- eos1[50:53,]
+syn29 <- eos1[57:60,]
+syn35 <- eos1[63:66,]
+
+```
+
+### Flux over the 18th
+```{r eos1, eval=TRUE, warning=FALSE, echo=FALSE, fig.width=12}
+
+plot <- ggplot(eos1, aes(x = DateTime))+
+  geom_line(aes(x= DateTime, y= Flux_eos2)) +
+  labs(x = "Time", y = "Flux")
+
+plot
+```
+
+
+### Flux of Synoptic Sites
+
+Syn1
+```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn1 <- select(syn1,DateTime, Flux_eos2)
+kable(head(syn1), format = "markdown", row.names = FALSE)
+
+```
+Syn5
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn5 <- select(syn5,DateTime, Flux_eos2)
+kable(head(syn5), format = "markdown", row.names = FALSE)
+
+```
+Syn8
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn8 <- select(syn8,DateTime, Flux_eos2)
+kable(head(syn8), format = "markdown", row.names = FALSE)
+
+```
+Syn11
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn11 <- select(syn11,DateTime, Flux_eos2)
+kable(head(syn11), format = "markdown", row.names = FALSE)
+
+```
+Syn14
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn14 <- select(syn14,DateTime, Flux_eos2)
+kable(head(syn14), format = "markdown", row.names = FALSE)
+
+```
+SynWaterfall
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+waterfall <- select(waterfall,DateTime, Flux_eos2)
+kable(head(waterfall), format = "markdown", row.names = FALSE)
+
+```
+Syn20
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn20 <- select(syn20,DateTime, Flux_eos2)
+kable(head(syn20), format = "markdown", row.names = FALSE)
+
+```
+Syn23
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn23 <- select(syn23,DateTime, Flux_eos2)
+kable(head(syn23), format = "markdown", row.names = FALSE)
+
+```
+Syn29
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn29 <- select(syn29,DateTime, Flux_eos2)
+kable(head(syn29), format = "markdown", row.names = FALSE)
+
+```
+Syn35
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+syn35 <- select(syn35,DateTime, Flux_eos2)
+kable(head(syn35), format = "markdown", row.names = FALSE)
+
+```
+
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+syn1avg <- mean(syn1$Flux_eos2)
+syn5avg <- mean(syn5$Flux_eos2)
+syn8avg <- mean(syn8$Flux_eos2)
+syn11avg <- mean(syn11$Flux_eos2)
+syn14avg <- mean(syn14$Flux_eos2)
+waterfallavg <- mean(waterfall$Flux_eos2)
+syn20avg <- mean(syn20$Flux_eos2)
+syn23avg <- mean(syn23$Flux_eos2)
+syn29avg <- mean(syn29$Flux_eos2)
+syn35avg <- mean(syn35$Flux_eos2)
+
+syn1sd <- sd(syn1$Flux_eos2)
+syn5sd <- sd(syn5$Flux_eos2)
+syn8sd <- sd(syn8$Flux_eos2)
+syn11sd <- sd(syn11$Flux_eos2)
+syn14sd <- sd(syn14$Flux_eos2)
+waterfallsd <- sd(waterfall$Flux_eos2)
+syn20sd <- sd(syn20$Flux_eos2)
+syn23sd <- sd(syn23$Flux_eos2)
+syn29sd <- sd(syn29$Flux_eos2)
+syn35sd <- sd(syn35$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(syn1avg,syn5avg,syn8avg,syn11avg,syn14avg,waterfallavg,syn20avg,syn23avg,syn29avg,syn35avg))
+rownames(a) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
+kable(a, format = "markdown", row.names = TRUE)
+
+sd <- data.frame(StdDev=
+c(syn1sd,syn5sd,syn8sd,syn11sd,syn14sd,waterfallsd,syn20sd,syn23sd,syn29sd,syn35sd))
+rownames(sd) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+
+avgplot <- ggplot(a)+
+ geom_errorbar(aes(x= 1:10,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +  
+  geom_point(aes(x= 1:10, y= AverageFlux), color = "blue", size = 2) 
+
+avgplot <- avgplot + scale_x_continuous(breaks=1:10, labels=c("syn1", "syn5", "syn8", "syn11", "syn14", "waterfall", "syn20", "syn23", "syn29", "syn35")) +
+labs(x = "Synoptic Site", y = "Average FLux")
+        
+
+avgplot
+
+```
