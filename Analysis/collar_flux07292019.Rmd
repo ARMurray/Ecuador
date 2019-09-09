@@ -2,7 +2,7 @@
 title: "Flux at Collar Transects"
 author: "Chloe"
 date: "Data from 7/29/2019 measurements
-for Col1-4, eos was on 15 minute interval, so only one measure per col. COL5-6 not correct yet"
+COL5-6 not correct yet"
 output: html_document
 ---
 
@@ -36,21 +36,20 @@ eos2 <- eos2%>%
 colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
                     "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
 
-eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_08022019.csv")))
-eos1$Year <- paste0("20",eos1$Year)
-eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
+#eos1$Year <- paste0("20",eos1$Year)
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
 eos1 <- eos1%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
-         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
-colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1",
-                    "CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+  select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
+        CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
 
 
 
-col1 <- eos1[2390,]
-col2 <- eos1[2392,]
-col3 <- eos1[2394,]
-col4 <- eos1[2395,]
+col1 <- eos1[2321:2324,]
+col2 <- eos1[2326:2329,]
+col3 <- eos1[2331:2334,]
+col4 <- eos1[2336:2339,]
 col5 <- eos2[471:475,]
 col6 <- eos2[479:484,]
 col7 <- eos2[487:493,]
