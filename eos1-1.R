@@ -78,9 +78,10 @@ plot <- ggplot(total)+
 plot
   
 flux_comp = ggplot() + 
-  geom_line(data = total, aes(x = DateTime_1, y = Flux_eos1), color = "blue") +
-  geom_line(data = total, aes(x = DateTime_1, y = Flux_eos2), color = "red") +
+  geom_point(data = total, aes(x = DateTime_1, y = Flux_eos1), color = "blue") +
+  geom_point(data = total, aes(x = DateTime_1, y = Flux_eos2), color = "red") +
   xlab('Time') +
-  ylab('Flux')
+  ylab('Flux') +
+  ggtitle('Flux Comparison') 
 
 print(flux_comp)
