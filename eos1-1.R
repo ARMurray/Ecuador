@@ -23,7 +23,7 @@ colnames(eos2) <- c("DateTime_2","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","
 eos2 <- eos2[c(2970:3162), ]
 
 #make sure flux is reading as a number 
-eos2$Flux_eos2<-as.numeric(as.character(eos2$Flux_eos2))
+eos2$CO2_Soil_ppm_eos2 <-as.numeric(as.character(eos2$CO2_Soil_ppm_eos2))
 
 #get some averages for this to compare 
 eos2avg <- mean(eos2$Flux_eos2)
@@ -52,7 +52,7 @@ colnames(eos1) <- c("DateTime_1","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","
 eos1 <- eos1[c(342:534), ]
 
 #make sure flux is reading as a number 
-eos1$Flux_eos1<-as.numeric(as.character(eos1$Flux_eos1))
+eos2$Temp_C_eos2<-as.numeric(as.character(eos2$Temp_C_eos2))
 
 #get some averages for this to compare 
 eos1avg <- mean(eos1$Flux_eos1)
@@ -65,23 +65,28 @@ eos1min
 eos1max
 eos1std_dev
 
+#make sure flux is reading as a number 
+eos1$CO2_Soil_ppm_eos1 <-as.numeric(as.character(eos1$CO2_Soil_ppm_eos1))
+
 #combine eos1 and 2
 
 total <- cbind(eos1, eos2)
 
 total <- total%>%
-  select(DateTime_1, Flux_eos1, Flux_eos2)
+  select(DateTime_1, CO2_Soil_ppm_eos1, CO2_Soil_ppm_eos2)
 
-plot <- ggplot(total)+
+#plot <- ggplot(total)+
   geom_line(aes(x= DateTime_1, y= Flux_eos1)) +
   labs(x = "Time", y = "Flux")
 plot
   
-flux_comp = ggplot() + 
-  geom_point(data = total, aes(x = DateTime_1, y = Flux_eos1), color = "blue") +
-  geom_point(data = total, aes(x = DateTime_1, y = Flux_eos2), color = "red") +
+co2_comp = ggplot() + 
+  geom_point(data = total, aes(x = DateTime_1, y = CO2_Soil_ppm_eos1), color = "blue") +
+  geom_point(data = total, aes(x = DateTime_1, y = CO2_Soil_ppm_eos2), color = "red") +
   xlab('Time') +
-  ylab('Flux') +
-  ggtitle('Flux Comparison') 
+  ylab('CO2') +
+  ggtitle('CO2 Comparison') 
+plot
 
-print(flux_comp)
+
+print(co2_comp)

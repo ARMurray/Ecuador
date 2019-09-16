@@ -3,14 +3,62 @@ library(ggplot2)
 library(here)
 library(dplyr)
 
-date <- 'Aug13'
+date <- 'Aug9'
+
+### Get a list of all the files
+Aug9_Files <- list.files(here::here("2019 picarro/08/09"),pattern = '.dat')
+
+#create an empty data.frame
+allAug9Data <- read.table(here::here("2019 picarro/08/09",Aug9_Files[1]), header= TRUE)
+
+
+### Combine all Aug9 data
+for(i in 2:length(Aug9_Files)){
+  file <- Aug9_Files[i]
+  data <- read.table(here::here("2019 picarro/08/09",file), header = TRUE)
+  allAug9Data <- rbind(allAug9Data,data)
+}
+
+allAug9Data <- allAug9Data %>%
+  select(DATE, TIME, X12CO2, Delta_Raw_iCO2)
+#allAug9Data$Time_fix <- as.POSIXct(as.character(allAug9Data$TIME), format = "%H:%M:%OS")
+
+
+# Combine Date and time into one column
+allAug9Data$DateTime <- paste0(allAug9Data$DATE," ",substr(allAug9Data$TIME,1,8))
+
+# Convert to PosixCT
+allAug9Data$PosixCT <- as.POSIXct(allAug9Data$DateTime, format = '%Y-%m-%d %H:%M:%OS')
+
+allAug9Data <- allAug9Data %>%
+  select(PosixCT, X12CO2, Delta_Raw_iCO2)
+
+allAug9Data <- allAug9Data[c(58000:92000), ]
+plot <- ggplot(allAug9Data)+
+  geom_point(aes(x= PosixCT, y= X12CO2)) +
+  labs(x = "Time", y = "CO2")
+plot
+
+
+allAug9Data <- allAug9Data[c(52670:82600), ]
+
+allAug9Data <- allAug9Data[c(3705:15765), ]
+plot <- ggplot(allAug9Data)+
+  geom_line(aes(x= Time_fix, y= X12CO2)) +
+  labs(x = "Time", y = "CO2")
+plot
+
 #Ok first let's bring in the data and clean her up a bit 
-Aug13.1 <- read.table(here("2019 picarro/08/13/CFIDS2089-20190813-164950Z-DataLog_User.dat"), header=TRUE)
+Aug9.1 <- read.table(here("2019 picarro/08/09/Picarro0809_1351_1422.dat"), header=TRUE)
 
-
-Aug13.1 <- Aug13.1 %>%
+####separate(Aug9.1, Aug9.1$DATE, into = ("Year","Month","Day"), sep = "[^[:-:]]+")
+#Aug9.1$dateTime <- as.POSIXct(as.character(paste0(Aug9.1$DATE," ",Aug9.1$TIME)), format = "%m/%d/%Y %H:%M:%OS")
+Aug9.1 <- Aug9.1 %>%
   select(DATE, TIME, X12CO2, Delta_Raw_iCO2)
 Aug13.1 <- Aug13.1[c(90:2060), ]
+
+
+
 
 write.csv(Aug13.1,here("Picarro/EOSTransects/081319/", "Aug13.1.csv"))
 
