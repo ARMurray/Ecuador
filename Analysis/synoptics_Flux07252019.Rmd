@@ -162,25 +162,95 @@ syn23sd <- sd(syn23$Flux_eos2)
 syn29sd <- sd(syn29$Flux_eos2)
 syn35sd <- sd(syn35$Flux_eos2)
 
-a <- data.frame(AverageFlux = c(syn1avg,syn5avg,syn10avg,syn14avg,waterfallavg,syn23avg,syn29avg,syn35avg))
-rownames(a) <- c("syn1", "syn5", "syn10", "syn14", "waterfall", "syn23", "syn29", "syn35")
-kable(a, format = "markdown", row.names = TRUE)
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, waterfallavg, syn14avg, syn10avg, syn5avg, syn1avg)) 
 
-sd <- data.frame(StdDev=
-c(syn1sd,syn5sd,syn10sd,syn14sd,waterfallsd,syn23sd,syn29sd,syn35sd))
-rownames(sd) <- c("syn1", "syn5", "syn10", "syn14", "waterfall", "syn23", "syn29", "syn35")
-kable(sd, format = "markdown", row.names = TRUE)
+rownames(a) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
 
-a <- cbind(a,sd)
+ 
 
-avgplot <- ggplot(a)+
- geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +  
-  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2) 
+kable(a, format = "markdown", row.names = TRUE) 
 
-avgplot <- avgplot + scale_x_continuous(breaks=1:8, labels=c("syn1", "syn5", "syn10","syn14", "waterfall", "syn23", "syn29", "syn35")) +
-labs(x = "Synoptic Site", y = "Average FLux")
-        
+ 
 
-avgplot
+ 
 
-```
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd,  waterfallsd, syn14sd, syn10sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
+
+kable(sd, format = "markdown", row.names = TRUE) 
+
+ 
+
+a <- cbind(a,sd) 
+
+ 
+
+avgplot <- ggplot(a)+ 
+
+ geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +   
+
+  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)  
+
+ 
+
+avgplot <- avgplot + scale_x_continuous(breaks=1:8, labels=c("syn35", "syn29", "syn23",  "waterfall", "syn14", "syn10", "syn 5", "syn1")) + 
+
+labs(x = "Synoptic Site", y = "Average FLux") 
+
+avgplot 
+
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+waterfalldis <- 126 
+dis14 <- 143.7 
+
+dis10 <- 178.7
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, waterfalldis, dis14, dis10, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
+
+kable(dis, format = "markdown", row.names = TRUE) 
+
+ 
+
+c <- cbind(a,dis) 
+
+ 
+
+ 
+
+displot <- ggplot(c)+ 
+
+ geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "blue", size = 2) 
+
+ 
+
+#displot <- displot + scale_x_continuous(breaks=1:10, labels=c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1")) + 
+
+displot <- displot +  
+
+  labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot 
+
+ 
+
+ 
+
+``` 
