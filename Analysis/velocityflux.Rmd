@@ -231,9 +231,6 @@ displot12 <- ggplot(c)+
 
 displot12
 
- 
-
- 
 
 ``` 
 
@@ -359,11 +356,6 @@ avgplot <- ggplot(c) +
 labs(x = "Synoptic Site Distance from Wetland (m) (8-06-2019)", y = "Average FLux (μmol/CO2/m2/s)")
 avgplot
 
-combined1 <- displot12 + 
-  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "blue", size = 2)   +
-   geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +   labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)")
-
-combined1
 
 
 ``` 
@@ -493,14 +485,6 @@ displot31 <- ggplot(c) +
 displot31
  
 
-combined2 <- combined1 + 
-
- geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="black") +   
-
-  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "black", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
-
-combined2
-
 
 ``` 
 
@@ -609,24 +593,28 @@ c <- cbind(a,dis)
 
  
 
- 
+v35 <- 2.4
+v29 <- 3
+v23 <- 14.6
+vwaterfall <- 12.5
+v14 <- 9.55
+v10<- 19.9
+v5 <- 18.3
+v1 <- 24.7
+
+velocity <- data.frame(v35, v29, v23, vwaterfall, v14, v10, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
 
 displot25 <- ggplot(c)+ 
 
- geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="green") +   
+ geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "green", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-
-
-
-combined3 <- combined2 + 
-
- geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="green") +   
-
-  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "green", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
-
-combined3
+displot25 <- displot25 +  geom_point(data = velocity, aes(distance, y= velocity), color = "tomato", size = 3)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2.5 , name = "Velocity (m/s)"), limits = c(0, 26))
+displot25
 
  
 
@@ -745,7 +733,23 @@ kable(dis, format = "markdown", row.names = TRUE)
 
 c <- cbind(a,dis) 
 
- 
+
+
+v35 <- 5.1
+v29 <- .7
+v23 <- 7.3
+v20 <- 11.6
+vwaterfall <- 3.3
+v14 <- 4.5
+v11 <- 10.75
+v8 <- 6.85
+v5 <- 7.75
+v1 <- 14.75
+
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
 
 displot18 <- ggplot(c)+ 
 
@@ -753,19 +757,8 @@ displot18 <- ggplot(c)+
 
   geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-
-
-
-combined4 <- combined3 + 
-
- geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
-
-  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "purple", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
-
-combined4
-
-  
-
+displot18 <- displot18 +  geom_point(data = velocity, aes(distance, y= velocity), color = "tomato", size = 3)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 22))
+displot18
 ``` 
 Individual Synoptic days
 
@@ -822,14 +815,3 @@ combined5 <- ggplot(syndays) +
 
 ``` 
 
-Synoptic Fluxes combined with Average and Standard Deviation of Synoptic Locations of 4 Synoptic Days
-
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-combined5
-
-combined6 <- combined4 +
- geom_errorbar(data = syndays, aes(x= dis,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="orange") +   
-
-  geom_point(data = syndays, aes(x= dis, y= AverageFlux, colour = variable), color = "orange", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)")
-combined6
-``` 
