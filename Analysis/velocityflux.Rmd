@@ -114,14 +114,7 @@ syn29 <- eos1[1245:1248,]
 
 syn35 <- eos1[1250:1252,] 
 
- 
 
-``` 
-
-
-Average Flux of Each Site 
-
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12} 
 
 syn1avg <- mean(syn1$Flux_eos2) 
 
@@ -220,19 +213,40 @@ rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "sy
 c <- cbind(a,dis) 
 
  
+v35 <- 3.7
+v29 <- 4.5
+v23 <- 9.65
+v20 <- 13.4
+vwaterfall <- 3
+v14 <- 1.45
+v11 <- 9.05
+v8 <- 23
+v5 <- 6.95
+v1 <- 17.1
 
- 
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
 
-displot12 <- ggplot(c)+ 
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
 
- geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="red") +   
+Synoptic flux paired with velocity 8-12-2019, 
+peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "red", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)")
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot12 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot12 <- displot12 + geom_point(data = velocities, aes(Distance, y= aug12V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
 
 displot12
 
-
 ``` 
+
 
 ```{r readDatas, echo=FALSE}
 #flux of synoptics 
@@ -350,21 +364,43 @@ rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "sy
 
 c <- cbind(a,dis) 
 
-avgplot <- ggplot(c) +
-  geom_point(aes(x= Distance, y= AverageFlux), color = "blue", size = 2)   +
-   geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +   
-labs(x = "Synoptic Site Distance from Wetland (m) (8-06-2019)", y = "Average FLux (μmol/CO2/m2/s)")
-avgplot
+ 
+v35 <- 1.9
+v29 <- 1.8
+v23 <- 4.3
+v20 <- 11.65
+vwaterfall <- 4
+v14 <- 1.45
+v11 <- 2.3
+v8 <- 21.15
+v5 <- 11.45
+v1 <- 15.2
 
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
 
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
 
-``` 
-combine
+Synoptic flux paired with velocity 8-6-2019, 
+peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-displot <- ggarrange(displot12, avgplot)
-displot
+
+displot6 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-6-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot6 <- displot6 + geom_point(data = velocities, aes(Distance, y= aug6V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 11)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+
+displot6
+
+
 
 ``` 
+
 
 ```{r readDatap, echo=FALSE}
 date<- "08012019"
@@ -403,7 +439,7 @@ syn35 <- eos1[2557:2560,]
 
 ```
 
-Average Flux of Each Site 7-31-2019
+
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 syn1avg <- mean(syn1$Flux_eos2)
 syn5avg <- mean(syn5$Flux_eos2)
@@ -474,17 +510,39 @@ rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "sy
 
 c <- cbind(a,dis) 
 
+
  
+v35 <- 4
+v29 <- 2.2
+v23 <- 6.85
+v20 <- 11.65
+vwaterfall <- 5.6
+v14 <- 18.45
+v11 <- 11.9
+v8 <- 23
+v5 <- 26.15
+v1 <- 19.2
 
-displot31 <- ggplot(c) +
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
 
- geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="black") +   
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "black", size = 2) + labs(x = "Synoptic Site Distance from Wetland (07-31-2019) (m)", y = "Average FLux (μmol/CO2/m2/s)") 
+Synoptic flux paired with velocity 7-31-2019, 
+peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot31 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-31-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot31 <- displot31 + geom_point(data = velocities, aes(Distance, y= jul31V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.3)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
 
 displot31
- 
-
 
 ``` 
 
@@ -591,8 +649,6 @@ rownames(dis) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "sy
 
 c <- cbind(a,dis) 
 
- 
-
 v35 <- 2.4
 v29 <- 3
 v23 <- 14.6
@@ -607,13 +663,22 @@ velocity <- t(velocity)
 velocity <- cbind(velocity, dis)
 colnames(velocity) <- c("velocity", "distance")
 
+velocities <- read.csv(here("FieldData/velocity.csv"))
+
+
+``` 
+
+Synoptic flux paired with velocity 07-25-2019, 
+peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 displot25 <- ggplot(c)+ 
 
  geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot25 <- displot25 +  geom_point(data = velocity, aes(distance, y= velocity), color = "tomato", size = 3)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2.5 , name = "Velocity (m/s)"), limits = c(0, 26))
+displot25 <- displot25 +  geom_point(data = velocities, aes(Distance, y= jul25V), color = "tomato", size = 2)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.5)) +geom_point(data = velocity, aes(distance, velocity), color = "blue", size = 3)
 displot25
 
  
@@ -656,8 +721,6 @@ syn23 <- sub.2[50:53,]
 syn29 <- sub.2[57:60,]
 syn35 <- sub.2[63:66,]
 
-```
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 syn1avg <- mean(syn1$Flux_eos2)
 syn5avg <- mean(syn5$Flux_eos2)
 syn8avg <- mean(syn8$Flux_eos2)
@@ -727,9 +790,6 @@ dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, 
 
 rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
 
-kable(dis, format = "markdown", row.names = TRUE) 
-
- 
 
 c <- cbind(a,dis) 
 
@@ -751,19 +811,29 @@ velocity <- t(velocity)
 velocity <- cbind(velocity, dis)
 colnames(velocity) <- c("velocity", "distance")
 
-displot18 <- ggplot(c)+ 
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
 
- geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+Synoptic flux paired with velocity 7-18-2019, 
+peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-displot18 <- displot18 +  geom_point(data = velocity, aes(distance, y= velocity), color = "tomato", size = 3)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 22))
+displot18 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot18 <- displot18 + geom_point(data = velocities, aes(Distance, y= jul18V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+ 
+
+
 displot18
 ``` 
+
 Individual Synoptic days
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-displot <- ggarrange(displot12, avgplot, displot31, displot25, displot18)
+displot <- ggarrange(displot12, displot6, displot31, displot25, displot18)
 displot
 
 ``` 
@@ -802,6 +872,15 @@ Averages and Standard Deviation of Synoptic Locations of 4 Synoptic Days
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
 kable(syndays, format = "markdown", row.names = TRUE)
+
+
+```
+
+Velocit of each synoptic section
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+kable(velocities, format = "markdown", row.names = TRUE)
 
 
 ```
