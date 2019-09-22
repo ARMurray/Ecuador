@@ -233,15 +233,15 @@ velocities <- read.csv(here("FieldData/velocity.csv"))
 ```
 
 Synoptic flux paired with velocity 8-12-2019, 
-peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-displot12 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+displot12 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot12 <- displot12 + geom_point(data = velocities, aes(Distance, y= aug12V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+displot12 <- displot12 + geom_point(data = velocities, aes(Distance, y= aug12V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
 
 displot12
 
@@ -385,15 +385,15 @@ velocities <- read.csv(here("FieldData/velocity.csv"))
 ```
 
 Synoptic flux paired with velocity 8-6-2019, 
-peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-displot6 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+displot6 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-6-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-6-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot6 <- displot6 + geom_point(data = velocities, aes(Distance, y= aug6V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 11)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+displot6 <- displot6 + geom_point(data = velocities, aes(Distance, y= aug6V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 11)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
 
 displot6
 
@@ -528,19 +528,20 @@ velocity <- t(velocity)
 velocity <- cbind(velocity, dis)
 colnames(velocity) <- c("velocity", "distance")
 
+
 velocities <- read.csv(here("FieldData/velocity.csv"))
 ```
 
 Synoptic flux paired with velocity 7-31-2019, 
-peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-displot31 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+displot31 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-31-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-31-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot31 <- displot31 + geom_point(data = velocities, aes(Distance, y= jul31V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.3)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+displot31 <- displot31 + geom_point(data = velocities, aes(Distance, y= jul31V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 14)) + geom_point(data = velocity, aes(x= distance, y= velocity), color = "blue", size = 3)
 
 displot31
 
@@ -669,16 +670,16 @@ velocities <- read.csv(here("FieldData/velocity.csv"))
 ``` 
 
 Synoptic flux paired with velocity 07-25-2019, 
-peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 displot25 <- ggplot(c)+ 
 
- geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+ geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot25 <- displot25 +  geom_point(data = velocities, aes(Distance, y= jul25V), color = "tomato", size = 2)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.5)) +geom_point(data = velocity, aes(distance, velocity), color = "blue", size = 3)
+displot25 <- displot25 +  geom_point(data = velocities, aes(Distance, y= jul25V), color = "steelblue2", size = 2)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.5)) +geom_point(data = velocity, aes(distance, velocity), color = "blue", size = 3)
 displot25
 
  
@@ -815,15 +816,15 @@ velocities <- read.csv(here("FieldData/velocity.csv"))
 ```
 
 Synoptic flux paired with velocity 7-18-2019, 
-peach points are velocities measured between each site, blue is velocity of synoptic sites found from interpolation, Purple is flux.
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-displot18 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
+displot18 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
 
-  geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-displot18 <- displot18 + geom_point(data = velocities, aes(Distance, y= jul18V), color = "tomato", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+displot18 <- displot18 + geom_point(data = velocities, aes(Distance, y= jul18V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
  
 
 
@@ -876,7 +877,7 @@ kable(syndays, format = "markdown", row.names = TRUE)
 
 ```
 
-Velocit of each synoptic section
+Velocity of each synoptic section
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
