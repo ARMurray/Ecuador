@@ -1,0 +1,897 @@
+
+
+title: "Flux at Synoptic Points" 
+
+author: "Chloe" 
+
+date: "8/12/2019" 
+
+output: html_document 
+
+
+ 
+
+```{r setup, include=FALSE} 
+
+knitr::opts_chunk$set(echo = TRUE) 
+
+# Plots and Analysis 
+
+library(here) 
+
+library(ggplot2) 
+
+library(tidyr) 
+
+library(dplyr) 
+
+library(wesanderson) 
+
+library('knitr') 
+library(ggpubr)
+library(miscTools)
+library(matrixStats)
+
+ 
+
+``` 
+
+ 
+
+## Plots and Analysis 
+
+ 
+
+```{r readData2, echo=FALSE} 
+
+#flux of synoptics  
+
+ 
+
+date<- "08012019" 
+
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_08142019.csv"))) 
+
+eos2$Year <- paste0("20",eos2$Year) 
+
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y%H:%M:%OS") 
+
+eos2 <- eos2%>% 
+
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.., 
+
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode) 
+
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode") 
+
+ 
+
+ 
+
+#eos2$Flux_eos2 <- as.numeric(eos2$Flux_eos2) 
+
+eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2)) 
+
+  
+
+ 
+
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_08132019.1.csv"))) 
+
+eos1$Year <- paste0("20",eos1$Year) 
+
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y%H:%M:%OS") 
+
+eos1 <- eos1%>% 
+
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm., 
+
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode) 
+
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode") 
+
+ 
+
+syn1 <- eos2[3712:3715,] 
+
+syn5 <- eos2[3717:3720,] 
+
+syn8 <- eos2[3722:3725,] 
+
+syn11 <- eos2[3728:3721,] 
+
+syn14 <- eos2[3735:3738,] 
+
+ 
+
+waterfall <- eos1[1229:1232,] 
+
+syn20 <- eos1[1234:1237,] 
+
+syn23 <- eos1[1239:1242,] 
+
+syn29 <- eos1[1245:1248,] 
+
+syn35 <- eos1[1250:1252,] 
+
+
+
+syn1avg <- mean(syn1$Flux_eos2) 
+
+syn5avg <- mean(syn5$Flux_eos2) 
+
+syn8avg <- mean(syn8$Flux_eos2) 
+
+syn11avg <- mean(syn11$Flux_eos2) 
+
+syn14avg <- mean(syn14$Flux_eos2) 
+
+waterfallavg <- mean(waterfall$Flux_eos1) 
+
+syn20avg <- mean(syn20$Flux_eos1) 
+
+syn23avg <- mean(syn23$Flux_eos1) 
+
+syn29avg <- mean(syn29$Flux_eos1) 
+
+syn35avg <- mean(syn35$Flux_eos1) 
+
+ 
+
+syn1sd <- sd(syn1$Flux_eos2) 
+
+syn5sd <- sd(syn5$Flux_eos2) 
+
+syn8sd <- sd(syn8$Flux_eos2) 
+
+syn11sd <- sd(syn11$Flux_eos2) 
+
+syn14sd <- sd(syn14$Flux_eos2) 
+
+waterfallsd <- sd(waterfall$Flux_eos1) 
+
+syn20sd <- sd(syn20$Flux_eos1) 
+
+syn23sd <- sd(syn23$Flux_eos1) 
+
+syn29sd <- sd(syn29$Flux_eos1) 
+
+syn35sd <- sd(syn35$Flux_eos1) 
+
+ 
+
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, syn20avg, waterfallavg, syn14avg, syn11avg, syn8avg, syn5avg, syn1avg)) 
+
+rownames(a) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+ 
+ 
+
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd, syn20sd, waterfallsd, syn14sd, syn11sd, syn8sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+asyn08122019 <- a
+ssyn08122019 <- sd
+ 
+
+a <- cbind(a,sd) 
+
+ 
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+dis20 <- 94.1 
+
+waterfalldis <- 126 
+
+dis14 <- 143.7 
+
+dis11 <- 169.9 
+
+dis8 <- 194.9 
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, dis11, dis8, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+ 
+
+c <- cbind(a,dis) 
+
+ 
+v35 <- 3.7
+v29 <- 4.5
+v23 <- 9.65
+v20 <- 13.4
+vwaterfall <- 3
+v14 <- 1.45
+v11 <- 9.05
+v8 <- 23
+v5 <- 6.95
+v1 <- 17.1
+
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
+
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
+
+Synoptic flux paired with velocity 8-12-2019, 
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot12 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot12 <- displot12 + geom_point(data = velocities, aes(Distance, y= aug12V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+
+displot12
+
+``` 
+
+
+```{r readDatas, echo=FALSE}
+#flux of synoptics 
+
+date<- "08012019"
+
+
+
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_08142019.csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y%H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+#eos2$Flux_eos2 <- as.numeric(eos2$Flux_eos2)
+eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
+ 
+
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_08132019.1.csv")))
+eos1$Year <- paste0("20",eos1$Year)
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y%H:%M:%OS")
+eos1 <- eos1%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+
+
+syn1 <- eos1[546:549,]
+syn5 <- eos1[551:454,]
+syn8 <- eos1[556:559,]
+syn11 <- eos1[561:564,]
+syn14 <- eos1[567:570,]
+waterfall <- eos2[3172:3175,]
+syn20 <- eos2[3178:3181,]
+syn23 <- eos2[3183:3186,]
+syn29 <- eos2[3189:3192,]
+syn35 <- eos2[3195:3198,]
+
+```
+
+
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+syn1avg <- mean(syn1$Flux_eos1)
+syn5avg <- mean(syn5$Flux_eos1)
+syn8avg <- mean(syn8$Flux_eos1)
+syn11avg <- mean(syn11$Flux_eos1)
+syn14avg <- mean(syn14$Flux_eos1)
+waterfallavg <- mean(waterfall$Flux_eos2)
+syn20avg <- mean(syn20$Flux_eos2)
+syn23avg <- mean(syn23$Flux_eos2)
+syn29avg <- mean(syn29$Flux_eos2)
+syn35avg <- mean(syn35$Flux_eos2)
+
+syn1sd <- sd(syn1$Flux_eos1)
+syn5sd <- sd(syn5$Flux_eos1)
+syn8sd <- sd(syn8$Flux_eos1)
+syn11sd <- sd(syn11$Flux_eos1)
+syn14sd <- sd(syn14$Flux_eos1)
+waterfallsd <- sd(waterfall$Flux_eos2)
+syn20sd <- sd(syn20$Flux_eos2)
+syn23sd <- sd(syn23$Flux_eos2)
+syn29sd <- sd(syn29$Flux_eos2)
+syn35sd <- sd(syn35$Flux_eos2)
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, syn20avg, waterfallavg, syn14avg, syn11avg, syn8avg, syn5avg, syn1avg)) 
+
+rownames(a) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+ 
+
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd, syn20sd, waterfallsd, syn14sd, syn11sd, syn8sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+asyn08062019 <- a
+ssyn08062019 <- sd
+
+a <- cbind(a,sd) 
+
+ 
+
+
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+dis20 <- 94.1 
+
+waterfalldis <- 126 
+
+dis14 <- 143.7 
+
+dis11 <- 169.9 
+
+dis8 <- 194.9 
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, dis11, dis8, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+
+c <- cbind(a,dis) 
+
+ 
+v35 <- 1.9
+v29 <- 1.8
+v23 <- 4.3
+v20 <- 11.65
+vwaterfall <- 4
+v14 <- 1.45
+v11 <- 2.3
+v8 <- 21.15
+v5 <- 11.45
+v1 <- 15.2
+
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
+
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
+
+Synoptic flux paired with velocity 8-6-2019, 
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot6 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-6-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot6 <- displot6 + geom_point(data = velocities, aes(Distance, y= aug6V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 11)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+
+displot6
+
+
+
+``` 
+
+
+```{r readDatap, echo=FALSE}
+date<- "08012019"
+
+
+
+
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y%H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
+#eos1$Year <- paste0("20",eos1$Year)
+#eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos1 <- eos1%>%
+  select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
+        CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+
+
+
+syn1 <- eos2[2177:2180,]
+syn5 <- eos2[2183:2186,]
+syn8 <- eos2[2188:2191,]
+syn11 <- eos2[2193:2196,]
+syn14 <- eos2[2200:2203,]
+waterfall <- eos1[2534:2537,]
+syn20 <- eos1[2540:2543,]
+syn23 <- eos1[2546:2549,]
+syn29 <- eos1[2552:2555,]
+syn35 <- eos1[2557:2560,]
+
+```
+
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+syn1avg <- mean(syn1$Flux_eos2)
+syn5avg <- mean(syn5$Flux_eos2)
+syn8avg <- mean(syn8$Flux_eos2)
+syn11avg <- mean(syn11$Flux_eos2)
+syn14avg <- mean(syn14$Flux_eos2)
+waterfallavg <- mean(waterfall$Flux_eos1)
+syn20avg <- mean(syn20$Flux_eos1)
+syn23avg <- mean(syn23$Flux_eos1)
+syn29avg <- mean(syn29$Flux_eos1)
+syn35avg <- mean(syn35$Flux_eos1)
+
+syn1sd <- sd(syn1$Flux_eos2)
+syn5sd <- sd(syn5$Flux_eos2)
+syn8sd <- sd(syn8$Flux_eos2)
+syn11sd <- sd(syn11$Flux_eos2)
+syn14sd <- sd(syn14$Flux_eos2)
+waterfallsd <- sd(waterfall$Flux_eos1)
+syn20sd <- sd(syn20$Flux_eos1)
+syn23sd <- sd(syn23$Flux_eos1)
+syn29sd <- sd(syn29$Flux_eos1)
+syn35sd <- sd(syn35$Flux_eos1)
+
+
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, syn20avg, waterfallavg, syn14avg, syn11avg, syn8avg, syn5avg, syn1avg)) 
+
+rownames(a) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd, syn20sd, waterfallsd, syn14sd, syn11sd, syn8sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+asyn07312019 <- a
+ssyn07312019 <- sd
+
+a <- cbind(a,sd) 
+
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+dis20 <- 94.1 
+
+waterfalldis <- 126 
+
+dis14 <- 143.7 
+
+dis11 <- 169.9 
+
+dis8 <- 194.9 
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, dis11, dis8, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+
+c <- cbind(a,dis) 
+
+
+ 
+v35 <- 4
+v29 <- 2.2
+v23 <- 6.85
+v20 <- 11.65
+vwaterfall <- 5.6
+v14 <- 18.45
+v11 <- 11.9
+v8 <- 23
+v5 <- 26.15
+v1 <- 19.2
+
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
+
+
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
+
+Synoptic flux paired with velocity 7-31-2019, 
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot31 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-31-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot31 <- displot31 + geom_point(data = velocities, aes(Distance, y= jul31V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 14)) + geom_point(data = velocity, aes(x= distance, y= velocity), color = "blue", size = 3)
+
+displot31
+
+``` 
+
+```{r readData, echo=FALSE}
+#flux of synoptics 
+
+date<- "07292019"
+
+
+# eos2 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+# Subset data so only records at 5 minute intervals are retained
+#sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
+#sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+# eos1 data
+eos1 <- read.csv(here("FieldData/EosFD","eos1_FIX_07312019.csv"))
+#eos1$DateTime <- as.POSIXct(eos1$DateTime, format = "%m/%d/%Y %H:%M:%OS")
+#eos2$dateTime <- as.POSIXct(as.character((eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+# Subset data so only records at 5 minute intervals are retained
+#sub.11 <- subset(eos1, format(DateTime,'%OS')=='00')
+#sub.22 <- subset(sub.11, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+
+syn1 <- eos1[1854:1857,]
+syn5 <- eos1[1860:1863,]
+syn10 <- eos1[1871:1873,]
+syn14 <- eos1[1879:1882,]
+waterfall <- eos2[1158:1161,]
+syn23 <- eos2[1169:1172,]
+syn29 <- eos2[1175:1178,]
+syn35 <- eos2[1180:1183,]
+
+```
+
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+syn1avg <- mean(syn1$Flux_1)
+syn5avg <- mean(syn5$Flux_1)
+syn10avg <- mean(syn10$Flux_1)
+syn14avg <- mean(syn14$Flux_1)
+waterfallavg <- mean(waterfall$Flux_eos2)
+syn23avg <- mean(syn23$Flux_eos2)
+syn29avg <- mean(syn29$Flux_eos2)
+syn35avg <- mean(syn35$Flux_eos2)
+
+syn1sd <- sd(syn1$Flux_1)
+syn5sd <- sd(syn5$Flux_1)
+syn10sd<- sd(syn10$Flux_1)
+syn14sd <- sd(syn14$Flux_1)
+waterfallsd <- sd(waterfall$Flux_eos2)
+syn23sd <- sd(syn23$Flux_eos2)
+syn29sd <- sd(syn29$Flux_eos2)
+syn35sd <- sd(syn35$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, waterfallavg, syn14avg, syn10avg, syn5avg, syn1avg)) 
+
+rownames(a) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
+
+
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd,  waterfallsd, syn14sd, syn10sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
+
+
+asyn07252019 <- a
+ssyn07252019 <- sd
+
+a <- cbind(a,sd) 
+
+
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+waterfalldis <- 126 
+dis14 <- 143.7 
+
+dis10 <- 178.7
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, waterfalldis, dis14, dis10, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "waterfall", "syn14", "syn10", "syn 5", "syn1") 
+
+
+c <- cbind(a,dis) 
+
+v35 <- 2.4
+v29 <- 3
+v23 <- 14.6
+vwaterfall <- 12.5
+v14 <- 9.55
+v10<- 19.9
+v5 <- 18.3
+v1 <- 24.7
+
+velocity <- data.frame(v35, v29, v23, vwaterfall, v14, v10, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
+
+velocities <- read.csv(here("FieldData/velocity.csv"))
+
+
+``` 
+
+Synoptic flux paired with velocity 07-25-2019, 
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+displot25 <- ggplot(c)+ 
+
+ geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot25 <- displot25 +  geom_point(data = velocities, aes(Distance, y= jul25V), color = "steelblue2", size = 2)  + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 13.5)) +geom_point(data = velocity, aes(distance, velocity), color = "blue", size = 3)
+displot25
+
+ 
+
+``` 
+
+```{r readDatfa, echo=FALSE}
+#flux of synoptics 
+
+date<- "07182019"
+
+
+# eos1 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+# Subset data so only records at 5 minute intervals are retained
+sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
+sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+sub.2 <- sub.2[500:565,]
+rownames(sub.2) <- NULL
+#this above code is good
+
+syn1 <- sub.2[2:6,]
+syn5 <- sub.2[8:11,]
+syn8 <- sub.2[13:17,]
+syn8 <- syn8[which(syn8$Flux_eos2 > 0), ]
+syn11 <- sub.2[19:22,]
+syn14 <- sub.2[27:30,]
+waterfall <- sub.2[36:39,]
+syn20 <- sub.2[44:47,]
+syn23 <- sub.2[50:53,]
+syn29 <- sub.2[57:60,]
+syn35 <- sub.2[63:66,]
+
+syn1avg <- mean(syn1$Flux_eos2)
+syn5avg <- mean(syn5$Flux_eos2)
+syn8avg <- mean(syn8$Flux_eos2)
+syn11avg <- mean(syn11$Flux_eos2)
+syn14avg <- mean(syn14$Flux_eos2)
+waterfallavg <- mean(waterfall$Flux_eos2)
+syn20avg <- mean(syn20$Flux_eos2)
+syn23avg <- mean(syn23$Flux_eos2)
+syn29avg <- mean(syn29$Flux_eos2)
+syn35avg <- mean(syn35$Flux_eos2)
+
+syn1sd <- sd(syn1$Flux_eos2)
+syn5sd <- sd(syn5$Flux_eos2)
+syn8sd <- sd(syn8$Flux_eos2)
+syn11sd <- sd(syn11$Flux_eos2)
+syn14sd <- sd(syn14$Flux_eos2)
+waterfallsd <- sd(waterfall$Flux_eos2)
+syn20sd <- sd(syn20$Flux_eos2)
+syn23sd <- sd(syn23$Flux_eos2)
+syn29sd <- sd(syn29$Flux_eos2)
+syn35sd <- sd(syn35$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(syn35avg, syn29avg, syn23avg, syn20avg, waterfallavg, syn14avg, syn11avg, syn8avg, syn5avg, syn1avg)) 
+
+rownames(a) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+ 
+
+sd <- data.frame(StdDev= 
+
+c(syn35sd, syn29sd, syn23sd, syn20sd, waterfallsd, syn14sd, syn11sd, syn8sd, syn5sd, syn1sd)) 
+
+rownames(sd) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+asyn07182019 <- a
+ssyn07182019 <- sd
+ 
+
+a <- cbind(a,sd) 
+
+ 
+
+ 
+
+dis35 <- 0 
+
+dis29 <- 37.4 
+
+dis23 <- 75.9 
+
+dis20 <- 94.1 
+
+waterfalldis <- 126 
+
+dis14 <- 143.7 
+
+dis11 <- 169.9 
+
+dis8 <- 194.9 
+
+dis5 <- 217.6 
+
+dis1<- 245.2 
+
+dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, dis11, dis8, dis5, dis1)) 
+
+rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+
+
+c <- cbind(a,dis) 
+
+
+
+v35 <- 5.1
+v29 <- .7
+v23 <- 7.3
+v20 <- 11.6
+vwaterfall <- 3.3
+v14 <- 4.5
+v11 <- 10.75
+v8 <- 6.85
+v5 <- 7.75
+v1 <- 14.75
+
+velocity <- data.frame(v35, v29, v23, v20, vwaterfall, v14, v11, v8, v5, v1)
+velocity <- t(velocity)
+velocity <- cbind(velocity, dis)
+colnames(velocity) <- c("velocity", "distance")
+
+velocities <- read.csv(here("FieldData/velocity.csv"))
+```
+
+Synoptic flux paired with velocity 7-18-2019, 
+light blue points are velocities measured between each site, dark blue points are velocity of synoptic sites found from interpolation, red is flux.
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+displot18 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="firebrick3") +   
+
+  geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+displot18 <- displot18 + geom_point(data = velocities, aes(Distance, y= jul18V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 2 , name = "Velocity (m/s)"), limits = c(0, 12)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+ 
+
+
+displot18
+``` 
+
+Individual Synoptic days
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+displot <- ggarrange(displot12, displot6, displot31, displot25, displot18)
+displot
+
+``` 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+#syn07252019
+#syn07252019 <- data.matrix(syn07252019)
+#New <- matrix(c(), nrow = 1, ncol = 2)
+#syn07252019 <- insertRow(syn07252019, New, 4)
+
+synopticdayavg <- cbind(asyn08122019, asyn08062019, asyn07312019, asyn07182019)
+colnames(synopticdayavg) <- c("Flux0812", "Flux0806",  "Flux0731",  "Flux0718") 
+
+syndayavg <- data.frame(rowMeans(synopticdayavg))
+synopticdayavg <- t(synopticdayavg)
+syndaysd <- data.frame(colSds(synopticdayavg))
+rownames(syndaysd) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+synopticdayavg <- t(synopticdayavg)
+syndays <- cbind(syndayavg, syndaysd, dis)
+colnames(syndays) <- c("AverageFlux", "StdDev", "dis")
+
+```
+
+```
+
+Combined Synoptic Day Flux Data
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+kable(synopticdayavg, format = "markdown", row.names = TRUE)
+
+
+```
+
+Averages and Standard Deviation of Synoptic Locations of 4 Synoptic Days
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+kable(syndays, format = "markdown", row.names = TRUE)
+
+
+```
+
+Velocity of each synoptic section
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+kable(velocities, format = "markdown", row.names = TRUE)
+
+
+```
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+combined5 <- ggplot(syndays) +
+ geom_errorbar(aes(x= dis,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="orange") +   
+
+  geom_point(aes(x= dis, y= AverageFlux), color = "orange", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+``` 
+

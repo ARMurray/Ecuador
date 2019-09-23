@@ -10,7 +10,7 @@ library(lubridate)
 
 date <- "08022019"
 
-EC1 <- read.csv(here("FieldData/EC", paste0("EC_1_", date,".csv")), skip = 1)
+EC1 <- read.csv("C:/Users/aestacio/Downloads/EcuadorFieldData/Ecuador/FieldData/EC/EC_1_08022019.csv", skip = 1)
 EC1 <- EC1[,2:4]
 
 colnames(EC1) <- c("DateTime","EC","tempC")
