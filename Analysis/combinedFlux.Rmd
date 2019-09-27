@@ -116,9 +116,6 @@ syn35 <- eos1[1250:1252,]
 
 ``` 
 
-
-Average Flux of Each Site 
-
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12} 
 
 syn1avg <- mean(syn1$Flux_eos2) 
@@ -217,9 +214,13 @@ rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "sy
 
 c <- cbind(a,dis) 
 
- 
+kable(dis, format = "markdown", row.names = TRUE)
+``` 
 
- 
+Average Flux of Each Site 8-12-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}  
+
 
 displot12 <- ggplot(c)+ 
 
@@ -278,7 +279,7 @@ syn35 <- eos2[3195:3198,]
 ```
 
 
-Average Flux of Each Site
+Average Flux of Each Site 8-6-2019
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 syn1avg <- mean(syn1$Flux_eos1)
 syn5avg <- mean(syn5$Flux_eos1)
@@ -361,14 +362,14 @@ combined1 <- displot12 +
   geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "blue", size = 2)   +
    geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +   labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)")
 
-combined1
+#combined1
 
 
 ``` 
-combine
+
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 displot <- ggarrange(displot12, avgplot)
-displot
+#displot
 
 ``` 
 
@@ -497,7 +498,7 @@ combined2 <- combined1 +
 
   geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "black", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-combined2
+#combined2
 
 
 ``` 
@@ -543,7 +544,8 @@ syn35 <- eos2[1180:1183,]
 
 ```
 
-Average Flux of Each Site
+Average Flux of Each Site 7-25-2019
+
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 syn1avg <- mean(syn1$Flux_1)
 syn5avg <- mean(syn5$Flux_1)
@@ -615,7 +617,7 @@ displot25 <- ggplot(c)+
 
   geom_point(aes(x= Distance, y= AverageFlux), color = "green", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-25-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-
+displot25
 
 
 combined3 <- combined2 + 
@@ -624,7 +626,7 @@ combined3 <- combined2 +
 
   geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "green", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
 
-combined3
+#combined3
 
  
 
@@ -737,13 +739,18 @@ dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, 
 
 rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
 
-kable(dis, format = "markdown", row.names = TRUE) 
+
 
  
 
 c <- cbind(a,dis) 
 
  
+```
+
+Average Flux of Each Site 7-18-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
 displot18 <- ggplot(c)+ 
 
@@ -752,13 +759,20 @@ displot18 <- ggplot(c)+
   geom_point(aes(x= Distance, y= AverageFlux), color = "purple", size = 2) +   labs(x = "Synoptic Site Distance from Wetland (m) (7-18-3029)", y = "Average FLux (μmol/CO2/m2/s)") 
 
 
-
+displot18
 
 combined4 <- combined3 + 
 
  geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
 
   geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "purple", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") 
+
+ 
+```
+
+Average Flux of Each Site on all synoptic days
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
 combined4
 
@@ -768,6 +782,7 @@ combined4
 Individual Synoptic days
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
 displot <- ggarrange(displot12, avgplot, displot31, displot25, displot18)
 displot
 
@@ -830,4 +845,27 @@ combined6 <- combined4 +
 
   geom_point(data = syndays, aes(x= dis, y= AverageFlux, colour = variable), color = "orange", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)")
 combined6
+
+
+
 ``` 
+
+Synoptic Flux measurements compared to CO2 ppm of stream
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+v <- read.csv(here("FieldData/Vaisala/Synoptics2.csv"))
+
+ppmplot <- ggplot(v) + geom_point(aes(x= Distance, y= Syn1_071819), color = "purple", size = 2) +
+   geom_point(aes(x= Distance, y= Syn2_072519), color = "green", size = 2) +
+   geom_point(aes(x= Distance, y= Syn4_073119), color = "black", size = 2) + 
+  geom_point(aes(x= Distance, y= Syn5_080619), color = "blue", size = 2) +
+  geom_point(aes(x= Distance, y= Syn6_081219), color = "red", size = 2) 
+ppmplot
+combined4
+
+plotz <- ggarrange(ppmplot, combined4)
+plotz
+
+``` 
+
