@@ -51,7 +51,7 @@ library(matrixStats)
 
 date<- "08012019" 
 
-eos2 <- read.csv(here(FieldData/EosFD/"eos2_08142019.csv")) 
+eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv")) 
 
 eos2$Year <- paste0("20",eos2$Year) 
 
@@ -242,10 +242,16 @@ displot12 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= Ave
   geom_point(aes(x= Distance, y= AverageFlux), color = "firebrick3", size = 3) +   labs(x = "Synoptic Site Distance from Wetland (m) (8-12-2019)", y = "Average FLux (μmol/CO2/m2/s)") 
 
 displot12 <- displot12 + geom_point(data = velocities, aes(Distance, y= aug12V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 1 , name = "Velocity (m/s)"), limits = c(0, 25)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
+displot12
+```
 
-velocities <- row.names(velocities$Distance)
+velocity vs flux 8-12-2019
 
-#vf12 <- match_df(c, velocities)
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+vf <- cbind(c, velocity)
+vf12 <- ggplot() + geom_point(data = vf, aes(velocity, y= AverageFlux), color = "steelblue3", size =3) 
+vf12
 
 ``` 
 
@@ -402,6 +408,15 @@ displot6
 
 
 ``` 
+velocity vs flux 8-6-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+vf <- cbind(c, velocity)
+vf6 <- ggplot() + geom_point(data = vf, aes(velocity, y= AverageFlux), color = "steelblue3", size =3) 
+vf6
+
+``` 
 
 
 ```{r readDatap, echo=FALSE}
@@ -551,6 +566,16 @@ wowplot
 
 ``` 
 
+velocity vs flux 7-31-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+vf <- cbind(c, velocity)
+vf31 <- ggplot() + geom_point(data = vf, aes(velocity, y= AverageFlux), color = "steelblue3", size =3) 
+vf31
+
+``` 
+
 ```{r readData, echo=FALSE}
 #flux of synoptics 
 
@@ -687,6 +712,16 @@ displot25 <- displot25 +  geom_point(data = velocities, aes(Distance, y= jul25V)
 displot25
 
  
+
+``` 
+
+velocity vs flux 7-25-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+vf <- cbind(c, velocity)
+vf25 <- ggplot() + geom_point(data = vf, aes(velocity, y= AverageFlux), color = "steelblue3", size =3) 
+vf25
 
 ``` 
 
@@ -830,9 +865,17 @@ displot18 <- ggplot(c) + geom_errorbar(aes(x= Distance,y= AverageFlux, ymin= Ave
 
 displot18 <- displot18 + geom_point(data = velocities, aes(Distance, y= jul18V), color = "steelblue2", size = 2) + scale_y_continuous(sec.axis = sec_axis( ~ . * 1 , name = "Velocity (m/s)"), limits = c(0, 25)) + geom_point(data = velocity, aes(distance, y= velocity), color = "blue", size = 3)
  
-vf18 <- ggplot() + geom_point(data = velocities, aes(Distance, y= jul18V), color = "steelblue2", size = 2) 
 ``` 
 
+velocity vs flux 7-18-2019
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+vf <- cbind(c, velocity)
+vf18 <- ggplot() + geom_point(data = vf, aes(velocity, y= AverageFlux), color = "steelblue3", size =3) 
+vf18
+
+``` 
 Individual Synoptic days
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
