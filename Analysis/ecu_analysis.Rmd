@@ -1,0 +1,101 @@
+---
+title: "Ecuador: Data Analysis"
+author: "Maribel Herrera"
+date: "9/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+```
+## Synoptic- Vaisala
+```{r synoptic, echo=FALSE}
+
+Synoptics <- read.csv(here("FieldData/Vaisala/Synoptics2.csv"))
+
+plot<- ggplot(Synoptics) +
+  geom_point(aes(x= Distance, y= Syn1_071819), color= "blue", size = 2) +
+  geom_point(aes(x= Distance, y= Syn2_072519), color= "cornflowerblue", size = 2) +
+  geom_point(aes(x= Distance, y= Syn3_072919), color= "darkgoldenrod1", size = 2) +
+  geom_point(aes(x= Distance, y= Syn4_073119), color= "darkolivegreen3", size = 2) +
+  geom_point(aes(x= Distance, y= Syn5_080619), color= "darkgreen", size = 2) +
+  geom_point(aes(x= Distance, y= Syn6_081219), color= "darkblue", size = 2) +
+  labs(x = "Distance from Upstream (m)",y= "CO2 (ppm)") +
+  ggtitle("Synoptics")
+
+ggplotly(plot)
+
+```
+
+## Synoptic Average & Standard Deviation
+
+
+```{r synavg, echo=FALSE}
+
+syn <- read.csv(here("FieldData/Vaisala/synavg.csv"))
+
+plot1 <- ggplot(syn) + 
+  geom_errorbar(aes(x= Distance, y= Avg, ymin= Avg - Stdv, ymax= Avg + Stdv), width=0.2, size=1, color="darkblue") +   
+  geom_point(aes(x= Distance, y= Avg), color = "darkblue", size = 2) +   
+  labs(x = "Distance from Upstream (m)", y = "Average CO2 (ppm)") 
+
+ggplotly(plot1)
+```
+
+## Injections
+
+|Date|Start|End|Notes|
+|:--:|:---:|:-:|:---:|
+|July 12|13:00|16:00|Started at 11:47 but had to be restarted since we had to reset sensors|
+|July 16|14:15|20:00|Night Injection|
+|July 22|16:25|19:45|Night Injection|
+|July 26|12:45|14:45|Day Injection|
+|August 1|16:00|20:00|Night Injection|
+|August 5|16:35|20:00|Night Injection|
+|August 8|12:43|15:25|Day Injection|
+
+```{r subset, echo=FALSE, warning=FALSE}
+data <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+data$DateTime <- as.POSIXct(data$DateTime)
+inj1 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-12 12:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-12 16:30:00"))
+ggplot(inj1, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+    scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #1 - July 12", x = "Time", y = "CO2 PPM", colour = "Sensor")
+```
+
+```{r inj2, echo=FALSE, warning=FALSE}
+inj2 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-16 13:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-16 21:00:00"))
+ggplot(inj2, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+    scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #2 - July 16", x = "Time", y = "CO2 PPM", colour ="Sensor")
+```
+
+
+
+```{r inj3, echo=FALSE, warning=FALSE}
+inj3 <- data%>%
+  filter(DateTime > as.POSIXct("2019-07-22 13:30:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-22 21:00:00"))
+ggplot(inj3, aes(x = DateTime))+
+  geom_point(aes(y = V1, colour = "Vaisala 1"))+
+    scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
+  geom_point(aes(y = V2, colour = "Vaisala 2"))+
+  geom_point(aes(y = V3, colour = "Vaisala 3"))+
+  geom_point(aes(y = V4, colour = "Vaisala 4"))+
+  labs(title = "Injection #3 - July 22", x = "Time", y = "CO2 PPM", colour = "Sensor")
