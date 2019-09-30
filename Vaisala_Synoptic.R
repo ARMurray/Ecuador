@@ -12,7 +12,7 @@ plot<- ggplot(Synoptics) +
   geom_point(aes(x= Distance, y= Syn4_073119), color= "darkolivegreen3", size = 2) +
   geom_point(aes(x= Distance, y= Syn5_080619), color= "darkgreen", size = 2) +
   geom_point(aes(x= Distance, y= Syn6_081219), color= "darkblue", size = 2) +
-  labs(x = "Distance from Upstream (m)",y= "CO2 (ppm)") +
+  labs(x = "Distance from Upstream (m)",y= "pCO2") +
   ggtitle("Synoptics")
 
 ggplotly(plot)
