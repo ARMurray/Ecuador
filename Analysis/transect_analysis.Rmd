@@ -1,0 +1,572 @@
+---
+title: "Flux at Collar Transects"
+author: "Chloe"
+date: "Data from 7/16/2019 measurements"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Plots and Analysis
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+library(ggpubr)
+
+```
+
+## Plots and Analysis
+
+```{r , echo=FALSE}
+#flux of synoptics 
+
+date<- "07182019"
+
+
+# eos1 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+# Subset data so only records at 5 minute intervals are retained
+sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
+sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+row.names(sub.2) <- NULL
+
+col1.1 <- sub.2[434:439,]
+col2.1 <- sub.2[442:446,]
+col3.1 <- sub.2[451:455,]
+col4.1 <- sub.2[460:464,]
+col5.1 <- sub.2[471:475,]
+col6.1 <- sub.2[479:484,]
+col7.1 <- sub.2[487:493,]
+
+```
+
+
+Flux of Collars 7-16-2019
+
+col1.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col1.1 <- select(col1.1,DateTime, Flux_eos2)
+kable(head(col1.1), format = "markdown", row.names = FALSE)
+
+```
+
+col2.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col2.1 <- select(col2.1,DateTime, Flux_eos2)
+kable(head(col2.1), format = "markdown", row.names = FALSE)
+
+```
+col3.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col3.1 <- select(col3.1,DateTime, Flux_eos2)
+kable(head(col3.1), format = "markdown", row.names = FALSE)
+
+```
+col4.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col4.1 <- select(col4.1,DateTime, Flux_eos2)
+kable(head(col4.1), format = "markdown", row.names = FALSE)
+
+```
+col5.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col5.1 <- select(col5.1,DateTime, Flux_eos2)
+kable(head(col5.1), format = "markdown", row.names = FALSE)
+
+```
+col6.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col6.1 <- select(col6.1,DateTime, Flux_eos2)
+kable(head(col6.1), format = "markdown", row.names = FALSE)
+
+```
+col7.1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col7.1 <- select(col7.1,DateTime, Flux_eos2)
+kable(head(col7.1), format = "markdown", row.names = FALSE)
+
+```
+
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+col1.1avg <- mean(col1.1$Flux_eos2)
+col2.1avg <- mean(col2.1$Flux_eos2)
+col3.1avg <- mean(col3.1$Flux_eos2)
+col4.1avg <- mean(col4.1$Flux_eos2)
+col5.1avg <- mean(col5.1$Flux_eos2)
+col6.1avg <- mean(col6.1$Flux_eos2)
+col7.1avg <- mean(col7.1$Flux_eos2)
+
+col1.1sd <- sd(col1.1$Flux_eos2)
+col2.1sd <- sd(col2.1$Flux_eos2)
+col3.1sd <- sd(col3.1$Flux_eos2)
+col4.1sd <- sd(col4.1$Flux_eos2)
+col5.1sd <- sd(col5.1$Flux_eos2)
+col6.1sd <- sd(col6.1$Flux_eos2)
+col7.1sd <- sd(col7.1$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(col1.1avg,col2.1avg,col3.1avg,col4.1avg,col5.1avg,col6.1avg,col7.1avg))
+rownames(a) <- c("col1.1", "col2.1", "col3.1", "col4.1", "col5.1", "col6.1", "col7.1")
+kable(a, format = "markdown", row.names = TRUE)
+
+sd <- data.frame(StdDev=
+c(col1.1sd,col2.1sd,col3.1sd,col4.1sd,col5.1sd,col6.1sd,col7.1sd))
+rownames(sd) <- c("col1.1", "col2.1", "col3.1", "col4.1", "col5.1", "col6.1", "col7.1")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+
+ 
+```
+
+collars 7-16-2019
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+avgplot1 <- ggplot(a)+
+ geom_errorbar(aes(x= 1:7,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(aes(x= 1:7, y= AverageFlux), color = "blue", size = 2)
+
+avgplot1 <- avgplot1 + scale_x_continuous(breaks=1:7, labels=c("col1.1", "col2.1", "col3.1", "col4.1", "col5.1", "col6.1", "col7.1")) +
+labs(x = "7-16-2019 Collar", y = "Average FLux")
+        
+
+avgplot1
+
+```
+
+```{r , echo=FALSE}
+#flux of synoptics 
+
+date<- "07222019"
+
+
+# eos1 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+# Subset data so only records at 5 minute intervals are retained
+sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
+sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+rownames(sub.2) <- NULL
+sub.2$Flux_eos2 <- as.numeric(as.character(sub.2$Flux_eos2))
+
+col1 <- sub.2[1758:1761,]
+col2 <- sub.2[1754:1757,]
+col3.2 <- sub.2[1748:1752,]
+col4.2 <- sub.2[1743:1746,]
+col5.2 <- sub.2[1711:1714,]
+col6.2 <- sub.2[1716:1719,]
+col7.2 <- sub.2[1726:1729,]
+col8.2 <- sub.2[1732:1735,]
+```
+
+
+Flux of Collars 7-22-2019
+
+col1
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col1 <- select(col1,DateTime, Flux_eos2)
+kable(head(col1), format = "markdown", row.names = FALSE)
+
+```
+
+col2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col2 <- select(col2,DateTime, Flux_eos2)
+kable(head(col2), format = "markdown", row.names = FALSE)
+
+```
+col3.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col3.2 <- select(col3.2,DateTime, Flux_eos2)
+kable(head(col3.2), format = "markdown", row.names = FALSE)
+
+```
+col4.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col4.2 <- select(col4.2,DateTime, Flux_eos2)
+kable(head(col4.2), format = "markdown", row.names = FALSE)
+
+```
+col5.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col5.2 <- select(col5.2,DateTime, Flux_eos2)
+kable(head(col5.2), format = "markdown", row.names = FALSE)
+
+```
+col6.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col6.2 <- select(col6.2,DateTime, Flux_eos2)
+kable(head(col6.2), format = "markdown", row.names = FALSE)
+
+```
+col7.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col7.2 <- select(col7.2,DateTime, Flux_eos2)
+kable(head(col7.2), format = "markdown", row.names = FALSE)
+
+```
+col8.2
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col8.2 <- select(col8.2,DateTime, Flux_eos2)
+kable(head(col8.2), format = "markdown", row.names = FALSE)
+
+```
+Average Flux of Each Site 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+col1avg <- mean(col1$Flux_eos2)
+col2avg <- mean(col2$Flux_eos2)
+col3.2avg <- mean(col3.2$Flux_eos2)
+col4.2avg <- mean(col4.2$Flux_eos2)
+col5.2avg <- mean(col5.2$Flux_eos2)
+col6.2avg <- mean(col6.2$Flux_eos2)
+col7.2avg <- mean(col7.2$Flux_eos2)
+col8.2avg <- mean(col8.2$Flux_eos2)
+
+col1sd <- sd(col1$Flux_eos2)
+col2sd <- sd(col2$Flux_eos2)
+col3.2sd <- sd(col3.2$Flux_eos2)
+col4.2sd <- sd(col4.2$Flux_eos2)
+col5.2sd <- sd(col5.2$Flux_eos2)
+col6.2sd <- sd(col6.2$Flux_eos2)
+col7.2sd <- sd(col7.2$Flux_eos2)
+col8.2sd <- sd(col8.2$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(col1avg,col2avg,col3.2avg,col4.2avg,col5.2avg,col6.2avg,col7.2avg,col8.2avg ))
+rownames(a) <- c("col1", "col2", "col3.2", "col4.2", "col5.2", "col6.2", "col7.2","col8.2")
+kable(a, format = "markdown", row.names = TRUE)
+
+sd <- data.frame(StdDev=
+c(col1sd,col2sd,col3.2sd,col4.2sd,col5.2sd,col6.2sd,col7.2sd,col8.2sd))
+rownames(sd) <- c("col1", "col2", "col3.2", "col4.2", "col5.2", "col6.2", "col7.2", "col8.2")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+
+avgplot2 <- ggplot(a)+
+ geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)
+avgplot2 <- avgplot2 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2.2", "col3", "col4", "col5", "col6", "col7","col8")) +
+labs(x = "7-22-2019 Collar", y = "Average FLux")
+        
+
+avgplot2
+
+```
+
+
+```{r , echo=FALSE}
+#flux of synoptics 
+
+date<- "07312019"
+
+
+# eos1 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
+#eos1$Year <- paste0("20",eos1$Year)
+eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
+eos1 <- eos1%>%
+  select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
+        CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+
+
+
+col1.3 <- eos1[2321:2324,]
+col2.3 <- eos1[2326:2329,]
+col3.3 <- eos1[2331:2334,]
+col4.3 <- eos1[2336:2339,]
+col5.3 <- eos2[1613:1617,]
+col6.3 <- eos2[1619:1623,]
+col7.3 <- eos2[1625:1628,]
+col8.3 <- eos2[1631:1634,]
+
+```
+
+
+Flux of Collars 7-29-2019
+
+col1.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col1.3 <- select(col1.3,DateTime, Flux_eos1)
+kable(head(col1.3), format = "markdown", row.names = FALSE)
+
+```
+
+col2.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col2.3 <- select(col2.3,DateTime, Flux_eos1)
+kable(head(col2.3), format = "markdown", row.names = FALSE)
+
+```
+col3.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col3.3 <- select(col3.3,DateTime, Flux_eos1)
+kable(head(col3.3), format = "markdown", row.names = FALSE)
+
+```
+col4.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col4.3 <- select(col4.3,DateTime, Flux_eos1)
+kable(head(col4.3), format = "markdown", row.names = FALSE)
+
+```
+col5.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col5.3 <- select(col5.3,DateTime, Flux_eos2)
+kable(head(col5.3), format = "markdown", row.names = FALSE)
+
+```
+col6.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col6.3 <- select(col6.3,DateTime, Flux_eos2)
+kable(head(col6.3), format = "markdown", row.names = FALSE)
+
+```
+col7.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col7.3 <- select(col7.3,DateTime, Flux_eos2)
+kable(head(col7.3), format = "markdown", row.names = FALSE)
+
+```
+col8.3
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col8.3 <- select(col8.3,DateTime, Flux_eos2)
+kable(head(col8.3), format = "markdown", row.names = FALSE)
+
+```
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+col1.3avg <- mean(col1.3$Flux_eos1)
+col2.3avg <- mean(col2.3$Flux_eos1)
+col3.3avg <- mean(col3.3$Flux_eos1)
+col4.3avg <- mean(col4.3$Flux_eos1)
+col5.3avg <- mean(col5.3$Flux_eos2)
+col6.3avg <- mean(col6.3$Flux_eos2)
+col7.3avg <- mean(col7.3$Flux_eos2)
+col8.3avg <- mean(col8.3$Flux_eos2)
+
+col1.3sd <- sd(col1.3$Flux_eos1)
+col2.3sd <- sd(col2.3$Flux_eos1)
+col3.3sd <- sd(col3.3$Flux_eos1)
+col4.3sd <- sd(col4.3$Flux_eos1)
+col5.3sd <- sd(col5.3$Flux_eos2)
+col6.3sd <- sd(col6.3$Flux_eos2)
+col7.3sd <- sd(col7.3$Flux_eos2)
+col8.3sd <- sd(col8.3$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(col1.3avg,col2.3avg,col3.3avg,col4.3avg,col5.3avg,col6.3avg,col7.3avg, col8.3avg))
+rownames(a) <- c("col1.3", "col2.3", "col3.3", "col4.3", "col5.3", "col6.3", "col7.3", "col8.3")
+kable(a, format = "markdown", row.names = TRUE)
+
+sd <- data.frame(StdDev=
+c(col1.3sd,col2.3sd,col3.3sd,col4.3sd,col5.3sd,col6.3sd,col7.3sd, col8.3sd))
+rownames(sd) <- c("col1.3", "col2.3", "col3.3", "col4.3", "col5.3", "col6.3", "col7.3", "col8.3")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+ 
+avgplot3 <- ggplot(a)+
+ geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)
+
+avgplot3 <- avgplot3 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8")) +
+labs(x = "7-29-2019 Collar", y = "Average FLux")
+        
+
+avgplot3
+
+```
+
+```{r , echo=FALSE}
+#flux of synoptics 
+
+date<- "08012019"
+
+
+# eos2 data
+eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+col1.4 <- eos2[2536:2539,]
+col2.4 <- eos2[2532:2535,]
+col3.4 <- eos2[2515:2517,]
+col4.4 <- eos2[2544:2547,]
+col5.4 <- eos2[2507:2510,]
+col6.4 <- eos2[2511:2514,]
+col7.4 <- eos2[2515:2517,]
+col8.4 <- eos2[2520:2523,]
+
+```
+
+
+### Flux of Collars 
+
+col1.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col1.4 <- select(col1.4,DateTime, Flux_eos2)
+kable(head(col1.4), format = "markdown", row.names = FALSE)
+
+```
+
+col2.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col2.4 <- select(col2.4,DateTime, Flux_eos2)
+kable(head(col2.4), format = "markdown", row.names = FALSE)
+
+```
+col3.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col3.4 <- select(col3.4,DateTime, Flux_eos2)
+kable(head(col3.4), format = "markdown", row.names = FALSE)
+
+```
+col4.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col4.4 <- select(col4.4,DateTime, Flux_eos2)
+kable(head(col4.4), format = "markdown", row.names = FALSE)
+
+```
+col5.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col5.4 <- select(col5.4,DateTime, Flux_eos2)
+kable(head(col5.4), format = "markdown", row.names = FALSE)
+
+```
+col6.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col6.4 <- select(col6.4,DateTime, Flux_eos2)
+kable(head(col6.4), format = "markdown", row.names = FALSE)
+
+```
+col7.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col7.4 <- select(col7.4,DateTime, Flux_eos2)
+kable(head(col7.4), format = "markdown", row.names = FALSE)
+
+```
+col8.4
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+col8.4 <- select(col8.4,DateTime, Flux_eos2)
+kable(head(col8.4), format = "markdown", row.names = FALSE)
+
+```
+Average Flux of Each Site
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+col1.4avg <- mean(col1.4$Flux_eos2)
+col2.4avg <- mean(col2.4$Flux_eos2)
+col3.4avg <- mean(col3.4$Flux_eos2)
+col4.4avg <- mean(col4.4$Flux_eos2)
+col5.4avg <- mean(col5.4$Flux_eos2)
+col6.4avg <- mean(col6.4$Flux_eos2)
+col7.4avg <- mean(col7.4$Flux_eos2)
+col8.4avg <- mean(col8.4$Flux_eos2)
+
+col1.4sd <- sd(col1.4$Flux_eos2)
+col2.4sd <- sd(col2.4$Flux_eos2)
+col3.4sd <- sd(col3.4$Flux_eos2)
+col4.4sd <- sd(col4.4$Flux_eos2)
+col5.4sd <- sd(col5.4$Flux_eos2)
+col6.4sd <- sd(col6.4$Flux_eos2)
+col7.4sd <- sd(col7.4$Flux_eos2)
+col8.4sd <- sd(col8.4$Flux_eos2)
+
+a <- data.frame(AverageFlux = c(col1.4avg,col2.4avg,col3.4avg,col4.4avg,col5.4avg,col6.4avg,col7.4avg, col8.4avg))
+rownames(a) <- c("col1.4", "col2.4", "col3.4", "col4.4", "col5.4", "col6.4", "col7.4", "col8.4")
+kable(a, format = "markdown", row.names = TRUE)
+
+sd <- data.frame(StdDev=
+c(col1.4sd,col2.4sd,col3.4sd,col4.4sd,col5.4sd,col6.4sd,col7.4sd, col8.4sd))
+rownames(sd) <- c("col1.4", "col2.4", "col3.4", "col4.4", "col5.4", "col6.4", "col7.4", "col8.4")
+kable(sd, format = "markdown", row.names = TRUE)
+
+a <- cbind(a,sd)
+
+ 
+avgplot4 <- ggplot(a)+
+ geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)
+
+avgplot4 <- avgplot4 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8")) +
+labs(x = "8-01-2019 Collar", y = "Average FLux")
+        
+
+avgplot4
+
+```
+
+
+All transect days
+
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+allplot <- ggarrange(avgplot1, avgplot2, avgplot3, avgplot4)
+allplot
+
