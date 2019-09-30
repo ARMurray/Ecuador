@@ -33,55 +33,55 @@ ggplotly(plot)
 
 
 
-ecu1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:14:11"
-                                     & alljuly30$PosixCT < "2019-07-30 15:18:47"), ]
+ecu1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:24:17"
+                                     & alljuly30$PosixCT < "2019-07-30 15:28:50"), ]
 ecu1$Sample <- as.character("ecu1")
 
-col1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:21:50"
-                         & alljuly30$PosixCT < "2019-07-30 15:25:09"), ]
+col1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:31:35"
+                         & alljuly30$PosixCT < "2019-07-30 15:35:08"), ]
 col1$Sample <- as.character("col1")
 
-col2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:28:08"
-                         & alljuly30$PosixCT < "2019-07-30 15:32:01"), ]
+col2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:38:00"
+                         & alljuly30$PosixCT < "2019-07-30 15:42:00"), ]
 col2$Sample <- as.character("col2")
 
-col3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:35:40"
-                         & alljuly30$PosixCT < "2019-07-30 15:39:00"), ]
+col3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:45:00"
+                         & alljuly30$PosixCT < "2019-07-30 15:49:00"), ]
 col3$Sample <- as.character("col3")
 
-col4 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:43:00"
-                         & alljuly30$PosixCT < "2019-07-30 15:46:00"), ]
+col4 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:52:00"
+                         & alljuly30$PosixCT < "2019-07-30 15:56:00"), ]
 col4$Sample <- as.character("col4")
 
-col5 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:55:45"
-                         & alljuly30$PosixCT < "2019-07-30 15:59:40"), ]
+col5 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:59:54"
+                         & alljuly30$PosixCT < "2019-07-30 16:03:00"), ]
 col5$Sample <- as.character("col5")
 
-ecu2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:03:00"
-                         & alljuly30$PosixCT < "2019-07-30 16:06:00"), ]
+ecu2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:05:58"
+                         & alljuly30$PosixCT < "2019-07-30 16:09:10"), ]
 ecu2$Sample <- as.character("ecu2")
 
-col6 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:11:00"
-                         & alljuly30$PosixCT < "2019-07-30 16:14:00"), ]
+col6 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:10:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:13:00"), ]
 col6$Sample <- as.character("col6")
 
-col7 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:19:21"
-                         & alljuly30$PosixCT < "2019-07-30 16:22:31"), ]
+col7 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:15:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:19:00"), ]
 col7$Sample <- as.character("col7")
 
-col8 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:25:00"
-                         & alljuly30$PosixCT < "2019-07-30 16:27:00"), ]
-col8Sample <- as.character("col8")
+col8 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:21:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:24:00"), ]
+col8$Sample <- as.character("col8")
 
-col8 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:25:00"
-                         & alljuly30$PosixCT < "2019-07-30 16:27:00"), ]
-col8Sample <- as.character("col8")
+col5test <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:26:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:29:00"), ]
+col5test$Sample <- as.character("col5test")
 
-ecu3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:31:12"
-                         & alljuly30$PosixCT < "2019-07-30 16:35:21"), ]
+ecu3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:31:57"
+                         & alljuly30$PosixCT < "2019-07-30 16:35:00"), ]
 ecu3$Sample <- as.character("ecu3")
 
-samplesjuly30 <- rbind(col1, col2, col3, ecu2, col4, col5, ecu3, col6, col7, ecu1, col8)
+samplesjuly30 <- rbind(col1, col2, col3, ecu2, col4, col5, ecu3, col6, col7, ecu1, col8, col5test)
 
 write.csv(samplesjuly30, here("Picarro/EOSTransects/072919/", "samplesjuly30.csv"))
 
@@ -112,9 +112,9 @@ col6avg <- data.frame("Sample" = "col6", "Avg_iCO2" = mean(col6$Delta_Raw_iCO2),
 col7avg <- data.frame("Sample" = "col7", "Avg_iCO2" = mean(col7$Delta_Raw_iCO2), "StdDev_iCO2" = sd(col7$Delta_Raw_iCO2))
 col8avg <- data.frame("Sample" = "col8", "Avg_iCO2" = mean(col8$Delta_Raw_iCO2), "StdDev_iCO2" = sd(col8$Delta_Raw_iCO2))
 ecu1avg <- data.frame("Sample" = "ecu4", "Avg_iCO2" = mean(ecu1$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu1$Delta_Raw_iCO2))
+col5testavg <- data.frame("Sample" = "col5test", "Avg_iCO2" = mean(col5test$Delta_Raw_iCO2), "StdDev_iCO2" = sd(col5test$Delta_Raw_iCO2))
 
 
-
-sumjuly30 <- rbind(col1avg, col2avg, col3avg, ecu2avg, col4avg, col5avg, ecu3avg, col6avg, col7avg, ecu1avg, col8avg)
+sumjuly30 <- rbind(col1avg, col2avg, col3avg, ecu2avg, col4avg, col5avg, ecu3avg, col6avg, col7avg, ecu1avg, col8avg, col5avg)
 
 write.csv(sumjuly30, here("Picarro/EOSTransects/072919/", "sumjuly30.csv"))
