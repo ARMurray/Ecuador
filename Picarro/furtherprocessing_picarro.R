@@ -6,85 +6,92 @@ library(plotly)
 library(wesanderson)
 
 #open up the cleaned file that you want to work with 
-alljuly23 <- read.csv(here("Picarro/EOSTransects/072219/alljuly23Data.csv"))
+alljuly30 <- read.csv(here("Picarro/EOSTransects/072919/alljuly30Data.csv"))
 
 #make posic.ct, posixct again
-alljuly23$PosixCT <- as.POSIXct(alljuly23$PosixCT)
+alljuly30$PosixCT <- as.POSIXct(alljuly30$PosixCT)
+
+#subset the data
+Subsjuly30 <- alljuly30[c(56370:70000), ]
 
 #Do an initial plot of C02 
-plot <- ggplot(alljuly23)+
+plot <- ggplot(alljuly30)+
 geom_point(aes(x= PosixCT, y= X12CO2)) +
 labs(x = "Time", y = "CO2") +
-ggtitle("july23 EOS Transect Pulls") 
+ggtitle("july30 EOS Transect Pulls") 
 plot
 
 #Do an initial plot of Delta_i 
-plot <- ggplot(Subsjuly23)+
+plot <- ggplot(Subsjuly30)+
 geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2)) +
 labs(x = "Time", y = "Delta_Raw") +
-ggtitle("July23 EOS Transect Pulls") 
+ggtitle("july30 EOS Transect Pulls") 
 
 plot
 ggplotly(plot)
 
 
-Subsjuly23 <- alljuly23[c(59770:69300), ]
 
-ecu1 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:14:11"
-                                     & alljuly23$PosixCT < "2019-07-23 15:18:47"), ]
+
+ecu1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:14:11"
+                                     & alljuly30$PosixCT < "2019-07-30 15:18:47"), ]
 ecu1$Sample <- as.character("ecu1")
 
-col1 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:21:50"
-                         & alljuly23$PosixCT < "2019-07-23 15:25:09"), ]
+col1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:21:50"
+                         & alljuly30$PosixCT < "2019-07-30 15:25:09"), ]
 col1$Sample <- as.character("col1")
 
-col5 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:28:08"
-                         & alljuly23$PosixCT < "2019-07-23 15:32:01"), ]
-col5$Sample <- as.character("col5")
-
-col8 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:35:40"
-                         & alljuly23$PosixCT < "2019-07-23 15:39:00"), ]
-col8$Sample <- as.character("col8")
-
-col4 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:43:00"
-                         & alljuly23$PosixCT < "2019-07-23 15:46:00"), ]
-col4$Sample <- as.character("col4")
-
-ecu2 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 15:55:45"
-                         & alljuly23$PosixCT < "2019-07-23 15:59:40"), ]
-ecu2$Sample <- as.character("ecu2")
-
-col3 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 16:03:00"
-                         & alljuly23$PosixCT < "2019-07-23 16:06:00"), ]
-col3$Sample <- as.character("col3")
-
-col7 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 16:11:00"
-                         & alljuly23$PosixCT < "2019-07-23 16:14:00"), ]
-col7$Sample <- as.character("col7")
-
-col2 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 16:19:21"
-                         & alljuly23$PosixCT < "2019-07-23 16:22:31"), ]
+col2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:28:08"
+                         & alljuly30$PosixCT < "2019-07-30 15:32:01"), ]
 col2$Sample <- as.character("col2")
 
-col6 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 16:25:00"
-                         & alljuly23$PosixCT < "2019-07-23 16:27:00"), ]
+col3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:35:40"
+                         & alljuly30$PosixCT < "2019-07-30 15:39:00"), ]
+col3$Sample <- as.character("col3")
+
+col4 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:43:00"
+                         & alljuly30$PosixCT < "2019-07-30 15:46:00"), ]
+col4$Sample <- as.character("col4")
+
+col5 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:55:45"
+                         & alljuly30$PosixCT < "2019-07-30 15:59:40"), ]
+col5$Sample <- as.character("col5")
+
+ecu2 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:03:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:06:00"), ]
+ecu2$Sample <- as.character("ecu2")
+
+col6 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:11:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:14:00"), ]
 col6$Sample <- as.character("col6")
 
-ecu3 <- alljuly23[ which(alljuly23$PosixCT > "2019-07-23 16:31:12"
-                         & alljuly23$PosixCT < "2019-07-23 16:35:21"), ]
+col7 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:19:21"
+                         & alljuly30$PosixCT < "2019-07-30 16:22:31"), ]
+col7$Sample <- as.character("col7")
+
+col8 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:25:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:27:00"), ]
+col8Sample <- as.character("col8")
+
+col8 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:25:00"
+                         & alljuly30$PosixCT < "2019-07-30 16:27:00"), ]
+col8Sample <- as.character("col8")
+
+ecu3 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 16:31:12"
+                         & alljuly30$PosixCT < "2019-07-30 16:35:21"), ]
 ecu3$Sample <- as.character("ecu3")
 
-samplesjuly23 <- rbind(col1, col2, col3, ecu2, col4, col5, ecu3, col6, col7, ecu1, col8)
+samplesjuly30 <- rbind(col1, col2, col3, ecu2, col4, col5, ecu3, col6, col7, ecu1, col8)
 
-write.csv(samplesjuly23, here("Picarro/EOSTransects/072219/", "samplesjuly23.csv"))
+write.csv(samplesjuly30, here("Picarro/EOSTransects/072919/", "samplesjuly30.csv"))
 
 #now let's plot only the samples 
 
 #Do an initial plot of Delta_i 
-plot <- ggplot(samplesjuly23)+
+plot <- ggplot(samplesjuly30)+
   geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2)) +
   labs(x = "Time", y = "Delta_Raw") +
-  ggtitle("july23 EOS Transect Pulls") 
+  ggtitle("july30 EOS Transect Pulls") 
 
 plot
 ggplotly(plot)
@@ -108,6 +115,6 @@ ecu1avg <- data.frame("Sample" = "ecu4", "Avg_iCO2" = mean(ecu1$Delta_Raw_iCO2),
 
 
 
-sumjuly23 <- rbind(col1avg, col2avg, col3avg, ecu2avg, col4avg, col5avg, ecu3avg, col6avg, col7avg, ecu1avg, col8avg)
+sumjuly30 <- rbind(col1avg, col2avg, col3avg, ecu2avg, col4avg, col5avg, ecu3avg, col6avg, col7avg, ecu1avg, col8avg)
 
-write.csv(sumjuly23, here("Picarro/EOSTransects/072219/", "sumjuly23.csv"))
+write.csv(sumjuly30, here("Picarro/EOSTransects/072919/", "sumjuly30.csv"))
