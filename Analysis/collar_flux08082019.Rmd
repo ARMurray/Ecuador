@@ -18,15 +18,12 @@ library('knitr')
 ```
 
 ## Plots and Analysis
-NOT CORRECT TIMES YET_ CHANGE TIMES 
+
 ```{r readData, echo=FALSE}
 #flux of synoptics 
 
-date<- "07312019"
-
-
-# eos1 data
-eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
+# eos2 data
+eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
 eos2 <- eos2%>%
@@ -35,24 +32,17 @@ eos2 <- eos2%>%
 colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
                     "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
 
-eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
-#eos1$Year <- paste0("20",eos1$Year)
-eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
-eos1 <- eos1%>%
-  select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
-        CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
-colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
 
-
-col1.6 <- eos1[2321:2324,]
-col2.6 <- eos1[2326:2329,]
-col3.6 <- eos1[2331:2334,]
-col4.6 <- eos1[2336:2339,]
-col5.6 <- eos2[1613:1617,]
-col6.6 <- eos2[1619:1623,]
-col7.6 <- eos2[1625:1628,]
-col8.6 <- eos2[1631:1634,]
+col1.6 <- eos2[3411:3413,]
+col2.6 <- eos2[3415:3417,]
+col3.6 <- eos2[3419:3421,]
+col4.6 <- eos2[3423:3426,]
+col5.6 <- eos2[3393:3396,]
+col6.6 <- eos2[3397:3400,]
+col7.6 <- eos2[3401:3404,]
+col8.6 <- eos2[3405:3408,]
 
 ```
 
@@ -62,7 +52,7 @@ col8.6 <- eos2[1631:1634,]
 col1.6
 ```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-col1.6 <- select(col1.6,DateTime, Flux_eos1)
+col1.6 <- select(col1.6,DateTime, Flux_eos2)
 kable(head(col1.6), format = "markdown", row.names = FALSE)
 
 ```
@@ -70,21 +60,21 @@ kable(head(col1.6), format = "markdown", row.names = FALSE)
 col2.6
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-col2.6 <- select(col2.6,DateTime, Flux_eos1)
+col2.6 <- select(col2.6,DateTime, Flux_eos2)
 kable(head(col2.6), format = "markdown", row.names = FALSE)
 
 ```
 col3.6
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-col3.6 <- select(col3.6,DateTime, Flux_eos1)
+col3.6 <- select(col3.6,DateTime, Flux_eos2)
 kable(head(col3.6), format = "markdown", row.names = FALSE)
 
 ```
 col4.6
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-col4.6 <- select(col4.6,DateTime, Flux_eos1)
+col4.6 <- select(col4.6,DateTime, Flux_eos2)
 kable(head(col4.6), format = "markdown", row.names = FALSE)
 
 ```
@@ -118,19 +108,19 @@ kable(head(col8.6), format = "markdown", row.names = FALSE)
 ```
 Average Flux of Each Site
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-col1.6avg <- mean(col1.6$Flux_eos1)
-col2.6avg <- mean(col2.6$Flux_eos1)
-col3.6avg <- mean(col3.6$Flux_eos1)
-col4.6avg <- mean(col4.6$Flux_eos1)
+col1.6avg <- mean(col1.6$Flux_eos2)
+col2.6avg <- mean(col2.6$Flux_eos2)
+col3.6avg <- mean(col3.6$Flux_eos2)
+col4.6avg <- mean(col4.6$Flux_eos2)
 col5.6avg <- mean(col5.6$Flux_eos2)
 col6.6avg <- mean(col6.6$Flux_eos2)
 col7.6avg <- mean(col7.6$Flux_eos2)
 col8.6avg <- mean(col8.6$Flux_eos2)
 
-col1.6sd <- sd(col1.6$Flux_eos1)
-col2.6sd <- sd(col2.6$Flux_eos1)
-col3.6sd <- sd(col3.6$Flux_eos1)
-col4.6sd <- sd(col4.6$Flux_eos1)
+col1.6sd <- sd(col1.6$Flux_eos2)
+col2.6sd <- sd(col2.6$Flux_eos2)
+col3.6sd <- sd(col3.6$Flux_eos2)
+col4.6sd <- sd(col4.6$Flux_eos2)
 col5.6sd <- sd(col5.6$Flux_eos2)
 col6.6sd <- sd(col6.6$Flux_eos2)
 col7.6sd <- sd(col7.6$Flux_eos2)
@@ -153,7 +143,7 @@ avgplot6 <- ggplot(a)+
   geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 3)
 
 avgplot6 <- avgplot6 + scale_x_continuous(breaks=1:8, labels=c("col1.6", "col2.6", "col3.6", "col4.6", "col5.6", "col6.6", "col7.6", "col8.6")) +
-labs(x = "Collar", y = "Average FLux")
+labs(x = "8-08-2019 Collar", y = "Average FLux")
         
 
 avgplot6
