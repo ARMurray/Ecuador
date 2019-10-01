@@ -1,12 +1,12 @@
-library(here)
 library(ggplot2)
 library(tidyverse)
 library(dplyr)
-
+library(here)
 
 VB1<- read.csv(here::here("FieldData/Vaisala/VB1_08012019_1min.csv"))
 VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08152019_1min.csv"))
 VB3<- read.csv(here::here("FieldData/Vaisala/VB3_08022019_1min.csv"))
+VB4<- read.csv(here::here("FieldData/Vaisala/VB"))
 
 # Convert time to POSIXct in a new column called "DateTime"
 VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
