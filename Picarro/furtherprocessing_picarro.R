@@ -6,86 +6,86 @@ library(plotly)
 library(wesanderson)
 
 #open up the cleaned file that you want to work with 
-allaug02 <- read.csv(here("Picarro/EOSTransects/080119/allaug02Data.csv"))
+allaug13 <- read.csv(here("Picarro/EOSTransects/081319/allaug13Data.csv"))
 
 #make posic.ct, posixct again
-allaug02$PosixCT <- as.POSIXct(allaug02$PosixCT)
+allaug13$PosixCT <- as.POSIXct(allaug13$PosixCT)
 
 #subset the data
-Subsaug02 <- allaug02[c(53272:59000), ]
+Subsaug13 <- allaug13[c(82900:89200), ]
 
 #Do an initial plot of C02 
-plot <- ggplot(allaug02)+
+plot <- ggplot(allaug13)+
 geom_point(aes(x= PosixCT, y= X12CO2)) +
 labs(x = "Time", y = "CO2") +
-ggtitle("aug02 EOS Transect Pulls") 
+ggtitle("aug13 EOS Transect Pulls") 
 plot
 
 #Do an initial plot of Delta_i 
-plot <- ggplot(Subsaug02)+
+plot <- ggplot(Subsaug13)+
 geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2)) +
 labs(x = "Time", y = "Delta_Raw") +
-ggtitle("aug02 EOS Transect Pulls") 
+ggtitle("aug13 EOS Transect Pulls") 
 
 plot
 ggplotly(plot)
 
 
 
-
-ecu3 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:22:11"
-                                     & allaug02$PosixCT < "2019-08-02 18:24:06"), ]
+ecu3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:44:00"
+                        & allaug13$PosixCT < "2019-08-13 20:48:00"), ]
 ecu3$Sample <- as.character("ecu3")
 
-col1 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:26:09"
-                         & allaug02$PosixCT < "2019-08-02 18:28:02"), ]
+
+col1 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:53:00"
+                         & allaug13$PosixCT < "2019-08-13 20:55:00"), ]
 col1$Sample <- as.character("col1")
 
-col2 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:30:16"
-                         & allaug02$PosixCT < "2019-08-02 18:33:15"), ]
+col2 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:59:00"
+                         & allaug13$PosixCT < "2019-08-13 21:02:00"), ]
 col2$Sample <- as.character("col2")
 
-col3 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:35:00"
-                         & allaug02$PosixCT < "2019-08-02 18:38:00"), ]
+col3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:06:00"
+                         & allaug13$PosixCT < "2019-08-13 21:09:00"), ]
 col3$Sample <- as.character("col3")
 
-col4 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:40:00"
-                         & allaug02$PosixCT < "2019-08-02 18:42:00"), ]
+col4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:14:00"
+                         & allaug13$PosixCT < "2019-08-13 21:16:00"), ]
 col4$Sample <- as.character("col4")
 
-col5 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:44:00"
-                         & allaug02$PosixCT < "2019-08-02 18:46:00"), ]
+col5 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:21:00"
+                         & allaug13$PosixCT < "2019-08-13 21:23:00"), ]
 col5$Sample <- as.character("col5")
 
-ecu4 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:48:42"
-                         & allaug02$PosixCT < "2019-08-02 18:50:59"), ]
+ecu4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:27:00"
+                        & allaug13$PosixCT < "2019-08-13 21:29:00"), ]
 ecu4$Sample <- as.character("ecu4")
 
-col6 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 18:53:00"
-                         & allaug02$PosixCT < "2019-08-02 18:57:00"), ]
+col6 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:33:00"
+                         & allaug13$PosixCT < "2019-08-13 21:36:00"), ]
 col6$Sample <- as.character("col6")
 
-col7 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 19:00:00"
-                         & allaug02$PosixCT < "2019-08-02 19:03:00"), ]
+col7 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:41:00"
+                         & allaug13$PosixCT < "2019-08-13 21:43:00"), ]
 col7$Sample <- as.character("col7")
 
-col8 <- allaug02[ which(allaug02$PosixCT > "2019-08-02 19:06:00"
-                         & allaug02$PosixCT < "2019-08-02 19:09:00"), ]
+col8 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:47:00"
+                         & allaug13$PosixCT < "2019-08-13 21:49:00"), ]
 col8$Sample <- as.character("col8")
 
 
 
-samplesaug02 <- rbind(col1, col2, col3, ecu4, col4, col5, ecu3, col6, col7, col8)
+samplesaug13 <- rbind(col1, col2, col3, col4, col5, col6, col7, col8, ecu3, ecu4)
 
-write.csv(samplesaug02, here("Picarro/EOSTransects/080119/", "samplesaug02.csv"))
+write.csv(samplesaug13, here("Picarro/EOSTransects/081319/", "samplesaug13.csv"))
 
 #now let's plot only the samples 
 
 #Do an initial plot of Delta_i 
-plot <- ggplot(samplesaug02)+
+plot <- ggplot(samplesaug13)+
   geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2)) +
   labs(x = "Time", y = "Delta_Raw") +
-  ggtitle("aug02 EOS Transect Pulls") 
+  ggtitle("aug13 EOS Transect Pulls") 
 
 plot
 ggplotly(plot)
@@ -108,6 +108,6 @@ col8avg <- data.frame("Sample" = "col8", "Avg_iCO2" = mean(col8$Delta_Raw_iCO2),
 
 
 
-sumaug02 <- rbind(col1avg, col2avg, col3avg, ecu3avg, col4avg, col5avg, ecu4avg, col6avg, col7avg, col8avg)
+sumaug13 <- rbind(col1avg, col2avg, col3avg, col4avg, col5avg, col6avg, col7avg, col8avg)
 
-write.csv(sumaug02, here("Picarro/EOSTransects/080119/", "sumaug02.csv"))
+write.csv(sumaug13, here("Picarro/EOSTransects/081319/", "sumaug13.csv"))
