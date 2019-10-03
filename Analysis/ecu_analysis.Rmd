@@ -23,7 +23,7 @@ plot<- ggplot(Synoptics) +
   geom_point(aes(x= Distance, y= Syn4_073119), color= "darkolivegreen3", size = 2) +
   geom_point(aes(x= Distance, y= Syn5_080619), color= "darkgreen", size = 2) +
   geom_point(aes(x= Distance, y= Syn6_081219), color= "darkblue", size = 2) +
-  labs(x = "Distance from Upstream (m)",y= "CO2 (ppm)") +
+  labs(x = "Distance from Upstream (m)",y= "pCO2") +
   ggtitle("Synoptics")
 
 ggplotly(plot)
@@ -32,6 +32,11 @@ ggplotly(plot)
 
 ## Synoptic Average & Standard Deviation
 
+Decrease beginning at about 37m from upstream (Synoptic point 29)
+unil 124m from upstream (Synoptic point 18: right under waterfall)
+ 
+
+**(107m =Waterfall)**        
 
 ```{r synavg, echo=FALSE, warning=FALSE}
 
@@ -40,7 +45,7 @@ syn <- read.csv(here("FieldData/Vaisala/synavg.csv"))
 plot1 <- ggplot(syn) + 
   geom_errorbar(aes(x= Distance, y= Avg, ymin= Avg - Stdv, ymax= Avg + Stdv), width=0.2, size=1, color="darkblue") +   
   geom_point(aes(x= Distance, y= Avg), color = "darkblue", size = 2) +   
-  labs(x = "Distance from Upstream (m)", y = "Average CO2 (ppm)") 
+  labs(x = "Distance from Upstream (m)", y = "pCO2)") 
 
 ggplotly(plot1)
 ```
@@ -69,7 +74,8 @@ ggplot(inj1, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #1 - July 12", x = "Time", y = "CO2 PPM", colour = "Sensor")
+  labs(title = "Injection #1 - July 12", x = "Time", y = "pCO2", colour = "Sensor")
+
 ```
 
 ```{r inj2, echo=FALSE, warning=FALSE}
@@ -82,7 +88,8 @@ ggplot(inj2, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #2 - July 16", x = "Time", y = "CO2 PPM", colour ="Sensor")
+  labs(title = "Injection #2 - July 16", x = "Time", y = "pCO2", colour ="Sensor")
+
 ```
 
 ```{r inj3, echo=FALSE, warning=FALSE}
@@ -96,26 +103,265 @@ ggplot(inj3, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #3 - July 22", x = "Time", y = "CO2 PPM", colour = "Sensor")
+  labs(title = "Injection #3 - July 22", x = "Time", y = "pCO2", colour = "Sensor")
+
 ```
 
-```{r echo=FALSE, warning=FALSE}
-inj_0726 <- read.csv(here("FieldData/Vaisala/inj_0726.csv"),
-                     blank.lines.skip = TRUE, header = TRUE)
+```{r inj4, echo=FALSE, warning=FALSE}
+VB1<- read.csv(here::here("FieldData/Vaisala/VB1_07262019_1min.csv"))
+VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08132019_1min.csv"))
+VB3<- read.csv(here::here("FieldData/Vaisala/VB3_07262019_1min.csv"))
+VB4<- read.csv(here::here("FieldData/Vaisala/VB4_07262019_1min.csv"))
 
-inj_0726$VB1<- (inj_0726$VB1 * 10000)-5
-inj_0726$VB2<- (inj_0726$VB2 * 10)-30
-inj_0726$VB3<- (inj_0726$VB3 * 10000)+17.5
-inj_0726$VB4<- (inj_0726$VB4 * 10000)+17.5
+# Convert time to POSIXct in a new column called "DateTime"
+VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
+VB1$DateTime <- as.POSIXct(VB1$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
 
-plot2<- ggplot(inj_0726, aes(x = Time))+
-    geom_point(aes(y = VB1, colour = "Vaisala 1"))+
-      scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
-    geom_point(aes(y = VB2, colour = "Vaisala 2"))+
-    geom_point(aes(y = VB3, colour = "Vaisala 3"))+
-    geom_point(aes(y = VB4, colour = "Vaisala 4"))+
-    labs(title = "Injection #4 - July 26", x = "Time", y = "CO2 PPM", colour = "Sensor")
+colnames(VB2) <- c("DateTime","Voltage")
+#VB2$DateTime <- paste0(VB2$Date," ",VB1$Time)
+VB2$DateTime <- as.POSIXct(VB2$DateTime, format = "%m/%d/%Y %H:%M")
 
-plot2
+# Correct time offset
+VB2$DateTime <- VB2$DateTime - 3600
+
+
+VB3$DateTime <- paste0(VB3$Date," ",VB3$Time)
+VB3$DateTime <- as.POSIXct(VB3$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+VB4$DateTime <- paste0(VB4$Date," ",VB4$Time)
+VB4$DateTime <- as.POSIXct(VB4$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Format the data, adjust based on field calibration and remove duplicate rows
+VB1 <- VB1%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)-5,VID="V1")%>%
+  dplyr::select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB2 <- VB2%>%
+  dplyr::mutate(PPM=(Voltage * 10)-30,VID="V2")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB3 <- VB3%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V3")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB4 <- VB4%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V4")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+# Combine data and make the ID field a factor so it is groupable
+VMerge <- rbind(VB1,VB2,VB3,VB4)%>%
+  filter(PPM > 100)%>%
+  filter(PPM < 10000)
+
+# Time Filter
+filt <- VMerge%>%
+  filter(DateTime > as.POSIXct("2019-07-26 11:45:00", format = "%Y-%m-%d %H:%M:%S"))%>%
+  filter(DateTime < as.POSIXct("2019-07-26 15:45:00", format = "%Y-%m-%d %H:%M:%S"))
+
+# Make a simple plot
+outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
+  geom_point(aes(col=VID), size = 1) +
+  labs(title = "Injection #4 - July 26", x = "Time", y = "pCO2", colour = "Sensor")
+
+outPlot
 ```
 
+```{r inj5, echo=FALSE, warning=FALSE}
+VB1<- read.csv(here::here("FieldData/Vaisala/VB1_08012019_1min.csv"))
+VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08132019_1min.csv"))
+VB3<- read.csv(here::here("FieldData/Vaisala/VB3_08022019_1min.csv"))
+#VB4<- read.csv(here::here("FieldData/Vaisala/VB4_08062019_1min.csv"))
+
+# Convert time to POSIXct in a new column called "DateTime"
+VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
+VB1$DateTime <- as.POSIXct(VB1$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+colnames(VB2) <- c("DateTime","Voltage")
+#VB2$DateTime <- paste0(VB2$Date," ",VB1$Time)
+VB2$DateTime <- as.POSIXct(VB2$DateTime, format = "%m/%d/%Y %H:%M")
+
+# Correct time offset
+#VB2$DateTime <- VB2$DateTime - 3600
+
+
+VB3$DateTime <- paste0(VB3$Date," ",VB3$Time)
+VB3$DateTime <- as.POSIXct(VB3$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+#VB4$DateTime <- paste0(VB4$Date," ",VB4$Time)
+#VB4$DateTime <- as.POSIXct(VB4$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Format the data, adjust based on field calibration and remove duplicate rows
+VB1 <- VB1%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)-5,VID="V1")%>%
+  dplyr::select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB2 <- VB2%>%
+  dplyr::mutate(PPM=(Voltage * 10)-30,VID="V2")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB3 <- VB3%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V3")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+#VB4 <- VB4%>%
+#  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V4")%>%
+#  select(DateTime,PPM,VID)%>%
+#  distinct()
+
+# Combine data and make the ID field a factor so it is groupable
+VMerge <- rbind(VB1,VB2,VB3)%>%
+  filter(PPM > 100)%>%
+  filter(PPM < 10000)
+
+# Time Filter
+filt <- VMerge%>%
+  filter(DateTime > as.POSIXct("2019-08-01 15:00:00", format = "%Y-%m-%d %H:%M:%S"))%>%
+  filter(DateTime < as.POSIXct("2019-08-01 21:00:00", format = "%Y-%m-%d %H:%M:%S"))
+
+# Make a simple plot
+#"#63ABF9"
+outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9"))+
+  geom_point(aes(col=VID), size = 1) +
+  labs(title = "Injection #5 - August 01")
+
+ggplotly(outPlot)
+```
+
+
+```{r inj6, echo=FALSE, warning=FALSE}
+VB1<- read.csv(here::here("FieldData/Vaisala/VB1_08062019_1min.csv"))
+VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08132019_1min.csv"))
+VB3<- read.csv(here::here("FieldData/Vaisala/VB3_08062019_1min.csv"))
+VB4<- read.csv(here::here("FieldData/Vaisala/VB4_08062019_1min.csv"))
+
+# Convert time to POSIXct in a new column called "DateTime"
+VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
+VB1$DateTime <- as.POSIXct(VB1$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+colnames(VB2) <- c("DateTime","Voltage")
+#VB2$DateTime <- paste0(VB2$Date," ",VB1$Time)
+VB2$DateTime <- as.POSIXct(VB2$DateTime, format = "%m/%d/%Y %H:%M")
+
+# Correct time offset
+#VB2$DateTime <- VB2$DateTime - 3600
+
+
+VB3$DateTime <- paste0(VB3$Date," ",VB3$Time)
+VB3$DateTime <- as.POSIXct(VB3$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+VB4$DateTime <- paste0(VB4$Date," ",VB4$Time)
+VB4$DateTime <- as.POSIXct(VB4$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Format the data, adjust based on field calibration and remove duplicate rows
+VB1 <- VB1%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)-5,VID="V1")%>%
+  dplyr::select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB2 <- VB2%>%
+  dplyr::mutate(PPM=(Voltage * 10)-30,VID="V2")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB3 <- VB3%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V3")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB4 <- VB4%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V4")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+# Combine data and make the ID field a factor so it is groupable
+VMerge <- rbind(VB1,VB2,VB3,VB4)%>%
+  filter(PPM > 100)%>%
+  filter(PPM < 10000)
+
+# Time Filter
+filt <- VMerge%>%
+  filter(DateTime > as.POSIXct("2019-08-05 14:00:00", format = "%Y-%m-%d %H:%M:%S"))%>%
+  filter(DateTime < as.POSIXct("2019-08-05 21:00:00", format = "%Y-%m-%d %H:%M:%S"))
+
+# Make a simple plot
+outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
+  geom_point(aes(col=VID), size = 1) +
+  labs(title = "Injection #6 - August 05")
+
+ggplotly(outPlot)
+```
+
+
+```{r inj7, echo=FALSE, warning=FALSE}
+VB1<- read.csv(here::here("FieldData/Vaisala/VB1_08092019_1min.csv"))
+VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08132019_1min.csv"))
+VB3<- read.csv(here::here("FieldData/Vaisala/VB3_08092019_1min.csv"))
+VB4<- read.csv(here::here("FieldData/Vaisala/VB4_08092019_1min.csv"))
+
+# Convert time to POSIXct in a new column called "DateTime"
+VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
+VB1$DateTime <- as.POSIXct(VB1$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+colnames(VB2) <- c("DateTime","Voltage")
+#VB2$DateTime <- paste0(VB2$Date," ",VB1$Time)
+VB2$DateTime <- as.POSIXct(VB2$DateTime, format = "%m/%d/%Y %H:%M")
+
+# Correct time offset
+#VB2$DateTime <- VB2$DateTime - 3600
+
+
+VB3$DateTime <- paste0(VB3$Date," ",VB3$Time)
+VB3$DateTime <- as.POSIXct(VB3$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+VB4$DateTime <- paste0(VB4$Date," ",VB4$Time)
+VB4$DateTime <- as.POSIXct(VB4$DateTime, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Format the data, adjust based on field calibration and remove duplicate rows
+VB1 <- VB1%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)-5,VID="V1")%>%
+  dplyr::select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB2 <- VB2%>%
+  dplyr::mutate(PPM=(Voltage * 10)-30,VID="V2")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB3 <- VB3%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V3")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+VB4 <- VB4%>%
+  dplyr::mutate(PPM=(Voltage..V. * 10000)+17.5,VID="V4")%>%
+  select(DateTime,PPM,VID)%>%
+  distinct()
+
+# Combine data and make the ID field a factor so it is groupable
+VMerge <- rbind(VB1,VB2,VB3,VB4)%>%
+  filter(PPM > 100)%>%
+  filter(PPM < 10000)
+
+# Time Filter
+filt <- VMerge%>%
+  filter(DateTime > as.POSIXct("2019-08-08 12:00:00", format = "%Y-%m-%d %H:%M:%S"))%>%
+  filter(DateTime < as.POSIXct("2019-08-08 16:00:00", format = "%Y-%m-%d %H:%M:%S"))
+
+# Make a simple plot
+outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
+  geom_point(aes(col=VID), size = 1) +
+  labs(title = "Injection #7 - August 08")
+
+ggplotly(outPlot)
+```
