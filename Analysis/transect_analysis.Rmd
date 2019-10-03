@@ -7,6 +7,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#install.packages("here")
+#install.packages("ggplot2")
+#install.packages("tidyr")
+#install.packages("dplyr")
+#install.packages("wesanderson")
+#install.packages("knitr")
+#install.packages("ggpubr")
 # Plots and Analysis
 library(here)
 library(ggplot2)
@@ -1005,6 +1012,37 @@ c8 <- cbind(c8, z1)
 cplot <- ggplot() +
 geom_point(data = c1, aes(x= z, y=c1), color = "red") + geom_point(data = c2, aes(x= z, y=c2), color = "orange")+ geom_point(data = c3, aes(x= z, y=c3), color = "yellow") + geom_point(data = c4, aes(x= z, y=c4), color = "green")+ geom_point(data = c5, aes(x= z, y=c5), color = "blue")+ geom_point(data = c6, aes(x= z, y=c6), color = "purple") +  geom_point(data = c7, aes(x= z, y=c7), color = "black")+ geom_point(data = c8, aes(x= z1, y=c8), color = "white")
 cplot
+```
+
+Transect near stream- Blues- lightest blue = col1 (least water) to col4 darkest blue (most water)
+Transect near spring- Darkest Green col5 (most water), lightest green col8 (least water)
+
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 cplot <- ggplot() +
-  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "red") + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "orange")+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "yellow") + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "green")+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue")+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "purple") +  geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "black")+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "white")
+  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =2 ) + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =2 )+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =2 ) + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =2 )+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =2 ) +  geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =2 )+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =2 )
 cplot
+cplot <- ggplot() +
+  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "brown", size =2 ) +   geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "dodgerblue3", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue", size =2 )+  geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "brown", size =2 )
+cplot
+```
+
+eos2 beside eos1 in water
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
+eos2$Year <- paste0("20",eos2$Year)
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2 <- eos2%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
+                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+
+
+# Subset data so only records at 5 minute intervals are retained
+sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
+sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+
+row.names(sub.2) <- NULL
