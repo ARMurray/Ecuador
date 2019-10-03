@@ -4,7 +4,6 @@ author: "Chloe"
 date: "Data from 7/16/2019 measurements"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 #install.packages("here")
@@ -36,7 +35,7 @@ date<- "07182019"
 # eos1 data
 eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -169,7 +168,7 @@ date<- "07222019"
 # eos1 data
 eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -306,22 +305,20 @@ date<- "07312019"
 # eos1 data
 eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
 colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
                     "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
 
-eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
-#eos1$Year <- paste0("20",eos1$Year)
-eos1 <- read.csv(here("FieldData/EosFD",paste0("eos1_FIX_07312019.csv")))
+eos1 <- read.csv(here("FieldData/EosFD/eos1_FIX_07312019.csv"))
 eos1 <- eos1%>%
   select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
         CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
 colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
 
-
+eos1$Flux_eos1 <- as.numeric(as.character(eos1$Flux_eos1))
 
 col1.3 <- eos1[2321:2324,]
 col2.3 <- eos1[2326:2329,]
@@ -446,7 +443,7 @@ date<- "08012019"
 # eos2 data
 eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_",date,".csv")))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -577,7 +574,7 @@ avgplot4
 # eos2 data
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -707,7 +704,7 @@ avgplot5
 # eos2 data
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -838,16 +835,17 @@ avgplot6
 #flux of synoptic
 eos1 <- read.csv(here("FieldData/EosFD/eos1_08132019.1.csv"))
 eos1$Year <- paste0("20",eos1$Year)
-eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Month,"/",eos1$Day,"/",eos1$Year," ",eos1$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Year,"-",eos1$Month,"-",eos1$Day," ",eos1$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos1 <- eos1%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
 colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1",
                     "CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+eos1$Flux_eos1 <- as.numeric(as.character(eos1$Flux_eos1))
 
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
   select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
@@ -1026,23 +1024,48 @@ cplot <- ggplot() +
   geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "brown", size =2 ) +   geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "dodgerblue3", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue", size =2 )+  geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "brown", size =2 )
 cplot
 ```
-
 eos2 beside eos1 in water
-
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+```{r, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
-eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Month,"/",eos2$Day,"/",eos2$Year," ",eos2$Time)), format = "%m/%d/%Y %H:%M:%OS")
+eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
          CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
 colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
                     "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
 
-# Subset data so only records at 5 minute intervals are retained
-sub.1 <- subset(eos2, format(DateTime,'%OS')=='00')
-sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+eos1 <- read.csv(here("FieldData/EosFD/eos1_08132019.1.csv"))
+eos1$Year <- paste0("20",eos1$Year)
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Year,"-",eos1$Month,"-",eos1$Day," ",eos1$Time)), format = "%Y-%m-%d %H:%M:%OS")
+eos1 <- eos1%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+eos1$Flux_eos1 <- as.numeric(as.character(eos1$Flux_eos1))
 
-row.names(sub.2) <- NULL
+land <- eos2[3210:3383,]
+land <- subset(land, format(DateTime,'%OS')=='00')
+land <- subset(land, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+row.names(land) <- NULL
+
+water <- eos1[580:753,]
+water <- subset(water, format(DateTime,'%OS')=='00')
+water <- subset(water, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+row.names(water) <- NULL
+
+
+landwater <- ggplot() + geom_point(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
+  geom_point(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) 
+landwater
+
+
+landwater <- ggplot() + geom_line(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
+  geom_line(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1)
+
+landwater
+
+```
