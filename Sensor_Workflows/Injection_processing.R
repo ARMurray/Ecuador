@@ -4,10 +4,10 @@ library(dplyr)
 library(here)
 library(plotly)
 
-VB1<- read.csv(here::here("FieldData/Vaisala/VB1_07262019_1min.csv"))
+VB1<- read.csv(here::here("FieldData/Vaisala/VB1_08092019_1min.csv"))
 VB2<- read.csv(here::here("FieldData/Vaisala/VB2_08132019_1min.csv"))
-VB3<- read.csv(here::here("FieldData/Vaisala/VB3_07262019_1min.csv"))
-VB4<- read.csv(here::here("FieldData/Vaisala/VB4_07262019_1min.csv"))
+VB3<- read.csv(here::here("FieldData/Vaisala/VB3_08092019_1min.csv"))
+VB4<- read.csv(here::here("FieldData/Vaisala/VB4_08092019_1min.csv"))
 
 # Convert time to POSIXct in a new column called "DateTime"
 VB1$DateTime <- paste0(VB1$Date," ",VB1$Time)
@@ -18,7 +18,7 @@ colnames(VB2) <- c("DateTime","Voltage")
 VB2$DateTime <- as.POSIXct(VB2$DateTime, format = "%m/%d/%Y %H:%M")
 
 # Correct time offset
-VB2$DateTime <- VB2$DateTime - 3600
+#VB2$DateTime <- VB2$DateTime - 3600
 
 
 VB3$DateTime <- paste0(VB3$Date," ",VB3$Time)
@@ -55,12 +55,13 @@ VMerge <- rbind(VB1,VB2,VB3,VB4)%>%
 
 # Time Filter
 filt <- VMerge%>%
-  filter(DateTime > as.POSIXct("2019-07-26 11:45:00", format = "%Y-%m-%d %H:%M:%S"))%>%
-  filter(DateTime < as.POSIXct("2019-07-26 15:45:00", format = "%Y-%m-%d %H:%M:%S"))
+  filter(DateTime > as.POSIXct("2019-08-08 12:00:00", format = "%Y-%m-%d %H:%M:%S"))%>%
+  filter(DateTime < as.POSIXct("2019-08-08 16:00:00", format = "%Y-%m-%d %H:%M:%S"))
 
 # Make a simple plot
 outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
-  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#32a852"))+
-  geom_point(aes(col=VID), size = 1)
+  scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
+  geom_point(aes(col=VID), size = 1) +
+  labs(title = "Injection #7 - August 08")
 
-outPlot
+ggplotly(outPlot)
