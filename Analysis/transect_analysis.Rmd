@@ -971,3 +971,40 @@ All transect days
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 allplot <- ggarrange(avgplot1, avgplot2, avgplot3, avgplot4, avgplot5, avgplot6, avgplot7)
 allplot
+
+c1 <- data.frame(col1.1avg, col1.2avg, col1.3avg, col1.4avg, col1.5avg, col1.6avg, col1.7avg)
+c2 <- data.frame(col2.1avg, col2.2avg, col2.3avg, col2.4avg, col2.5avg, col2.6avg, col2.7avg)
+c3 <- data.frame(col3.1avg, col3.2avg, col3.3avg, col3.4avg, col3.5avg, col3.6avg, col3.7avg)
+c4 <- data.frame(col4.1avg, col4.2avg, col4.3avg, col4.4avg, col4.5avg, col4.6avg, col4.7avg)
+c5 <- data.frame(col5.1avg, col5.2avg, col5.3avg, col5.4avg, col5.5avg, col5.6avg, col5.7avg)
+c6 <- data.frame(col6.1avg, col6.2avg, col6.3avg, col6.4avg, col6.5avg, col6.6avg, col6.7avg)
+c7 <- data.frame(col7.1avg, col7.2avg, col7.3avg, col7.4avg, col7.5avg, col7.6avg, col7.7avg)
+c8 <- data.frame(col8.2avg, col8.3avg, col8.4avg, col8.5avg, col8.6avg, col8.7avg)
+c1 <- t(c1)
+c2 <- t(c2)
+c3 <- t(c3)
+c4 <- t(c4)
+c5 <- t(c5)
+c6 <- t(c6)
+c7 <- t(c7)
+c8 <- t(c8)
+z <- c("Jul16", "Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
+z1 <- c("Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
+z1 <- data.frame(z1)
+z <- data.frame(z)
+
+c1 <- cbind(c1, z)
+c2 <- cbind(c2, z)
+c3 <- cbind(c3, z)
+c4 <- cbind(c4, z)
+c5 <- cbind(c5, z)
+c6 <- cbind(c6, z)
+c7 <- cbind(c7, z)
+c8 <- cbind(c8, z1)
+
+cplot <- ggplot() +
+geom_point(data = c1, aes(x= z, y=c1), color = "red") + geom_point(data = c2, aes(x= z, y=c2), color = "orange")+ geom_point(data = c3, aes(x= z, y=c3), color = "yellow") + geom_point(data = c4, aes(x= z, y=c4), color = "green")+ geom_point(data = c5, aes(x= z, y=c5), color = "blue")+ geom_point(data = c6, aes(x= z, y=c6), color = "purple") +  geom_point(data = c7, aes(x= z, y=c7), color = "black")+ geom_point(data = c8, aes(x= z1, y=c8), color = "white")
+cplot
+cplot <- ggplot() +
+  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "red") + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "orange")+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "yellow") + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "green")+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue")+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "purple") +  geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "black")+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "white")
+cplot
