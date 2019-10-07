@@ -6,58 +6,59 @@ library(plotly)
 library(wesanderson)
 
 #open up the cleaned file that you want to work with 
-allaug13 <- read.csv(here("Picarro/EOSTransects/081319/methaneaug13Data.csv"))
+allaug09 <- read.csv(here("Picarro/EOSTransects/080819/comprehensiveaug09.csv"))
 
 #make posic.ct, posixct again
-allaug13$PosixCT <- as.POSIXct(allaug13$PosixCT)
+allaug09$PosixCT <- as.POSIXct(allaug09$PosixCT)
 
 
-ecu3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:44:00"
-                        & allaug13$PosixCT < "2019-08-13 20:48:00"), ]
+
+ecu3 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 20:44:00"
+                        & allaug09$PosixCT < "2019-08-13 20:48:00"), ]
 ecu3$Sample <- as.character("ecu3")
 
-col1 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:53:00"
-                         & allaug13$PosixCT < "2019-08-13 20:55:00"), ]
+col1 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 20:53:00"
+                         & allaug09$PosixCT < "2019-08-13 20:55:00"), ]
 col1$Sample <- as.character("col1")
 
-col2 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:59:00"
-                         & allaug13$PosixCT < "2019-08-13 21:02:00"), ]
+col2 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 20:59:00"
+                         & allaug09$PosixCT < "2019-08-13 21:02:00"), ]
 col2$Sample <- as.character("col2")
 
-col3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:06:00"
-                         & allaug13$PosixCT < "2019-08-13 21:09:00"), ]
+col3 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:06:00"
+                         & allaug09$PosixCT < "2019-08-13 21:09:00"), ]
 col3$Sample <- as.character("col3")
 
-col4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:14:00"
-                         & allaug13$PosixCT < "2019-08-13 21:16:00"), ]
+col4 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:14:00"
+                         & allaug09$PosixCT < "2019-08-13 21:16:00"), ]
 col4$Sample <- as.character("col4")
 
-col5 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:21:00"
-                         & allaug13$PosixCT < "2019-08-13 21:23:00"), ]
+col5 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:21:00"
+                         & allaug09$PosixCT < "2019-08-13 21:23:00"), ]
 col5$Sample <- as.character("col5")
 
-ecu4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:27:00"
-                        & allaug13$PosixCT < "2019-08-13 21:29:00"), ]
+ecu4 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:27:00"
+                        & allaug09$PosixCT < "2019-08-13 21:29:00"), ]
 ecu4$Sample <- as.character("ecu4")
 
-col6 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:33:00"
-                         & allaug13$PosixCT < "2019-08-13 21:36:00"), ]
+col6 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:33:00"
+                         & allaug09$PosixCT < "2019-08-13 21:36:00"), ]
 col6$Sample <- as.character("col6")
 
-col7 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:41:00"
-                         & allaug13$PosixCT < "2019-08-13 21:43:00"), ]
+col7 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:41:00"
+                         & allaug09$PosixCT < "2019-08-13 21:43:00"), ]
 col7$Sample <- as.character("col7")
 
-col8 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:47:00"
-                         & allaug13$PosixCT < "2019-08-13 21:49:00"), ]
+col8 <- allaug09[ which(allaug09$PosixCT > "2019-08-13 21:47:00"
+                         & allaug09$PosixCT < "2019-08-13 21:49:00"), ]
 col8$Sample <- as.character("col8")
 
 
 
 
-samplesaug13 <- rbind(col1, col2, col3, col4, col5, col6, col7, col8, ecu3, ecu4)
+samplesaug09 <- rbind(col1, col2, col3, col4, col5, col6, col7, col8, ecu3, ecu4)
 
-write.csv(samplesaug13, here("Picarro/EOSTransects/081319/", "allsamplesaug13.csv"))
+write.csv(samplesaug09, here("Picarro/EOSTransects/080819/", "allsamplesaug09.csv"))
 
 #now let's plot only the samples 
 
@@ -79,6 +80,6 @@ col7avg <- data.frame("Sample" = "col7", "Avg_iCH4" = mean(col7$Delta_iCH4_Raw),
 col8avg <- data.frame("Sample" = "col8", "Avg_iCH4" = mean(col8$Delta_iCH4_Raw), "StdDev_iCH4" = sd(col8$Delta_iCH4_Raw))
 
 
-sumaug13 <- rbind(col1avg, col2avg, col3avg, col4avg, col5avg, col6avg, col7avg, col8avg, ecu3avg, ecu4avg)
+sumaug09 <- rbind(col1avg, col2avg, col3avg, col4avg, col5avg, col6avg, col7avg, col8avg, ecu3avg, ecu4avg)
 
-write.csv(sumaug13, here("Picarro/EOSTransects/081319/", "summethaneaug13.csv"))
+write.csv(sumaug09, here("Picarro/EOSTransects/080819/", "summethaneaug09.csv"))
