@@ -4,17 +4,17 @@ library(here)
 library(dplyr)
 library(plotly)
 
-july17 <- read.csv(here("Picarro/EOSTransects/071619/allsamplesjuly17.csv"))
+aug13 <- read.csv(here("Picarro/EOSTransects/081319/allsamplesaug13.csv"))
 
 #make posic.ct, posixct again
-july17$PosixCT <- as.POSIXct(july17$PosixCT)
+aug13$PosixCT <- as.POSIXct(aug13$PosixCT)
 
-july17$Sample <- as.character(july17$Sample)
+aug13$Sample <- as.character(aug13$Sample)
 
-Ecujuly17 <- july17[ which(july17$Sample == "ecu2"
-                           | july17$Sample == "ecu3"
-                           | july17$Sample == "ecu4"), ]
+Ecuaug13 <- aug13[ which(aug13$Sample == "ecu3"
+                           | aug13$Sample == "ecu4"), ]
+                           #| aug13$Sample == "ecu1"), ]
                           
-Ecujuly17$Day <- as.character("July17")
+Ecuaug13$Day <- as.character("aug13")
 
-write.csv(Ecujuly17, here("Picarro/EOSTransects/071619/", "ecusamplesjuly17.csv"))
+write.csv(Ecuaug13, here("Picarro/EOSTransects/081319/", "ecusamplesaug13.csv"))
