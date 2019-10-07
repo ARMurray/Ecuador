@@ -1,7 +1,7 @@
 ---
 title: "Linearity-EOS Transects"
 author: "Meg Raisle"
-date: "10/7/2019"
+date: "10/6/2019"
 output: html_document
 ---
 
@@ -22,13 +22,28 @@ library('knitr')
 
 allecuavg <- read.csv(here("Picarro/EOSTransects/allecuavg.csv"))
 comboecuavg <- read.csv(here("Picarro/EOSTransects/comboecuavg.csv"))
-july15test <- read.csv(here("Picarro/EOSTranects/july15test.csv"))
+july15test <- read.csv(here("Picarro/EOSTransects/july15test.csv"))
 
+allecuavg <- allecuavg %>%
+  select(Day, Sample, Avg_iCO2, StdDev_iCO2)
 ```
 
 ### All Ecuador Samples Run During EOS Transects 
-```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
-kable(head(allecuavg), format = "markdown", row.names = FALSE)
+```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(allecuavg, format = "markdown")
+
+```
+You can see above that there is a lot of variability between ecuador samples and the standard deviations vary pretty signficantly. Wondering if we should have a conversation about narrowing the window which I'm callign the gas pull . . . would be alot of work and not sure if it is the right thing to do, but worth a discussion.
+
+### Results of Delta_iCO2 Differences from July 15 Linearity Test 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(july15test, format = "markdown")
 
 ```
 
+## Average, Standard Deviation, and Correction of All EOS Ecuador Bags
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(comboecuavg, format = "markdown")
+
+```
+I haven't yet run variance because it would not let me run with such a small sample size and thought we might have a discussion about this data before proceeding
