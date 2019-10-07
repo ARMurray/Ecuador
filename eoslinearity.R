@@ -3,6 +3,7 @@ library(ggplot2)
 library(here)
 library(dplyr)
 library(plotly)
+library('knitr')
 
 aug13 <- read.csv(here("Picarro/EOSTransects/081319/allsamplesaug13.csv"))
 
@@ -44,7 +45,6 @@ ecuaug13 <- ecuaug13 %>%
 onlyecuall$PosixCT <- as.POSIXct(onlyecuall$PosixCT)
 
 onlyecuall <- rbind(ecuaug02, ecuaug09, ecuaug13, ecujuly17, ecujuly23, ecujuly30)
-
 
 
 
@@ -91,4 +91,9 @@ ecuaug13 <- ecuaug13 %>%
   select(PosixCT, Day, Sample, X12CO2, Delta_Raw_iCO2)
 
 write.csv(allday, here("Picarro/EOSTransects/comboecuavg.csv"))
+
+July15test <- data.frame("CHKnown Value" = "-11.09", "CHPicarro" = "-12.66", "CI" = "+/- .314", "CHCorrected Avg" = "-11.09",
+                         "Correction" = "-1.57", "ECUPicarro" = "-26.31", "CI" = "+/-.196", "ECUCorrected Avg" = "-24.74")
+
+write.csv(July15test, here("Picarro/EOSTransects/july15test.csv"))
 
