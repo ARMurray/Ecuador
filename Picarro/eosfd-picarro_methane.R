@@ -21,8 +21,9 @@ for(i in 2:length(aug13_Files)){
   allaug13Data <- rbind(allaug13Data,data)
 }
 #select all the data columns we would ever need 
-allaug13Data <- allaug13Data %>%
+allaug09Data <- allaug09Data %>%
   select(DATE, TIME, X12CO2, Delta_Raw_iCO2, Delta_30s_iCO2, HR_12CH4, HP_12CH4, Delta_iCH4_Raw, HR_Delta_iCH4_Raw, HR_Delta_iCH4_30s, HP_Delta_iCH4_Raw, HP_Delta_iCH4_30s)
+
 
 #Save this in case you'd ever need it 
 write.csv(allaug13Data,here("Picarro/EOSTransects/081319/", "comprehensiveaug13.csv"))
