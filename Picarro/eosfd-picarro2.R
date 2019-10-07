@@ -21,18 +21,18 @@ for(i in 2:length(aug09_Files)){
   allaug09Data <- rbind(allaug09Data,data)
 }
 #select only the data columns we need 
-allaug09Data <- allaug09Data %>%
+aug09 <- aug09 %>%
   select(DATE, TIME, X12CO2, Delta_Raw_iCO2)
 
 
 # Combine Date and time into one column
-onlyecuaug09$DateTime <- paste0(onlyecuaug09$DATE," ",substr(onlyecuaug09$TIME,1,8))
+aug09$DateTime <- paste0(aug09$DATE," ",substr(aug09$TIME,1,8))
 
 # Convert to PosixCT
-onlyecuaug09$PosixCT <- as.POSIXct(onlyecuaug09$DateTime, format = '%Y-%m-%d %H:%M:%OS')
+aug09$PosixCT <- as.POSIXct(aug09$DateTime, format = '%Y-%m-%d %H:%M:%OS')
 
 #Select again the columns we need 
-allaug09Data <- allaug09Data %>%
+aug09 <- aug09 %>%
   select(PosixCT, X12CO2, Delta_Raw_iCO2)
 
 #save all data in one file 

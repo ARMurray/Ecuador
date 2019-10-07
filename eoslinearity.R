@@ -23,42 +23,58 @@ ecuaug09$day <- as.character("Aug09")
 
 write.csv(ecuaug09, here("Picarro/EOSTransects/080819/", "ecusamplesaug09.csv"))
 
-ecuaug13 <- read.csv(here("Picarro/EOSTransects/081319/samplesaug13.csv"))
-ecujuly17 <- read.csv(here("Picarro/EOSTransects/071619/samplesjuly17.csv"))
-ecujuly23 <- read.csv(here("Picarro/EOSTransects/072219/samplesjuly23.csv"))
-ecujuly30 <- read.csv(here("Picarro/EOSTransects/072919/samplesjuly30.csv"))
-ecuaug02 <- read.csv(here("Picarro/EOSTransects/080119/samplesaug02.csv"))
-#ecuaug09 <- read.csv(here("Picarro/EOSTransects/080819/samplesaug09.csv"))
+ecuaug13 <- read.csv(here("Picarro/EOSTransects/081319/aug13ecuwithco2.csv"))
+ecujuly17 <- read.csv(here("Picarro/EOSTransects/071619/july17ecuwithco2.csv"))
+ecujuly23 <- read.csv(here("Picarro/EOSTransects/072219/july23ecuwithco2.csv"))
+ecujuly30 <- read.csv(here("Picarro/EOSTransects/072919/july30ecuwithco2.csv"))
+ecuaug02 <- read.csv(here("Picarro/EOSTransects/080119/aug02ecuwithco2.csv"))
+ecuaug09 <- read.csv(here("Picarro/EOSTransects/080819/aug09ecuwithco2.csv"))
 
 ecujuly30 <- ecujuly30[ which(ecujuly30$Sample == "ecu2"
                             | ecujuly30$Sample == "ecu1"), ]
 
 ecujuly30$Day <- as.character("July30")
 
-write.csv(ecuaug13, here("Picarro/EOSTransects/081319/aug13ecuwithco2.csv"))
+write.csv(ecuaug09, here("Picarro/EOSTransects/080819/aug09ecuwithco2.csv"))
+
+ecuaug13 <- ecuaug13 %>%
+  select(PosixCT, Day, Sample, X12CO2, Delta_Raw_iCO2)
+
+#make posic.ct, posixct again
+onlyecuall$PosixCT <- as.POSIXct(onlyecuall$PosixCT)
 
 onlyecuall <- rbind(ecuaug02, ecuaug09, ecuaug13, ecujuly17, ecujuly23, ecujuly30)
 
 
 
-write.csv(onlyecuall, here("Picarro/EOSTransects", "allecusamples_raw.csv"))
+
+write.csv(onlyecuall, here("Picarro/EOSTransects", "allecusamples_rawc02.csv"))
 
 
 #ok now let's find the mean of each ecu sample 
 #what we want at the end is a table with the mean, day, sample, std dev, and variance 
 
 
-justsamples23 <- allaug09Data[ which(allaug09Data$PosixCT > "2019-07-23 15:00:00"
-                                     & allaug09Data$PosixCT < "2019-07-23 17:00:00"), ]
-
 col1avg <- data.frame("Sample" = "col1", "Avg_iCH4" = mean(col1$Delta_iCH4_Raw), "StdDev_iCH4" = sd(col1$Delta_iCH4_Raw))
 
 
 
-aug13ecu3 <- data.frame("Day" = "Aug13", "Sample" = "ecu3", "Avg_iCH4")            which(ecuaug13$Sample == "ecu3")
+july17ecu3 <- data.frame("Day" = "july17", "Sample" = "ecu3", "Avg_iCO2" = mean(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu3")]),
+                       "StdDev_iCO2" = sd(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu3")]))         
+july17ecu2 <- data.frame("Day" = "july17", "Sample" = "ecu2", "Avg_iCO2" = mean(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu2")]),
+                        "StdDev_iCO2" = sd(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu2")]))
+#july17ecu1 <- data.frame("Day" = "july17", "Sample" = "ecu1", "Avg_iCO2" = mean(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu1")]),
+                        # "StdDev_iCO2" = sd(ecujuly17$Delta_Raw_iCO2[ which(ecujuly17$Sample == "ecu1")]))
+avgjuly17 <- rbind(july17ecu2, july17ecu3)
 
+allecuavg <- rbind(avgjuly17, avgjuly23, avgjuly30, avgaug02, avgaug09, avgaug13)
 
+write.csv(allecuavg, here("Picarro/EOSTransects/allecuavg.csv"))
 
+comboaug13 <- data.frame("Day" = "aug13", "Bags" = "2", "Avg_iCO2" = mean(avgaug13$Avg_iCO2),
+                          "StdDev_iCO2" = sd(avgaug13$Avg_iCO2)) 
 
+allday <- rbind(combojuly17, combojuly23, combojuly30, comboaug02, comboaug09, comboaug13)
 
+write.csv(allday, here("Picarro/EOSTransects/comboecuavg.csv"))
 
