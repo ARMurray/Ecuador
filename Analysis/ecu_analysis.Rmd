@@ -13,21 +13,17 @@ library(plotly)
 ```
 ## Synoptic- Vaisala
 ```{r synoptic, echo=FALSE, warning=FALSE}
-
 Synoptics <- read.csv(here("FieldData/Vaisala/Synoptics2.csv"))
-
-plot<- ggplot(Synoptics) +
+plot <- ggplot(Synoptics) +
   geom_point(aes(x= Distance, y= Syn1_071819), color= "blue", size = 2) +
   geom_point(aes(x= Distance, y= Syn2_072519), color= "cornflowerblue", size = 2) +
   geom_point(aes(x= Distance, y= Syn3_072919), color= "darkgoldenrod1", size = 2) +
   geom_point(aes(x= Distance, y= Syn4_073119), color= "darkolivegreen3", size = 2) +
   geom_point(aes(x= Distance, y= Syn5_080619), color= "darkgreen", size = 2) +
   geom_point(aes(x= Distance, y= Syn6_081219), color= "darkblue", size = 2) +
-  labs(x = "Distance from Upstream (m)",y= "pCO2") +
+  labs(x = "Distance from Upstream (m)", y= "pCO2") +
   ggtitle("Synoptics")
-
 ggplotly(plot)
-
 ```
 
 ## Synoptic Average & Standard Deviation
@@ -58,7 +54,7 @@ ggplotly(plot1)
 |July 16|14:15|20:00|Night Injection|
 |July 22|16:25|19:45|Night Injection|
 |July 26|12:45|14:45|Day Injection|
-|August 1|16:00|20:00|Night Injection|
+|August 1|16:00|20:00|Night Injection, No V4 because no connection to battery, weird CR300 reading for V2|
 |August 5|16:35|20:00|Night Injection|
 |August 8|12:43|15:25|Day Injection|
 
@@ -68,7 +64,8 @@ data$DateTime <- as.POSIXct(data$DateTime)
 inj1 <- data%>%
   filter(DateTime > as.POSIXct("2019-07-12 12:30:00"))%>%
   filter(DateTime < as.POSIXct("2019-07-12 16:30:00"))
-ggplot(inj1, aes(x = DateTime))+
+
+plot3 <- ggplot(inj1, aes(x = DateTime))+
   geom_point(aes(y = V1, colour = "Vaisala 1"))+
     scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
@@ -76,20 +73,21 @@ ggplot(inj1, aes(x = DateTime))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
   labs(title = "Injection #1 - July 12", x = "Time", y = "pCO2", colour = "Sensor")
 
+ggplotly(plot3)
 ```
 
 ```{r inj2, echo=FALSE, warning=FALSE}
 inj2 <- data%>%
   filter(DateTime > as.POSIXct("2019-07-16 13:30:00"))%>%
   filter(DateTime < as.POSIXct("2019-07-16 21:00:00"))
-ggplot(inj2, aes(x = DateTime))+
+plot4 <- ggplot(inj2, aes(x = DateTime))+
   geom_point(aes(y = V1, colour = "Vaisala 1"))+
     scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
   labs(title = "Injection #2 - July 16", x = "Time", y = "pCO2", colour ="Sensor")
-
+ggplotly(plot4)
 ```
 
 ```{r inj3, echo=FALSE, warning=FALSE}
@@ -97,14 +95,14 @@ inj3 <- data%>%
   filter(DateTime > as.POSIXct("2019-07-22 13:30:00"))%>%
   filter(DateTime < as.POSIXct("2019-07-22 21:00:00"))
 
-ggplot(inj3, aes(x = DateTime))+
+plot5 <- ggplot(inj3, aes(x = DateTime))+
   geom_point(aes(y = V1, colour = "Vaisala 1"))+
     scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
   labs(title = "Injection #3 - July 22", x = "Time", y = "pCO2", colour = "Sensor")
-
+ggplotly(plot5)
 ```
 
 ```{r inj4, echo=FALSE, warning=FALSE}
@@ -163,12 +161,12 @@ filt <- VMerge%>%
   filter(DateTime < as.POSIXct("2019-07-26 15:45:00", format = "%Y-%m-%d %H:%M:%S"))
 
 # Make a simple plot
-outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+outPlot3 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
   labs(title = "Injection #4 - July 26", x = "Time", y = "pCO2", colour = "Sensor")
 
-outPlot
+ggplotly(outPlot3)
 ```
 
 ```{r inj5, echo=FALSE, warning=FALSE}
@@ -228,12 +226,12 @@ filt <- VMerge%>%
 
 # Make a simple plot
 #"#63ABF9"
-outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+outPlot2 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #5 - August 01")
+  labs(title = "Injection #5 - August 01",x = "Time", y = "pCO2", colour = "Sensor")
 
-ggplotly(outPlot)
+ggplotly(outPlot2)
 ```
 
 
@@ -293,12 +291,12 @@ filt <- VMerge%>%
   filter(DateTime < as.POSIXct("2019-08-05 21:00:00", format = "%Y-%m-%d %H:%M:%S"))
 
 # Make a simple plot
-outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
+outPlot1 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #6 - August 05")
+  labs(title = "Injection #6 - August 05", x = "Time", y = "pCO2", colour = "Sensor")
 
-ggplotly(outPlot)
+ggplotly(outPlot1)
 ```
 
 
@@ -361,7 +359,7 @@ filt <- VMerge%>%
 outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #7 - August 08")
+  labs(title = "Injection #7 - August 08", x = "Time", y = "pCO2", colour = "Sensor")
 
 ggplotly(outPlot)
 ```
