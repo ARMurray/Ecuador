@@ -76,5 +76,19 @@ comboaug13 <- data.frame("Day" = "aug13", "Bags" = "2", "Avg_iCO2" = mean(avgaug
 
 allday <- rbind(combojuly17, combojuly23, combojuly30, comboaug02, comboaug09, comboaug13)
 
+allday$EcuLinearityAvg <- "-24.74"
+
+allday$Correction <- (allday$Avg_iCO2test - allday$EcuLinearityAvg)
+
+allday$Avg_iCO2test <- as.numeric(as.character(allday$Avg_iCO2))
+allday$EcuLinearityAvg <- as.numeric(as.character(allday$EcuLinearityAvg))
+
+allday <- allday %>%
+  select(Day, Bags, Avg_iCO2, StdDev_iCO2, EcuLinearityAvg, Correction)
+allday$Avg_iCO2 <- allday$Avg_iCO2test
+
+ecuaug13 <- ecuaug13 %>%
+  select(PosixCT, Day, Sample, X12CO2, Delta_Raw_iCO2)
+
 write.csv(allday, here("Picarro/EOSTransects/comboecuavg.csv"))
 
