@@ -1,3 +1,9 @@
+---
+title: "Flux at Collar Transects"
+author: "Chloe"
+date: "Data from 7/16/2019 measurements"
+output: html_document
+---
 ```{r setup, include=FALSE} 
 
 knitr::opts_chunk$set(echo = TRUE) 
@@ -16,6 +22,8 @@ library(wesanderson)
 
 library('knitr') 
 library(ggpubr)
+#install.packages("miscTools")
+#install.packages("matrixStats")
 library(miscTools)
 library(matrixStats)
 
@@ -77,15 +85,16 @@ colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO
 
  
 
-syn1 <- eos2[3712:3715,] 
+syn1 <- eos2[3581:3584,] 
 
-syn5 <- eos2[3717:3720,] 
 
-syn8 <- eos2[3722:3725,] 
+syn5 <- eos2[3586:3589,] 
 
-syn11 <- eos2[3728:3721,] 
+syn8 <- eos2[3591:3594,] 
 
-syn14 <- eos2[3735:3738,] 
+syn11 <- eos2[3597:3600,] 
+
+syn14 <- eos2[3604:3607,] 
 
  
 
@@ -251,15 +260,15 @@ colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO
 
 
 syn1 <- eos1[546:549,]
-syn5 <- eos1[551:454,]
+syn5 <- eos1[551:554,]
 syn8 <- eos1[556:559,]
 syn11 <- eos1[561:564,]
 syn14 <- eos1[567:570,]
-waterfall <- eos2[3172:3175,]
-syn20 <- eos2[3178:3181,]
-syn23 <- eos2[3183:3186,]
-syn29 <- eos2[3189:3192,]
-syn35 <- eos2[3195:3198,]
+waterfall <- eos2[3041:3044,]
+syn20 <- eos2[3047:3050,]
+syn23 <- eos2[3052:3055,]
+syn29 <- eos2[3058:3061,]
+syn35 <- eos2[3064:3067,]
 
 ```
 
@@ -723,7 +732,7 @@ dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, 
 
 rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "waterfall", "syn14", "syn11", "syn8", "syn 5", "syn1") 
 
-kable(dis, format = "markdown", row.names = TRUE) 
+#kable(dis, format = "markdown", row.names = TRUE) 
 
  
 
@@ -777,7 +786,7 @@ colnames(syndays) <- c("AverageFlux", "StdDev", "dis")
 
 ```
 
-```
+
 
 Combined Synoptic Day Flux Data
 
@@ -1868,7 +1877,7 @@ cplot <- ggplot() +
   geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "brown", size =2 ) +   geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "dodgerblue3", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue", size =2 )+  geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "brown", size =2 ) + labs(x = "Date", y = "Average FLux of collar")
 #cplot
 ```
-eos2 beside eos1 in water
+Green is eos2 which was in soil beside flotation at eos1. 
 ```{r, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
@@ -1900,9 +1909,9 @@ water <- subset(water, format(DateTime,'%M')%in% c("00","05","10","15","20","25"
 row.names(water) <- NULL
 
 
-landwater <- ggplot() + geom_point(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
-  geom_point(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
-landwater
+#landwater <- ggplot() + geom_point(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
+ # geom_point(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
+#landwater
 
 
 landwater <- ggplot() + geom_line(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
@@ -1922,9 +1931,41 @@ row.names(eos1night) <- NULL
 
 nightplot<- ggplot() + geom_line(data = col1night, aes(x= DateTime, y= Flux_eos2), color = "red", size = 1) +
   geom_line(data = eos1night, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
-nightplot
+nightplot 
 
-wtf <- ggarrange(allplotz, combined4) +ylim=c(0,10)
-wtf
 ```
 
+
+Blue is Flux from floatation and purple is flux in far wetland from
+16:00 on Jul23 to 11:00 Jul25
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+wetlnd <- eos2[843:1015,]
+row.names(wetlnd) <- NULL
+
+eos1 <- read.csv(here("FieldData/EosFD/eos1_08022019.csv"))
+eos1$Year <- paste0("20",eos1$Year)
+eos1$dateTime <- as.POSIXct(as.character(paste0(eos1$Year,"-",eos1$Month,"-",eos1$Day," ",eos1$Time)), format = "%Y-%m-%d %H:%M:%OS")
+eos1 <- eos1%>%
+  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm.,
+         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
+colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
+eos1$Flux_eos1 <- as.numeric(as.character(eos1$Flux_eos1))
+
+
+eos1same <- eos1[1670:1842,]
+row.names(eos1same) <- NULL
+
+wetplot <- ggplot() + geom_line(data = wetlnd, aes(x= DateTime, y= Flux_eos2), color = "purple", size = 1) +
+  geom_line(data = eos1same, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
+wetplot
+
+
+allplotz <- allplotz + ylim(0,10)
+
+
+wtf <- ggarrange(allplotz, combined4) 
+wtf
+
+```
