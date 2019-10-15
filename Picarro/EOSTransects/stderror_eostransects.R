@@ -74,10 +74,50 @@ comboecu$highbound <- c(comboecu$Avg_iCO2+(2*comboecu$stderror))
 
 write.csv(comboecu, here("Picarro/EOSTransects/statsecusamples_day.csv"))
 
+comboecuclean <- comboecu %>%
+  select(Day, Avg_iCO2, stderror, lowbound, highbound)
+
+write.csv(comboecuclean, here("Picarro/EOSTransects/statsecusamples_day_clean.csv"))
+
+
 #let's graph this
 # Use geom_pointrange
 stderrorplot2 <- ggplot(comboecu, aes(x=Day, y=Avg_iCO2, color=Day)) + 
-  geom_pointrange(aes(ymin=lowbound, ymax=highbound)) +
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=10) +
   ggtitle("Avg_iCO2 per Day 95% Confidence Intervals") 
 stderrorplot2
 
+
+## ok now let's try to figure out this percent error situation 
+
+
+# first let's make a column that represents 1% of the average value 
+
+onepercent <- data.frame(totalecu$datesample, c(totalecu$Avg_iCO2/100), totalecu$stderror)
+
+onepercent$BelowCutoff <- as.character("yes")
+onepercent$BelowCutoff[5] <- "no"
+onepercent$BelowCutoff[13] <- "no"
+
+onepercent$DateSample <- as.character(onepercent$totalecu.datesample)
+onepercent$Avg_ico2 <- as.character(onepercent$c.totalecu.Avg_iCO2.100.)
+onepercent$stderror <- as.character(onepercent$totalecu.stderror)
+
+onepercent <- onepercent %>%
+  select(DateSample, Avg_ico2, stderror,BelowCutoff)
+
+write.csv(onepercent, here("Picarro/EOSTransects/oneperecenttest_samples.csv"))
+
+
+## ok now let's do the same thing but per day 
+
+day <- data.frame(comboecu$Day, c(comboecu$Avg_iCO2/100), comboecu$stderror)
+day$BelowCutoff <- as.character("yes")
+day$Day <- as.character(day$comboecu.Day)
+day$Avg_ico2 <- as.character(day$c.comboecu.Avg_iCO2.100.)
+day$stderror <- as.character(day$comboecu.stderror)
+
+day <- day %>%
+  select(Day, Avg_ico2, stderror,BelowCutoff)
+
+write.csv(day, here("Picarro/EOSTransects/oneperecenttest_days.csv"))
