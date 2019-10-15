@@ -1,0 +1,55 @@
+---
+title: "Standard Error EosTransects"
+author: "Meg Raisle"
+date: "10/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+```
+
+
+
+```{r readData, echo=FALSE}
+#import all data we want here
+
+#for per sample stuff 
+totalecu <- read.csv(here("Picarro/EOSTransects/statsecusamples.csv"))
+
+#for per day
+comboecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_day.csv"))
+comboecuclean <- read.csv(here("Picarro/EOSTransects/statsecusamples_day_clean.csv"))
+
+```
+
+### All Ecuador Bags Run 
+```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(totalecu, format = "markdown")
+
+#let's graph this
+# Use geom_pointrange
+stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) + 
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=2) +
+  ggtitle("Avg_iCO2 with 95% Confidence Intervals") 
+stderrorplot
+```
+
+### All Bags Each EOS Day 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(comboecuclean, format = "markdown")
+
+#let's graph this
+# Use geom_pointrange
+stderrorplot2 <- ggplot(comboecu, aes(x=Day, y=Avg_iCO2, color=Day)) + 
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=2) +
+  ggtitle("Avg_iCO2 per Day 95% Confidence Intervals") 
+stderrorplot2
+
+```
