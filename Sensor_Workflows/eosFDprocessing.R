@@ -68,5 +68,5 @@ bothEos <- merge(sub.2, sub.22,by="DateTime", all = TRUE)%>%
   distinct()
 
 # Export the data
-write.csv(bothEos,here("data_4_analysis/eosFD_Stream.csv"))
+write.csv(bothEos,here("data_4_analysis/eosFD_All.csv"))
 
