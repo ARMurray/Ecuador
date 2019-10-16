@@ -38,7 +38,8 @@ for(i in 1:length(V2Files)){
   file <- V2Files[i]
   data <- read.csv(here::here("FieldData/Vaisala",file),
                    blank.lines.skip = TRUE, header = TRUE)
-  V2Data <- rbind(V2Data,data)
+  print(paste0(V2Files[i],": ", ncol(data)))
+  #V2Data <- rbind(V2Data,data)
 }
 V2Data$DateTime <- paste0(V2Data$Date," ",V2Data$Time)
 V2Data$DateTime <- as.POSIXct(V2Data$DateTime, format = "%m/%d/%Y %H:%M:%S")
@@ -53,7 +54,8 @@ for(i in 1:length(V3Files)){
   file <- V3Files[i]
   data <- read.csv(here::here("FieldData/Vaisala",file),
                    blank.lines.skip = TRUE, header = TRUE)
-  V3Data <- rbind(V3Data,data)
+  print(paste0(V3Files[i],": ", ncol(data)))
+  #V3Data <- rbind(V3Data,data)
 }
 V3Data$DateTime <- paste0(V3Data$Date," ",V3Data$Time)
 V3Data$DateTime <- as.POSIXct(V3Data$DateTime, format = "%m/%d/%Y %H:%M:%S")
