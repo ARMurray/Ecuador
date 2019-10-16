@@ -21,6 +21,8 @@ We attempt to collect data from the sensors as often as possible (almost every w
 
 At the end of the script, a file is written to '~Ecuador/data_4_analysis/Vaisala_Stations_AllData.csv' This file is in long format and contains all data collected from the Vaisalla stations.
 
+**Vaisala_time_cleaning.r**
+This was written to replace Vaisala_Processing.r which was necesarry because the data loggers switched between 24-hour (military) time to 12-hour (AM/PM) time.
 
 **Vaisala_Flux.r:**
 This script converts vaisala readings to flux

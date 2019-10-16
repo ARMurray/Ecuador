@@ -19,6 +19,7 @@ for(i in 1:length(V1Files)){
   file <- V1Files[i]
   data <- read.csv(here::here("FieldData/Vaisala",file),
                    blank.lines.skip = TRUE, header = TRUE)
+  data <- data[c(1,2,ncol(data))]   # Some of the files had two extra colums
   V1Data <- rbind(V1Data,data)
 }
 # Convert time to POSIXct in a new column called "DateTime"
