@@ -6,13 +6,13 @@ output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#install.packages("here")
-#install.packages("ggplot2")
-#install.packages("tidyr")
-#install.packages("dplyr")
-#install.packages("wesanderson")
-#install.packages("knitr")
-#install.packages("ggpubr")
+install.packages("here")
+install.packages("ggplot2")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("wesanderson")
+install.packages("knitr")
+install.packages("ggpubr")
 # Plots and Analysis
 library(here)
 library(ggplot2)
@@ -285,13 +285,16 @@ kable(sd, format = "markdown", row.names = TRUE)
 a <- cbind(a,sd)
 
 avgplot2 <- ggplot(a)+
- geom_errorbar(aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
-  geom_point(aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)
+ geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="blue") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "blue", size = 2)
 avgplot2 <- avgplot2 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8")) +
 labs(x = "7-22-2019 Collar", y = "Average FLux")
         
 
 avgplot2
+
+allplotz <- avgplot1 +  geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="green") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "green", size = 2)
 
 ```
 
@@ -428,10 +431,10 @@ avgplot3 <- ggplot(a)+
 
 avgplot3 <- avgplot3 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8")) +
 labs(x = "7-29-2019 Collar", y = "Average FLux")
-        
-
 avgplot3
 
+allplotz <- allplotz +  geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="red") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "red", size = 2)
 ```
 
 ```{r , echo=FALSE}
@@ -560,10 +563,10 @@ avgplot4 <- ggplot(a)+
 
 avgplot4 <- avgplot4 + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8")) +
 labs(x = "8-01-2019 Collar", y = "Average FLux")
-        
-
 avgplot4
 
+allplotz <- allplotz + geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "purple", size = 2)
 ```
 
 ```{r , echo=FALSE}
@@ -573,24 +576,23 @@ avgplot4
 
 # eos2 data
 eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
+
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
-         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
-colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
-                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+  select(dateTime,Flux)
+colnames(eos2) <- c("DateTime","Flux_eos2")
 
 eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
-col1.5 <- eos2[2946:2949,]
-col2.5 <- eos2[2951:2954,]
-col3.5 <- eos2[2955:2957,]
-col4.5 <- eos2[2960:2962,]
-col5.5 <- eos2[2939:2942,]
-col6.5 <- eos2[2927:2930,]
-col7.5 <- eos2[2931:2933,]
-col8.5 <- eos2[2935:2938,]
+col1.5 <- eos2[2815:2818,]
+col2.5 <- eos2[2820:2823,]
+col3.5 <- eos2[2824:2826,]
+col4.5 <- eos2[2829:2831,]
+col5.5 <- eos2[2808:2811,]
+col6.5 <- eos2[2796:2799,]
+col7.5 <- eos2[2800:2803,]
+col8.5 <- eos2[2804:2807,]
 
 ```
 
@@ -692,10 +694,10 @@ avgplot5 <- ggplot(a)+
 
 avgplot5 <- avgplot5 + scale_x_continuous(breaks=1:8, labels=c("col1.5", "col2.5", "col3.5", "col4.5", "col5.5", "col6.5", "col7.5", "col8.5")) +
 labs(x = "8-05-2019 Collar", y = "Average FLux")
-        
-
 avgplot5
 
+allplotz<- allplotz + geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="yellow") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "yellow", size = 2)
 ```
 
 ```{r , echo=FALSE}
@@ -706,22 +708,19 @@ eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
-         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
-colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
-                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+  select(dateTime,Flux)
+colnames(eos2) <- c("DateTime","Flux_eos2")
 
 eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
-
-col1.6 <- eos2[3411:3413,]
-col2.6 <- eos2[3415:3417,]
-col3.6 <- eos2[3419:3421,]
-col4.6 <- eos2[3423:3426,]
-col5.6 <- eos2[3393:3396,]
-col6.6 <- eos2[3397:3400,]
-col7.6 <- eos2[3401:3404,]
-col8.6 <- eos2[3405:3408,]
+col1.6 <- eos2[3280:3282,]
+col2.6 <- eos2[3284:3286,]
+col3.6 <- eos2[3288:3291,]
+col4.6 <- eos2[3292:3295,]
+col5.6 <- eos2[3262:3265,]
+col6.6 <- eos2[3266:3269,]
+col7.6 <- eos2[3270:3273,]
+col8.6 <- eos2[3274:3277,]
 
 ```
 
@@ -823,10 +822,10 @@ avgplot6 <- ggplot(a)+
 
 avgplot6 <- avgplot6 + scale_x_continuous(breaks=1:8, labels=c("col1.6", "col2.6", "col3.6", "col4.6", "col5.6", "col6.6", "col7.6", "col8.6")) +
 labs(x = "8-08-2019 Collar", y = "Average FLux")
-        
-
 avgplot6
 
+allplotz <- allplotz + geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="orange") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "orange", size = 2)
 ```
 
 
@@ -847,19 +846,18 @@ eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
-         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
-colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2","CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+  select(dateTime,Flux)
+colnames(eos2) <- c("DateTime","Flux_eos2")
 
 eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
-col1.7 <- eos2[3832:3835,]
-col2.7 <- eos2[3837:3840,]
-col3.7 <- eos2[3842:3845,]
-col4.7 <- eos2[3846:3849,]
+col1.7 <- eos2[3701:3704,]
+col2.7 <- eos2[3706:3709,]
+col3.7 <- eos2[3711:3714,]
+col4.7 <- eos2[3715:3718,]
 col5.7 <- eos1[1344:1347,]
 col6.7 <- eos1[1348:1351,]
-col7.7 <- eos1[1352:1340,]
+col7.7 <- eos1[1352:1355,]
 col8.7 <- eos1[1356:1359,]
 
 
@@ -964,10 +962,10 @@ avgplot7 <- ggplot(a)+
 
 avgplot7 <- avgplot7 + scale_x_continuous(breaks=1:8, labels=c("col1.7", "col2.7", "col3.7", "col4.7", "col5.7", "col6.7", "col7.7", "col8.7")) +
 labs(x = "8-13-2019 Collar", y = "Average FLux")
-        
-
 avgplot7
 
+allplotz <- allplotz + geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="brown") +
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "brown", size = 2)
 ```
 
 All transect days
@@ -976,6 +974,46 @@ All transect days
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 allplot <- ggarrange(avgplot1, avgplot2, avgplot3, avgplot4, avgplot5, avgplot6, avgplot7)
 allplot
+allplotz
+
+
+```
+
+Average and standard deviation of each transect day at each collar 
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
+c1a <- t(data.frame(col1.1avg, col1.2avg, col1.3avg, col1.4avg, col1.5avg, col1.6avg, col1.7avg))
+c2a <- t(data.frame(col2.1avg, col2.2avg, col2.3avg, col2.4avg, col2.5avg, col2.6avg, col2.7avg))
+c3a <- t(data.frame(col3.1avg, col3.2avg, col3.3avg, col3.4avg, col3.5avg, col3.6avg, col3.7avg))
+c4a<- t(data.frame(col4.1avg, col4.2avg, col4.3avg, col4.4avg, col4.5avg, col4.6avg, col4.7avg))
+c5a<- t(data.frame(col5.1avg, col5.2avg, col5.3avg, col5.4avg, col5.5avg, col5.6avg, col5.7avg))
+c6a<- t(data.frame(col6.1avg, col6.2avg, col6.3avg, col6.4avg, col6.5avg, col6.6avg, col6.7avg))
+c7a<- t(data.frame(col7.1avg, col7.2avg, col7.3avg, col7.4avg, col7.5avg, col7.6avg, col7.7avg))
+c8a<- t(data.frame(col8.2avg, col8.2avg, col8.3avg, col8.4avg, col8.5avg, col8.6avg, col8.7avg))
+
+callavgs <- data.frame(cbind(c1a, c2a, c3a, c4a, c5a, c6a, c7a, c8a))
+row.names(callavgs) <- c("Jul16", "Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
+colnames(callavgs) <- c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8")
+kable(head(callavgs), format = "markdown", row.names = FALSE)
+
+allavg <- data.frame(c(mean(callavgs$col1), mean(callavgs$col2), mean(callavgs$col3), mean(callavgs$col4), mean(callavgs$col5), mean(callavgs$col6), mean(callavgs$col7), mean(callavgs$col8)))
+colnames(allavg) <- c("avgflux")
+allsd <- data.frame(c(sd(callavgs$col1), sd(callavgs$col2), sd(callavgs$col3), sd(callavgs$col4), sd(callavgs$col5), sd(callavgs$col6), sd(callavgs$col7), sd(callavgs$col8)))
+colnames(allsd) <- c("stddev")
+allz <- cbind(allavg, allsd)
+
+alltrans <- ggplot(allz) +
+ geom_errorbar(aes(x= 1:8,ymin= avgflux - stddev, ymax= avgflux + stddev), width=0.2, size=1, color= "orange") +
+  geom_point(aes(x= 1:8, y= avgflux, color = "orange", size = 3)) + labs( x= "Collar" , y= "Average Flux") + scale_x_continuous(breaks=1:8, labels=c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8"))
+alltrans
+
+```
+
+Collar fluxes by date 
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+
 
 c1 <- data.frame(col1.1avg, col1.2avg, col1.3avg, col1.4avg, col1.5avg, col1.6avg, col1.7avg)
 c2 <- data.frame(col2.1avg, col2.2avg, col2.3avg, col2.4avg, col2.5avg, col2.6avg, col2.7avg)
@@ -1007,8 +1045,16 @@ c6 <- cbind(c6, z)
 c7 <- cbind(c7, z)
 c8 <- cbind(c8, z1)
 
+c1$z <- factor(c1$z, levels = c1$z)
+c2$z <- factor(c2$z, levels = c2$z)
+c3$z <- factor(c3$z, levels = c3$z)
+c4$z <- factor(c4$z, levels = c4$z)
+c5$z <- factor(c5$z, levels = c5$z)
+c6$z <- factor(c6$z, levels = c6$z)
+c7$z <- factor(c7$z, levels = c7$z)
+c8$z1 <- factor(c8$z1, levels = c8$z1)
 cplot <- ggplot() +
-geom_point(data = c1, aes(x= z, y=c1), color = "red") + geom_point(data = c2, aes(x= z, y=c2), color = "orange")+ geom_point(data = c3, aes(x= z, y=c3), color = "yellow") + geom_point(data = c4, aes(x= z, y=c4), color = "green")+ geom_point(data = c5, aes(x= z, y=c5), color = "blue")+ geom_point(data = c6, aes(x= z, y=c6), color = "purple") +  geom_point(data = c7, aes(x= z, y=c7), color = "black")+ geom_point(data = c8, aes(x= z1, y=c8), color = "white")
+geom_point(data = c1, aes(x= z, y=c1), color = "red", size=3) + geom_point(data = c2, aes(x= z, y=c2), color = "orange", size=3)+ geom_point(data = c3, aes(x= z, y=c3), color = "yellow", size=3) + geom_point(data = c4, aes(x= z, y=c4), color = "green", size=3)+ geom_point(data = c5, aes(x= z, y=c5), color = "blue", size=3)+ geom_point(data = c6, aes(x= z, y=c6), color = "purple") +  geom_point(data = c7, aes(x= z, y=c7), color = "black", size=3)+ geom_point(data = c8, aes(x= z1, y=c8), color = "brown", size=3) + labs(x = "Date", y = "Average FLux of collar")
 cplot
 ```
 
@@ -1018,11 +1064,11 @@ Transect near spring- Darkest Green col5 (most water), lightest green col8 (leas
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 cplot <- ggplot() +
-  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =2 ) + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =2 )+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =2 ) + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =2 )+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =2 ) +  geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =2 )+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =2 )
+  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =2 ) + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =2 )+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =2 ) + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =2 )+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =2 ) +  geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =2 )+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =2 ) + labs(x = "Date", y = "Average FLux of collar")
 cplot
 cplot <- ggplot() +
-  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "brown", size =2 ) +   geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "dodgerblue3", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue", size =2 )+  geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "brown", size =2 )
-cplot
+  geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "brown", size =2 ) +   geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "dodgerblue3", size =2 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "blue", size =2 )+  geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "brown", size =2 ) + labs(x = "Date", y = "Average FLux of collar")
+#cplot
 ```
 eos2 beside eos1 in water
 ```{r, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
@@ -1031,10 +1077,8 @@ eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 eos2$Year <- paste0("20",eos2$Year)
 eos2$dateTime <- as.POSIXct(as.character(paste0(eos2$Year,"-",eos2$Month,"-",eos2$Day," ",eos2$Time)), format = "%Y-%m-%d %H:%M:%OS")
 eos2 <- eos2%>%
-  select(dateTime,Flux,Temperature..C.,CO2.Soil..ppm..,
-         CO2.Soil.STD..ppm.,CO2.ATM..ppm.,CO2.ATM.STD..ppm.,Mode)
-colnames(eos2) <- c("DateTime","Flux_eos2","Temp_C_eos2","CO2_Soil_ppm_eos2","CO2_Soil_STD_ppm_eos2",
-                    "CO2_ATM_ppm_eos2","CO2_ATM_STD_ppm_eos2","Mode")
+  select(dateTime,Flux)
+colnames(eos2) <- c("DateTime","Flux_eos2")
 eos2$Flux_eos2 <- as.numeric(as.character(eos2$Flux_eos2))
 
 
@@ -1047,7 +1091,7 @@ eos1 <- eos1%>%
 colnames(eos1) <- c("DateTime","Flux_eos1","Temp_C_eos1","CO2_Soil_ppm_eos1","CO2_Soil_STD_ppm_eos1","CO2_ATM_ppm_eos1","CO2_ATM_STD_ppm_eos1","Mode")
 eos1$Flux_eos1 <- as.numeric(as.character(eos1$Flux_eos1))
 
-land <- eos2[3210:3383,]
+land <- eos2[3078:3251,]
 land <- subset(land, format(DateTime,'%OS')=='00')
 land <- subset(land, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
 row.names(land) <- NULL
@@ -1059,13 +1103,27 @@ row.names(water) <- NULL
 
 
 landwater <- ggplot() + geom_point(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
-  geom_point(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) 
+  geom_point(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
 landwater
 
 
 landwater <- ggplot() + geom_line(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
-  geom_line(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1)
+  geom_line(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
 
 landwater
+```
+
+Blue is Flux from floatation and red is flux from collar 1 from 15:00 on Aug12 to 10:00 Aug13th
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
+col1night <- eos2[3618:3694,]
+row.names(col1night) <- NULL
+eos1night <- eos1[1261:1337,]
+row.names(eos1night) <- NULL
+
+
+nightplot<- ggplot() + geom_line(data = col1night, aes(x= DateTime, y= Flux_eos2), color = "red", size = 1) +
+  geom_line(data = eos1night, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux")
+nightplot
 
 ```
