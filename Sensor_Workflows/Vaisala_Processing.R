@@ -6,10 +6,10 @@ library(tidyverse)
 # which are permanently installed inside of the 4 large weatherproof boxes
 
 # Import the Vaisala data for the date specified above.
-V1Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB1")
-V2Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB2")
-V3Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB3")
-V4Files <- list.files(path = here("FieldData/Vaisala"), pattern = "VB4")
+V1Files <- list.files(here::here("FieldData/Vaisala"), pattern = "VB1")
+V2Files <- list.files(here::here("FieldData/Vaisala"), pattern = "VB2")
+V3Files <- list.files(here::here("FieldData/Vaisala"), pattern = "VB3")
+V4Files <- list.files(here::here("FieldData/Vaisala"), pattern = "VB4")
 
 ### Create an empty data frame
 V1Data <- data.frame()
