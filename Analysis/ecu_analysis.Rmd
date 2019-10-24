@@ -11,6 +11,9 @@ library(dplyr)
 library(ggplot2)
 library(plotly)
 ```
+Objective:
+Hypothesis:
+
 ## Synoptic- Vaisala
 ```{r synoptic, echo=FALSE, warning=FALSE}
 Synoptics <- read.csv(here("FieldData/Vaisala/Synoptics2.csv"))
@@ -22,9 +25,21 @@ plot <- ggplot(Synoptics) +
   geom_point(aes(x= Distance, y= Syn5_080619), color= "darkgreen", size = 2) +
   geom_point(aes(x= Distance, y= Syn6_081219), color= "darkblue", size = 2) +
   labs(x = "Distance from Upstream (m)", y= "pCO2") +
-  ggtitle("Synoptics")
+  ggtitle("Synoptics")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
 ggplotly(plot)
 ```
+# Discharge
+
+|Station|V1(Distance:0.00m)|V2(Distance:26.2m)|V3(Distance:56.2m)|V4(Distance:130.4m)|
+|:--:|:---:|:---:|:---:|:---:|
+|Jul18|0.03477536|0.011292|0.14120016|0.010436
+|Jul25|0.06361875|0.009304|0.08879856|0.04661081
+|Jul31|0.00989931|0.011292|0.07793986|0.010436
+|Aug6|0.00989931|0.01328|0.7|0.010436
+|Aug12|0.03477536|-0.00163|0.04906866|0.05259296
 
 ## Synoptic Average & Standard Deviation
 
@@ -41,7 +56,9 @@ syn <- read.csv(here("FieldData/Vaisala/synavg.csv"))
 plot1 <- ggplot(syn) + 
   geom_errorbar(aes(x= Distance, y= Avg, ymin= Avg - Stdv, ymax= Avg + Stdv), width=0.2, size=1, color="darkblue") +   
   geom_point(aes(x= Distance, y= Avg), color = "darkblue", size = 2) +   
-  labs(x = "Distance from Upstream (m)", y = "pCO2)") 
+  labs(x = "Distance from Upstream (m)", y = "pCO2") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(plot1)
 ```
@@ -71,7 +88,9 @@ plot3 <- ggplot(inj1, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #1 - July 12", x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #1 - July 12", x = "Time", y = "pCO2", colour = "Sensor") +
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(plot3)
 ```
@@ -86,7 +105,9 @@ plot4 <- ggplot(inj2, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #2 - July 16", x = "Time", y = "pCO2", colour ="Sensor")
+  labs(title = "Injection #2 - July 16", x = "Time", y = "pCO2", colour ="Sensor") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggplotly(plot4)
 ```
 
@@ -101,7 +122,9 @@ plot5 <- ggplot(inj3, aes(x = DateTime))+
   geom_point(aes(y = V2, colour = "Vaisala 2"))+
   geom_point(aes(y = V3, colour = "Vaisala 3"))+
   geom_point(aes(y = V4, colour = "Vaisala 4"))+
-  labs(title = "Injection #3 - July 22", x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #3 - July 22", x = "Time", y = "pCO2", colour = "Sensor") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggplotly(plot5)
 ```
 
@@ -164,7 +187,9 @@ filt <- VMerge%>%
 outPlot3 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9", "#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #4 - July 26", x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #4 - July 26", x = "Time", y = "pCO2", colour = "Sensor") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(outPlot3)
 ```
@@ -229,7 +254,9 @@ filt <- VMerge%>%
 outPlot2 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #5 - August 01",x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #5 - August 01",x = "Time", y = "pCO2", colour = "Sensor")+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(outPlot2)
 ```
@@ -294,7 +321,9 @@ filt <- VMerge%>%
 outPlot1 <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #6 - August 05", x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #6 - August 05", x = "Time", y = "pCO2", colour = "Sensor") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(outPlot1)
 ```
@@ -359,7 +388,9 @@ filt <- VMerge%>%
 outPlot <- ggplot(filt, aes(x = DateTime, y = PPM, group = VID))+
   scale_color_manual(values=c("#1A5807", "#F3C519", "#1B48A9","#63ABF9"))+
   geom_point(aes(col=VID), size = 1) +
-  labs(title = "Injection #7 - August 08", x = "Time", y = "pCO2", colour = "Sensor")
+  labs(title = "Injection #7 - August 08", x = "Time", y = "pCO2", colour = "Sensor") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 ggplotly(outPlot)
 ```
