@@ -42,8 +42,8 @@ ggplotly(plot)
 
 #Now let's get the exact sample times that we need for 30 seconds 
 
-ecu1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:24:47"
-                         & alljuly30$PosixCT < "2019-07-30 15:28:20"), ]
+ecu1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:28:04"
+                         & alljuly30$PosixCT < "2019-07-30 15:28:50"), ]
 ecu1$Sample <- as.character("ecu1")
 
 col1 <- alljuly30[ which(alljuly30$PosixCT > "2019-07-30 15:32:05"
@@ -95,10 +95,10 @@ write.csv(samplesjuly30, here("Picarro/EOSTransects/072919/", "samplesalldatajul
 
 #let's get the average and std. deviation of all ecu samples 
 
-ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_Raw_iCO2))
-ecu1avg <- data.frame("Sample" = "ecu1", "Avg_iCO2" = mean(ecu3$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_Raw_iCO2))
+ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_30s_iCO2))
+ecu1avg <- data.frame("Sample" = "ecu1", "Avg_iCO2" = mean(ecu1$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu1$Delta_30s_iCO2))
 
-sumjuly30ecu <- rbind(ecu2avg, ecu3avg)
+sumjuly30ecu <- rbind(ecu2avg, ecu1avg)
 
 write.csv(sumjuly30ecu, here("Picarro/EOSTransects/081319/", "sumecujuly30.csv"))
 
