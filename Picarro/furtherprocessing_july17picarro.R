@@ -27,7 +27,8 @@ write.csv(alljuly17, here("Picarro/EOSTransects/071619/alldeltajuly17.csv"))
 #subset the data
 subsjuly17 <- alljuly17[ which(alljuly17$PosixCT > "2019-07-17 18:00:00"
                  & alljuly17$PosixCT < "2019-07-17 19:30:00"), ]
-
+#savethis
+write.csv(subsjuly17, here("Picarro/EOSTransects/071619/subsjuly17.csv"))
 
 #Do an initial plot of Delta_i 
 plot <- ggplot(subsjuly17)+
