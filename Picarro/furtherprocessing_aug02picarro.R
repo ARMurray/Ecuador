@@ -85,7 +85,7 @@ col8$Sample <- as.character("col8")
 
 
 
-samplesaug02 <- rbind(col1, col2, col3, col4, col5, col6, col7, ecu3, ecu4)
+samplesaug02 <- rbind(col1, col2, col3, col4, col5, col6, col7, col8, ecu3, ecu4)
 
 write.csv(samplesaug02, here("Picarro/EOSTransects/080119/", "samplesalldataaug02.csv"))
 
