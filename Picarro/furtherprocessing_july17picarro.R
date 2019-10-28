@@ -97,5 +97,5 @@ ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_30s_iCO2),
 
 sumjuly17ecu <- rbind(ecu2avg, ecu3avg)
 
-write.csv(sumjuly17ecu, here("Picarro/EOSTransects/081319/", "sumecujuly17.csv"))
+write.csv(sumjuly17ecu, here("Picarro/EOSTransects/071619/", "sumecujuly17.csv"))
 
