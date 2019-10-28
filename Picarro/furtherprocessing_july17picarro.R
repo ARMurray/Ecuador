@@ -88,21 +88,12 @@ samplesjuly17 <- rbind(col1, col2, col3, col4, col5, col6, col7, ecu3, ecu2)
 
 write.csv(samplesjuly17, here("Picarro/EOSTransects/071619/", "samplesalldatajuly17.csv"))
 
-#now let's plot only the samples 
 
-#Do an initial plot of Delta_i 
-plot2 <- ggplot(samplesjuly17)+
-  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color=Sample)+
-  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color=Sample)+
-  labs(x = "Time", y = "Delta")+
-  ggtitle("July 17 Sample Comparison Delta Raw and 30s") 
-plot2
-ggplotly(plot)
 
-#let's get the average and std. deviation of all ecu samples 
+#let's get the average and std. deviation of all ecu samples at 30s
 
-ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_Raw_iCO2))
-ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_Raw_iCO2))
+ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_30s_iCO2))
+ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_30s_iCO2))
 
 sumjuly17ecu <- rbind(ecu2avg, ecu3avg)
 
