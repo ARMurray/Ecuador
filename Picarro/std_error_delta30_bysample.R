@@ -52,6 +52,7 @@ samplenumber <- read.csv(here("Picarro/EOSTransects/samplenumbers_30seconds.csv"
 
 totalecu <- cbind(allecu30sec, samplenumber)
 write.csv(totalecu, here("Picarro/EOSTransects/ecuavg30secwithsamplenumbers.csv"))
+totalecu <- read.csv(here("Picarro/EOSTransects/ecuavg30secwithsamplenumbers.csv"))
 
 #ok now let's calculate standard error 
 stderror <- data.frame(totalecu$StdDev_iCO2/sqrt(totalecu$SampleNumber))
@@ -79,7 +80,7 @@ totalecu<- totalecu %>%
 #save this 
 
 write.csv(totalecu, here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
-
+totalecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
 #let's graph this
 # Use geom_pointrange
 stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) + 
@@ -87,3 +88,23 @@ stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) +
   ggtitle("Avg_iCO2_30second with 95% Confidence Intervals") 
 stderrorplot
 
+
+## ok now let's try to figure out this percent error situation 
+
+
+# first let's make a column that represents 1% of the average value 
+
+onepercent <- data.frame(totalecu$datesample, c(totalecu$Avg_iCO2/100), totalecu$stderror)
+
+onepercent$BelowCutoff <- as.character("yes")
+#onepercent$BelowCutoff[5] <- "no"
+#onepercent$BelowCutoff[13] <- "no"
+
+onepercent$DateSample <- as.character(onepercent$totalecu.datesample)
+onepercent$Avg_ico2 <- as.character(onepercent$c.totalecu.Avg_iCO2.100.)
+onepercent$stderror <- as.character(onepercent$totalecu.stderror)
+
+onepercent <- onepercent %>%
+  select(DateSample, Avg_ico2, stderror,BelowCutoff)
+
+write.csv(onepercent, here("Picarro/EOSTransects/oneperecenttest_samples30seconds.csv"))
