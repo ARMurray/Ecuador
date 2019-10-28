@@ -98,4 +98,12 @@ plot2 <- ggplot(samplesjuly17)+
 plot2
 ggplotly(plot)
 
+#let's get the average and std. deviation of all ecu samples 
+
+ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_Raw_iCO2))
+ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_Raw_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_Raw_iCO2))
+
+sumjuly17ecu <- rbind(ecu2avg, ecu3avg)
+
+write.csv(sumjuly17ecu, here("Picarro/EOSTransects/081319/", "sumecujuly17.csv"))
 
