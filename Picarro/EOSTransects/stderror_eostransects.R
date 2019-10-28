@@ -41,7 +41,7 @@ totalecu<- totalecu %>%
 
 #save this 
 
-write.csv(totalecu, here("Picarro/EOSTransects/statsecusamples.csv"))
+write.csv(totalecu, here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
 
 #let's graph this
 # Use geom_pointrange

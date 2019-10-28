@@ -53,3 +53,37 @@ samplenumber <- read.csv(here("Picarro/EOSTransects/samplenumbers_30seconds.csv"
 totalecu <- cbind(allecu30sec, samplenumber)
 write.csv(totalecu, here("Picarro/EOSTransects/ecuavg30secwithsamplenumbers.csv"))
 
+#ok now let's calculate standard error 
+stderror <- data.frame(totalecu$StdDev_iCO2/sqrt(totalecu$SampleNumber))
+stderror$stderror <-- as.numeric(stderror$totalecu.StdDev_iCO2.sqrt.totalecu.SampleNumber.)
+stderror <- stderror %>%
+  select(stderror)
+
+#let's add that to the full table
+
+totalecu <- cbind(totalecu, stderror)
+
+#95% confidence intervals of the mean
+c(totalecu$Avg_iCO2-(2*stderror$stderror), totalecu$Avg_iCO2+(2*stderror$stderror))
+
+totalecu$lowbound <- c(totalecu$Avg_iCO2-(2*stderror$stderror))
+totalecu$highbound <- c(totalecu$Avg_iCO2+(2*stderror$stderror))
+
+#make column combining day and sample 
+totalecu$datesample <- paste(totalecu$Day, totalecu$Sample)
+
+#reorg table 
+totalecu<- totalecu %>%
+  select(Day, Sample, datesample, SampleNumber, Avg_iCO2, StdDev_iCO2, stderror, lowbound, highbound)
+
+#save this 
+
+write.csv(totalecu, here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
+
+#let's graph this
+# Use geom_pointrange
+stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) + 
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound)) +
+  ggtitle("Avg_iCO2_30second with 95% Confidence Intervals") 
+stderrorplot
+
