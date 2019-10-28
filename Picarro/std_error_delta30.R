@@ -44,3 +44,12 @@ aug13 <- aug13 %>%
 
 #combine them all
 allecu30sec <- rbind(july17, july23, july30, aug02, aug09, aug13)
+
+write.csv(allecu30sec, here("Picarro/EOSTransects/ecuaveragesamples_30seconds.csv"))
+
+
+samplenumber <- read.csv(here("Picarro/EOSTransects/samplenumbers_30seconds.csv"))
+
+totalecu <- cbind(allecu30sec, samplenumber)
+write.csv(totalecu, here("Picarro/EOSTransects/ecuavg30secwithsamplenumbers.csv"))
+
