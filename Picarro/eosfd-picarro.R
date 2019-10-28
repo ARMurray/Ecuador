@@ -1,3 +1,11 @@
+install.packages("tmaptools")
+install.packages("ggplot2")
+install.packages("here")
+install.packages("dplyr")
+install.packages("plotly")
+install.packages("wesanderson")
+
+
 library(tmaptools)
 library(ggplot2)
 library(here)
@@ -8,15 +16,15 @@ library(wesanderson)
 date <- 'aug06'
 
 ### Get a list of all the files
-Aug6_Files <- list.files(here::here("2019 picarro/08/06"),pattern = '.dat')
+Aug06_Files <- list.files(here::here("2019 picarro/08/06"),pattern = '.dat')
 
 #create an empty data.frame
-allaug06Data <- read.table(here::here("2019 picarro/08/06",aug06_Files[1]), header= TRUE)
+allaug06Data <- read.table(here::here("2019 picarro/08/06",Aug06_Files[1]), header= TRUE)
 
 
 # Combine all aug06 data
-for(i in 2:length(aug06_Files)){
-  file <- aug06_Files[i]
+for(i in 2:length(Aug06_Files)){
+  file <- Aug06_Files[i]
   data <- read.table(here::here("2019 picarro/08/06",file), header = TRUE)
   allaug06Data <- rbind(allaug06Data,data)
 }

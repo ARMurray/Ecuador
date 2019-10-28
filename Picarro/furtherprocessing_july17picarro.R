@@ -6,71 +6,86 @@ library(plotly)
 library(wesanderson)
 
 #open up the cleaned file that you want to work with 
-allaug13 <- read.csv(here("Picarro/EOSTransects/081319/allaug13Data.csv"))
+alljuly17 <- read.csv(here("Picarro/EOSTransects/071619/comprehensivejuly17.csv"))
+
+# Combine Date and time into one column
+alljuly17$DateTime <- paste0(alljuly17$DATE," ",substr(alljuly17$TIME,1,8))
+
+# Convert to PosixCT
+alljuly17$PosixCT <- as.POSIXct(alljuly17$DateTime, format = '%Y-%m-%d %H:%M:%OS')
 
 #make posic.ct, posixct again
-allaug13$PosixCT <- as.POSIXct(allaug13$PosixCT)
+alljuly17$PosixCT <- as.POSIXct(alljuly17$PosixCT)
+
+#only take what you need
+alljuly17 <- alljuly17 %>%
+  select(DATE, PosixCT, X12CO2, Delta_Raw_iCO2, Delta_30s_iCO2,HR_12CH4, HP_12CH4, Delta_iCH4_Raw, HR_Delta_iCH4_Raw, HR_Delta_iCH4_30s, HP_Delta_iCH4_Raw, HP_Delta_iCH4_30s)
+
+#savethis
+write.csv(alljuly17, here("Picarro/EOSTransects/071619/alldeltajuly17.csv"))
 
 #subset the data
-Subsaug13 <- allaug13[c(82900:89200), ]
+subsjuly17 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 18:00:00"
+                 & alljuly17$PosixCT < "2019-08-13 19:30:00"), ]
 
-#Do an initial plot of C02 
-plot <- ggplot(allaug13)+
+
+#Do an initial plot comparing raw delta and 30sec delta 
+plot <- ggplot(alljuly17)+
 geom_point(aes(x= PosixCT, y= X12CO2)) +
 labs(x = "Time", y = "CO2") +
 ggtitle("aug13 EOS Transect Pulls") 
 plot
 
 #Do an initial plot of Delta_i 
-plot <- ggplot(Subsaug13)+
-geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2)) +
-labs(x = "Time", y = "Delta_Raw") +
-ggtitle("aug13 EOS Transect Pulls") 
+plot <- ggplot(subsjuly17)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2))+
+  labs(x = "Time", y = "Delta") +
+  ggtitle("July 17 Delta Co2 Raw and 30 second") 
 
 plot
 ggplotly(plot)
 
 
 
-ecu3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:44:00"
-                        & allaug13$PosixCT < "2019-08-13 20:48:00"), ]
+ecu3 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 20:44:00"
+                        & alljuly17$PosixCT < "2019-08-13 20:48:00"), ]
 ecu3$Sample <- as.character("ecu3")
 
 
-col1 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:53:00"
-                         & allaug13$PosixCT < "2019-08-13 20:55:00"), ]
+col1 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 20:53:00"
+                         & alljuly17$PosixCT < "2019-08-13 20:55:00"), ]
 col1$Sample <- as.character("col1")
 
-col2 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 20:59:00"
-                         & allaug13$PosixCT < "2019-08-13 21:02:00"), ]
+col2 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 20:59:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:02:00"), ]
 col2$Sample <- as.character("col2")
 
-col3 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:06:00"
-                         & allaug13$PosixCT < "2019-08-13 21:09:00"), ]
+col3 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:06:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:09:00"), ]
 col3$Sample <- as.character("col3")
 
-col4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:14:00"
-                         & allaug13$PosixCT < "2019-08-13 21:16:00"), ]
+col4 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:14:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:16:00"), ]
 col4$Sample <- as.character("col4")
 
-col5 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:21:00"
-                         & allaug13$PosixCT < "2019-08-13 21:23:00"), ]
+col5 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:21:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:23:00"), ]
 col5$Sample <- as.character("col5")
 
-ecu4 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:27:00"
-                        & allaug13$PosixCT < "2019-08-13 21:29:00"), ]
+ecu4 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:27:00"
+                        & alljuly17$PosixCT < "2019-08-13 21:29:00"), ]
 ecu4$Sample <- as.character("ecu4")
 
-col6 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:33:00"
-                         & allaug13$PosixCT < "2019-08-13 21:36:00"), ]
+col6 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:33:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:36:00"), ]
 col6$Sample <- as.character("col6")
 
-col7 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:41:00"
-                         & allaug13$PosixCT < "2019-08-13 21:43:00"), ]
+col7 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:41:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:43:00"), ]
 col7$Sample <- as.character("col7")
 
-col8 <- allaug13[ which(allaug13$PosixCT > "2019-08-13 21:47:00"
-                         & allaug13$PosixCT < "2019-08-13 21:49:00"), ]
+col8 <- alljuly17[ which(alljuly17$PosixCT > "2019-08-13 21:47:00"
+                         & alljuly17$PosixCT < "2019-08-13 21:49:00"), ]
 col8$Sample <- as.character("col8")
 
 
