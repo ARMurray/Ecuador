@@ -43,48 +43,48 @@ ggplotly(plot)
 #Now let's get the exact sample times that we need for 30 seconds 
 
 
-col1 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:26:39"
-                        & allaug09$PosixCT < "2019-08-09 18:27:32"), ]
+col1 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:23:30"
+                        & allaug09$PosixCT < "2019-08-09 15:25:30"), ]
 col1$Sample <- as.character("col1")
 
-col2 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:30:46"
-                         & allaug09$PosixCT < "2019-08-09 18:32:45"), ]
+col2 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:29:30"
+                         & allaug09$PosixCT < "2019-08-09 15:31:30"), ]
 col2$Sample <- as.character("col2")
 
-col3 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:35:30"
-                         & allaug09$PosixCT < "2019-08-09 18:37:30"), ]
+col3 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:34:30"
+                         & allaug09$PosixCT < "2019-08-09 15:35:30"), ]
 col3$Sample <- as.character("col3")
 
-col4 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:40:30"
-                         & allaug09$PosixCT < "2019-08-09 18:41:30"), ]
+col4 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:40:30"
+                         & allaug09$PosixCT < "2019-08-09 15:43:30"), ]
 col4$Sample <- as.character("col4")
 
-col5 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:44:30"
-                         & allaug09$PosixCT < "2019-08-09 18:45:30"), ]
+col5 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:46:30"
+                         & allaug09$PosixCT < "2019-08-09 15:47:30"), ]
 col5$Sample <- as.character("col5")
 
-col6 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:53:30"
-                         & allaug09$PosixCT < "2019-08-09 18:56:30"), ]
+col6 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:50:30"
+                         & allaug09$PosixCT < "2019-08-09 15:53:30"), ]
 col6$Sample <- as.character("col6")
 
-col7 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 19:00:30"
-                         & allaug09$PosixCT < "2019-08-09 19:02:30"), ]
+col7 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 15:58:30"
+                         & allaug09$PosixCT < "2019-08-09 15:59:30"), ]
 col7$Sample <- as.character("col7")
 
-col8 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 19:06:30"
-                         & allaug09$PosixCT < "2019-08-09 19:08:30"), ]
+col8 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 16:05:30"
+                         & allaug09$PosixCT < "2019-08-09 16:08:30"), ]
 col8$Sample <- as.character("col8")
 
-ecu1 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:49:50"
-                        & allaug09$PosixCT < "2019-08-09 18:50:45"), ]
+ecu1 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 14:41:42"
+                        & allaug09$PosixCT < "2019-08-09 14:42:21"), ]
 ecu1$Sample <- as.character("ecu1")
 
-ecu2 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 18:49:50"
-                        & allaug09$PosixCT < "2019-08-09 18:50:45"), ]
+ecu2 <- allaug09[ which(allaug09$PosixCT > "2019-08-09 16:11:57"
+                        & allaug09$PosixCT < "2019-08-09 16:12:09"), ]
 ecu2$Sample <- as.character("ecu2")
 
 
-samplesaug09 <- rbind(col1, col2, col3, col4, col5, col6, col7, ecu3, ecu4)
+samplesaug09 <- rbind(col1, col2, col3, col4, col5, col6, col7, col8, ecu1, ecu2)
 
 write.csv(samplesaug09, here("Picarro/EOSTransects/080819/", "samplesalldataaug09.csv"))
 
@@ -92,10 +92,10 @@ write.csv(samplesaug09, here("Picarro/EOSTransects/080819/", "samplesalldataaug0
 
 #let's get the average and std. deviation of all ecu samples 
 
-ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_30s_iCO2))
-ecu4avg <- data.frame("Sample" = "ecu4", "Avg_iCO2" = mean(ecu4$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu4$Delta_30s_iCO2))
+ecu1avg <- data.frame("Sample" = "ecu1", "Avg_iCO2" = mean(ecu1$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu1$Delta_30s_iCO2))
+ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_30s_iCO2))
 
-sumaug09ecu <- rbind(ecu3avg, ecu4avg)
+sumaug09ecu <- rbind(ecu1avg, ecu2avg)
 
 write.csv(sumaug09ecu, here("Picarro/EOSTransects/081319/", "sumecuaug09.csv"))
 
