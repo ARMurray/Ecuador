@@ -1,0 +1,72 @@
+---
+title: "Moving to 30second Delta_i for Standard Error"
+author: "Meg Raisle"
+date: "10/20/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+```
+
+
+
+```{r readData, echo=FALSE}
+#import all data we want here
+
+#for graphing
+subsjuly17<- read.csv(here("Picarro/EOSTransects/071619/subsjuly17.csv"))
+subsjuly23<- read.csv(here("Picarro/EOSTransects/072219/subsjuly23.csv"))
+subsjuly30<- read.csv(here("Picarro/EOSTransects/072919/subsjuly30.csv"))
+subsaug02<- read.csv(here("Picarro/EOSTransects/080119/subsaug02.csv"))
+subsaug09<- read.csv(here("Picarro/EOSTransects/080819/subsaug09.csv"))
+subsaug13<- read.csv(here("Picarro/EOSTransects/081319/subsaug13.csv"))
+
+#for per sample stuff 
+totalecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
+
+#for per day
+comboecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec.csv"))
+comboecuclean <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec_clean.csv"))
+
+#for percents 
+onepercent_sample <- read.csv(here("Picarro/EOSTransects/oneperecenttest_samples30seconds.csv"))
+day_onepercent <- read.csv(here("Picarro/EOSTransects/oneperecenttest_days30sec.csv"))
+```
+
+### All Ecuador Bags Run 
+```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(totalecu, format = "markdown")
+
+#let's graph this
+# Use geom_pointrange
+stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) + 
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=2) +
+  ggtitle("Avg_iCO2 with 95% Confidence Intervals") 
+stderrorplot
+```
+
+### All Bags Each EOS Day 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(comboecuclean, format = "markdown")
+
+#let's graph this
+# Use geom_pointrange
+stderrorplot2 <- ggplot(comboecu, aes(x=Day, y=Avg_iCO2, color=Day)) + 
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=2) +
+  ggtitle("Avg_iCO2 per Day 95% Confidence Intervals") 
+stderrorplot2
+
+```
+
+## Within the 1% Range 
+Based on the papers you sent, I looked to see if the standard error was less than 1% of the average for that bag. Only two fell outside of that window, but that creates a problem for the one day which now only has one bag. That same problem doesn't arise when looking at standard error per day (see second table below )
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(onepercent_sample, format = "markdown")
+kable(day_onepercent, format = "markdown")

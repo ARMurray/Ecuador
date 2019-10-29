@@ -1,0 +1,100 @@
+---
+title: "Moving to 30second Delta_i for Standard Error"
+author: "Meg Raisle"
+date: "10/20/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(ggplot2)
+library(plotly)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+```
+
+
+
+```{r readData, echo=FALSE}
+#import all data we want here
+
+#for graphing
+subsjuly17<- read.csv(here("Picarro/EOSTransects/071619/subsjuly17.csv"))
+subsjuly23<- read.csv(here("Picarro/EOSTransects/072219/subsjuly23.csv"))
+subsjuly30<- read.csv(here("Picarro/EOSTransects/072919/subsjuly30.csv"))
+subsaug02<- read.csv(here("Picarro/EOSTransects/080119/subsaug02.csv"))
+subsaug09<- read.csv(here("Picarro/EOSTransects/080819/subsaug09.csv"))
+subsaug13<- read.csv(here("Picarro/EOSTransects/081319/subsaug13.csv"))
+
+
+```
+
+### Comparing Raw Delta_i C02 Values with 30 second values 
+## Across the following graphs, blue represents the raw data and red represents the 30second data
+```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+#Do an initial plot of Delta_i 
+plot <- ggplot(subsjuly17)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("July 17 Delta Co2 Raw and 30 seconds") 
+
+plot
+ggplotly(plot)
+
+#Do an initial plot of Delta_i 
+plot2 <- ggplot(subsjuly23)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("July 23 Delta Co2 Raw and 30 seconds") 
+
+plot2
+ggplotly(plot2)
+
+#Do an initial plot of Delta_i 
+plot3 <- ggplot(subsjuly30)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("July 30 Delta Co2 Raw and 30 seconds") 
+
+plot3
+ggplotly(plot3)
+
+#Do an initial plot of Delta_i 
+plot4 <- ggplot(subsaug02)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("August 02 Delta Co2 Raw and 30 seconds") 
+
+plot4
+ggplotly(plot4)
+
+#Do an initial plot of Delta_i 
+plot5 <- ggplot(subsaug09)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("August 09 Delta Co2 Raw and 30 seconds") 
+
+plot5
+ggplotly(plot5)
+
+#Do an initial plot of Delta_i 
+plot6 <- ggplot(subsaug13)+
+  geom_point(aes(x= PosixCT, y= Delta_Raw_iCO2), color="blue")+
+  geom_point(aes(x= PosixCT, y= Delta_30s_iCO2), color="red")+
+  labs(x = "Time", y = "Delta")+
+  ggtitle("August 13 Delta Co2 Raw and 30 seconds") 
+
+plot6
+ggplotly(plot6)
+
+```
+Based on this, it seems pretty clear that choosing 30 seconds is the wise thing to do! yay! 
+
