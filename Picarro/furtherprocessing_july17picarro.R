@@ -128,7 +128,7 @@ col7avg <- data.frame("Sample" = "col7", "Avg_iCO2" = mean(col7$Delta_30s_iCO2),
 
 sumjuly17_30 <- rbind(col1avg, col2avg, col3avg, col4avg, col5avg, col6avg, col7avg)
 
-write.csv(sumjuly17, here("Picarro/EOSTransects/080119/", "sumjuly17_30sec_uncorrected.csv"))
+write.csv(sumjuly17_30, here("Picarro/EOSTransects/080119/", "sumjuly17_30sec_uncorrected.csv"))
 
 
 #ok now let's do the correction 
