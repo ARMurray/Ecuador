@@ -3,7 +3,6 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(wesanderson)
-library('knitr')
 
 #first let's load the comboecu file 
 
@@ -19,8 +18,10 @@ combocorrect <- comboecuclean30 %>%
 #let's look at the ecu linearity tables 
 
 july15test <- read.csv(here("Picarro/Linearity/july15linearity.csv"), header = TRUE)
+july15test$CHCorrection <- as.numeric("1.57")
 
 aug09test <- read.csv(here("Picarro/Linearity/aug09linearity.csv"), header = TRUE)
+aug09test$Correction <- as.numeric("1.22")
 
 #ok now let's put that into the combocorrect table 
 
