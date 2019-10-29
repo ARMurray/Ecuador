@@ -33,6 +33,10 @@ combocorrect$EcuLinearityAvg[6] <- as.numeric("-23.62")
 
 write.csv(combocorrect, here("Picarro/", "fullday30seccorrection.csv"))
 
+#ok now let's find the daily correction 
+
+combocorrect$DailyCorrection <- as.numeric(combocorrect$)
+
 
 
 
