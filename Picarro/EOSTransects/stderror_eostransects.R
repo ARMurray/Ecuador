@@ -57,8 +57,8 @@ samplenumber_day <- read.csv(here("Picarro/EOSTransects/samplenumbers_day.csv"))
 comboecu <- cbind(comboecuavg, samplenumber_day)
 
 #ok now let's calculate standard error 
-erorday <- data.frame(comboecu$StdDev_iCO2/sqrt(comboecu$Sample.number.day))
-erorday$stderror <-- as.numeric(erorday$comboecu.StdDev_iCO2.sqrt.comboecu.Sample.number.day.)
+erorday <- data.frame(comboecu$StdDev_iCO2/sqrt(comboecu$SampleNumber))
+erorday$stderror <-- as.numeric(erorday$comboecu.StdDev_iCO2.sqrt.comboecu.SampleNumber.)
 erorday <- erorday %>%
   select(stderror)
 
