@@ -5,7 +5,7 @@ library(dplyr)
 library(plotly)
 library(wesanderson)
 
-totalecu <- read.csv(here("Picarro/EOSTransects/ecuavg30secwithsamplenumbers.csv"))
+#let's call all of the day summaries and combine them into one and call it comboecuavg
 
-ecu2avg <- data.frame("Sample" = "ecu2", "Avg_iCO2" = mean(ecu2$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu2$Delta_30s_iCO2))
-ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_30s_iCO2))
+
+aug13 <- read.csv(here("Picarro/EOSTransects/071619/", "Aug13alldayecuavg.csv"))
