@@ -20,16 +20,12 @@ library('knitr')
 ```{r readData, echo=FALSE}
 #import all data we want here
 
-#for graphing
-subsjuly17<- read.csv(here("Picarro/EOSTransects/071619/subsjuly17.csv"))
-subsjuly23<- read.csv(here("Picarro/EOSTransects/072219/subsjuly23.csv"))
-subsjuly30<- read.csv(here("Picarro/EOSTransects/072919/subsjuly30.csv"))
-subsaug02<- read.csv(here("Picarro/EOSTransects/080119/subsaug02.csv"))
-subsaug09<- read.csv(here("Picarro/EOSTransects/080819/subsaug09.csv"))
-subsaug13<- read.csv(here("Picarro/EOSTransects/081319/subsaug13.csv"))
 
 #for per sample stuff 
 totalecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_30seconds.csv"))
+#get rid of datesample 
+totalecu2 <- totalecu %>%
+  select(Day, Sample, SampleNumber, Avg_iCO2, StdDev_iCO2, stderror, lowbound, highbound)
 
 #for per day
 comboecu <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec.csv"))
@@ -42,12 +38,12 @@ day_onepercent <- read.csv(here("Picarro/EOSTransects/oneperecenttest_days30sec.
 
 ### All Ecuador Bags Run 
 ```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
-kable(totalecu, format = "markdown")
+kable(totalecu2, format = "markdown")
 
 #let's graph this
 # Use geom_pointrange
 stderrorplot <- ggplot(totalecu, aes(x=datesample, y=Avg_iCO2, color=Day)) + 
-  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=2) +
+  geom_pointrange(aes(ymin=lowbound, ymax=highbound), size=1) +
   ggtitle("Avg_iCO2 with 95% Confidence Intervals") 
 stderrorplot
 ```
@@ -70,3 +66,5 @@ Based on the papers you sent, I looked to see if the standard error was less tha
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
 kable(onepercent_sample, format = "markdown")
 kable(day_onepercent, format = "markdown")
+````
+Now we're going to use the whole-day corrections to find the correction of the data 
