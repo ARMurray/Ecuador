@@ -100,3 +100,12 @@ sumaug02ecu <- rbind(ecu3avg, ecu4avg)
 
 write.csv(sumaug02ecu, here("Picarro/EOSTransects/080119/", "sumecuaug02.csv"))
 
+#now let's get the ecuador averages for this day combinded
+
+#First let's make a table with just the ecu samples
+
+ecutogether <- rbind(ecu3, ecu4)
+
+Aug02avg <- data.frame("Day" = "Aug02", "Avg_iCO2" = mean(ecutogether$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecutogether$Delta_30s_iCO2))
+
+write.csv(Aug02avg, here("Picarro/EOSTransects/071619/", "Aug02alldayecuavg.csv"))

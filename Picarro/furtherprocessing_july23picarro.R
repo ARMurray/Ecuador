@@ -105,3 +105,13 @@ sumjuly23ecu <- rbind(ecu1avg, ecu2avg, ecu3avg)
 
 write.csv(sumjuly23ecu, here("Picarro/EOSTransects/072219/", "sumecujuly23.csv"))
 
+
+#now let's get the ecuador averages for this day combinded
+
+#First let's make a table with just the ecu samples
+
+ecutogether <- rbind(ecu1,ecu2,ecu3)
+
+July23avg <- data.frame("Day" = "July17", "Avg_iCO2" = mean(ecutogether$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecutogether$Delta_30s_iCO2))
+
+write.csv(July23avg, here("Picarro/EOSTransects/072219/", "july23alldayecuavg.csv"))
