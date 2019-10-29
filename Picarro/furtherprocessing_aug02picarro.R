@@ -129,7 +129,7 @@ col8avg <- data.frame("Sample" = "col8", "Avg_iCO2" = mean(col8$Delta_30s_iCO2),
 
 sumaug13_30 <- rbind(col1avg, col2avg, col3avg, col4avg, col5avg, col6avg, col7avg, col8avg)
 
-write.csv(sumaug13, here("Picarro/EOSTransects/080119/", "sumaug02_30sec_uncorrected.csv"))
+write.csv(sumaug13_30, here("Picarro/EOSTransects/080119/", "sumaug02_30sec_uncorrected.csv"))
 
 
 #ok now let's do the correction 
