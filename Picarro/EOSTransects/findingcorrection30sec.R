@@ -16,7 +16,22 @@ comboecuclean30 <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec_
 combocorrect <- comboecuclean30 %>%
   select(Day, Avg_iCO2, lowbound, highbound)
 
-#add in the ecu linearity 
+#let's look at the ecu linearity tables 
+
+july15test <- read.csv(here("Picarro/Linearity/july15linearity.csv"), header = TRUE)
+
+aug09test <- read.csv(here("Picarro/Linearity/aug09linearity.csv"), header = TRUE)
+
+#ok now let's put that into the combocorrect table 
+
+combocorrect$EcuLinearityAvg <- as.numeric("-24.74")
+combocorrect$EcuLinearityAvg[5] <- as.numeric("-23.62")
+combocorrect$EcuLinearityAvg[6] <- as.numeric("-23.62")
+
+#save this 
+
+write.csv(combocorrect, here("Picarro/", "fullday30seccorrection.csv"))
+
 
 
 
