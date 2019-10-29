@@ -35,8 +35,16 @@ write.csv(combocorrect, here("Picarro/", "fullday30seccorrection.csv"))
 
 #ok now let's find the daily correction 
 
-combocorrect$DailyCorrection <- as.numeric(combocorrect$)
+combocorrect$EcuLinearityAvg <- as.numeric(combocorrect$EcuLinearityAvg)
+combocorrect$Avg_iCO2 <- as.numeric(combocorrect$Avg_iCO2)
+
+combocorrect$DailyCorrection[1] <- as.numeric(combocorrect$EcuLinearityAvg[1] - combocorrect$Avg_iCO2[1])
 
 
+combocorrect$DailyCorrection <- as.numeric(c(combocorrect$EcuLinearityAvg - combocorrect$Avg_iCO2))
+
+#save this 
+
+write.csv(combocorrect, here("Picarro/EOSTransects/", "30secdailycorrections.csv"))
 
 
