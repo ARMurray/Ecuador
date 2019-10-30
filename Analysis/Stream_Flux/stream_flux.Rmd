@@ -1,0 +1,35 @@
+---
+title: "Stream Flux"
+author: "Andrew"
+date: "10/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+```
+
+## Flux plots
+In this document we are going to calculate flux from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature.
+```{r data, echo=FALSE, message=FALSE}
+df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+df$DateTime <- as.POSIXct(df$DateTime)
+```
+
+## Calculate ppt as a running total of the previous X hours
+We have precipitation data at five minute intervals for the entire period of data collection thanks to a weather station close to our study site. Data was obtained from the [FONAG hydrometeorolical monitoring netowrk](http://sedc.fonag.org.ec/reportes/consultas/) (Station M5024). I run an iterator to total precipitation for the previous rows. Data collection began on July 9, 2019.
+For now I'll create three variables: 24-hour / 48-hour / 72-hour rainfall. This code exists in [Merge_All_Data.R](github.com)
+
+## Plot new ppt variables
+```{r pptPlot, echo=FALSE}
+ggplot(df)+
+  geom_point(aes(x=DateTime, y = ppt24Tot, col = "24 Hour"), col="blue")+
+  geom_point(aes(x=DateTime, y = ppt48Tot, col = "48 Hour"), col="red")+
+  geom_point(aes(x=DateTime, y = ppt72Tot, col = "72 Hour"), col="green")
+
+```
+
