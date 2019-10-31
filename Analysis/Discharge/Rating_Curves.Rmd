@@ -1,0 +1,181 @@
+---
+title: "Rating Curves"
+author: "Andrew"
+date: "10/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(here)
+library(plotly)
+```
+
+# Can we interpolate the missing data?
+```{r}
+level <- read.csv(here("data_4_analysis/WaterLevel_Cleaned.csv"))
+level$DateTime <- as.POSIXct(as.character(level$DateTime),format = "%Y-%m-%d %H:%M")
+
+df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+```
+
+```{r lvlPlot, echo=FALSE}
+level$Serial <- as.factor(level$Serial)
+ggplot(level)+
+  geom_point(aes(x=DateTime, y = LEVEL_m, group = Serial, col = Serial))+
+  labs(x = "Date", y = "Level (m)")
+
+```
+
+
+# Try to get station 1 from station 3
+Here I filter data only to times where both station 1 and 3 recorded level data. I then use linear regression to test the relationship between them.
+
+```{r lm, echo=TRUE}
+stn1_2 <- level%>%
+  filter(Serial == "2020436" | Serial == "2020421")%>%
+  select(DateTime, LEVEL_m, Serial)
+stn1_2_wide <- spread(stn1_2, Serial, LEVEL_m)
+colnames(stn1_2_wide) <- c("DateTime","Station_3","Station_1")
+
+stn1_2_complete <- na.omit(stn1_2_wide) # Keep only rows with both data points
+
+
+lm <- lm(stn1_2_complete$Station_1~stn1_2_complete$Station_3)
+summary(lm)
+```
+
+
+## Based on a reasonable r-square value we can estimate level at station 1 from level at station 3 at times we are missing station 1 level data
+
+Here I do this by filtering data to only those rows where station 1 is missing and station 3 is not. We will use the coefficient from the regression model to estimate level at station 1.
+
+```{r levelEstimate, echo=TRUE}
+lvl4est <- stn1_2_wide%>%
+  filter(is.na(Station_1) & !is.na(Station_3))
+lvl4est$Station_1 <- lvl4est$Station_3 - (lvl4est$Station_3 * 0.047655)
+```
+
+## Now we need to replace the NA values with the new estimates
+I do this by calling the orignal data and using a filter to create a dataset without the rows that were missing station 1 level data, and then I add in the new estimates from the previous step
+```{r}
+levelMod <- stn1_2_wide%>%
+  filter(!is.na(Station_1))
+levelMod <- rbind(levelMod,lvl4est)
+
+p <- ggplot(levelMod)+
+  geom_point(aes(x = DateTime, y = Station_1), col="orange")+
+  geom_point(aes(x = DateTime, y = Station_3), col="#20bab2")
+
+ggplotly(p)
+```
+
+
+# From here we can update the level values in our discharge table
+We use level data from Station 1 for discharge measurements at Station 1 and 2. We use level data from Station 3 for discharge measurements at station 3 and 4.
+
+# Now let's work on the rating curves
+```{r discharge}
+discharge <- read.csv(here("data_4_analysis/recorded_discharge.csv"))
+discharge$DateTime <-as.POSIXct(paste0(discharge$Date,"",discharge$Time),format = "%m/%d/%Y %H:%M")
+discharge <- discharge%>%
+  select(DateTime,Stn,Level,Discharge)
+
+ggplot(discharge)+
+  geom_point(aes(x = Discharge, y = Level, col = Stn), size = 3)
+```
+
+## Station 1 Rating Curve
+Code is shown for Station 1 only, other stations use identical code.
+```{r stn1, echo=TRUE, warning=FALSE}
+stn1 <- discharge%>%
+  filter(Stn == "Station 1")%>%
+  na.omit()%>%
+  arrange(Discharge)
+
+x<-stn1$Discharge
+y<-stn1$Level
+#for simple models nls find good starting values for the parameters even if it throw a warning
+m<-nls(y~a*x/(b+x))
+
+df$stn1_Q <- predict(m,data.frame(x=df$lvl_436_m))
+
+plot(x,y)
+lines(x,predict(m),lty=2,col="red",lwd=3)
+```
+
+## Station 2 Rating Curve
+```{r stn2, echo=FALSE, warning=FALSE}
+stn2 <- discharge%>%
+  filter(Stn == "Station 2")%>%
+  na.omit()%>%
+  arrange(Discharge)
+
+x<-stn2$Discharge
+y<-stn2$Level
+#for simple models nls find good starting values for the parameters even if it throw a warning
+m<-nls(y~a*x/(b+x))
+
+df$stn2_Q <- predict(m,data.frame(x=df$lvl_436_m))
+
+plot(x,y)
+lines(x,predict(m),lty=2,col="red",lwd=3)
+```
+
+## Station 3 Rating Curve
+```{r stn3, echo=FALSE, warning=FALSE}
+stn3 <- discharge%>%
+  filter(Stn == "Station 3")%>%
+  na.omit()%>%
+  arrange(Discharge)
+
+x<-stn3$Discharge
+y<-stn3$Level
+#for simple models nls find good starting values for the parameters even if it throw a warning
+m<-nls(y~a*x/(b+x))
+
+df$stn3_Q <- predict(m,data.frame(x=df$lvl_421_m))
+
+plot(x,y)
+lines(x,predict(m),lty=2,col="red",lwd=3)
+```
+
+## Station 4 Rating Curve
+```{r stn4, echo=FALSE, warning=FALSE}
+stn4 <- discharge%>%
+  filter(Stn == "Station 4")%>%
+  na.omit()%>%
+  arrange(Discharge)
+
+x<-stn4$Discharge
+y<-stn4$Level
+#for simple models nls find good starting values for the parameters even if it throw a warning
+m<-nls(y~a*x/(b+x))
+
+df$stn4_Q <- predict(m,data.frame(x=df$lvl_421_m))
+
+plot(x,y)
+lines(x,predict(m),lty=2,col="red",lwd=3)
+```
+
+## Export the updated data
+```{r}
+write.csv(df,here("data_4_analysis/All_Stream_Data.csv"))
+```
+
+
+
+## Let's plot the discharge over time
+```{r dischargePlot}
+df.sub <- df%>%
+  select(DateTime,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
+  gather(Station,Discharge,-DateTime)
+df.sub$DateTime <- as.POSIXct(df.sub$DateTime)
+ggplot(df.sub)+
+  geom_point(aes(x=DateTime, y=Discharge, col=Station))
+
+```
+
+

@@ -33,3 +33,52 @@ ggplot(df)+
 
 ```
 
+## Calculate Flux using my equation
+```{r}
+df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q
+
+```
+
+## Plot data
+```{r plot}
+pptDaily <- read.csv(here("data_4_analysis/ppt.csv"))
+pptDaily$DateTime <- as.POSIXct(pptDaily$DateTime)
+
+pptBar <- ggplot()+
+  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
+  geom_point(data = df,aes(x = DateTime, y = flux_12))
+
+
+pptBar
+```
+
+## Let's remove the injections
+```{r}
+nonInjection1 <- df%>%
+  filter(DateTime > as.POSIXct("2019-07-12")&DateTime < as.POSIXct("2019-07-16 14:00"))
+
+nonInjection2 <- df%>%
+  filter(DateTime > as.POSIXct("2019-07-16 21:00")&DateTime < as.POSIXct("2019-07-22 14:00"))
+
+nonInjection3 <- df%>%
+  filter(DateTime > as.POSIXct("2019-07-22 21:00")&DateTime < as.POSIXct("2019-07-26 12:30"))
+
+nonInjection4 <- df%>%
+  filter(DateTime > as.POSIXct("2019-07-26 18:00")&DateTime < as.POSIXct("2019-08-01 15:30"))
+
+nonInjection5 <- df%>%
+  filter(DateTime > as.POSIXct("2019-08-01 21:00")&DateTime < as.POSIXct("2019-08-05 16:00"))
+
+nonInjection6 <- df%>%
+  filter(DateTime > as.POSIXct("2019-08-05 21:00")&DateTime < as.POSIXct("2019-08-08 12:30"))
+
+nonInjection7 <- df%>%
+  filter(DateTime > as.POSIXct("2019-08-08 16:00"))
+
+nonInjections <- rbind(nonInjection1,nonInjection2,nonInjection3,nonInjection4,nonInjection5,nonInjection6,nonInjection7)
+
+ggplot()+
+  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
+  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12/50))
+```
+

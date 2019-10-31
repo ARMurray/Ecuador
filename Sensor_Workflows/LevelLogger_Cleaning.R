@@ -75,17 +75,6 @@ ggplotly(lvlPlot)
 
 
 
-# Can we interpolate the missing data?
 
-# Try to get station 1 from station 3
-stn1_2 <- level%>%
-  filter(Serial == "2020436" | Serial == "2020421")%>%
-  select(DateTime, LEVEL_m, Serial)
-stn1_2_wide <- spread(stn1_2, Serial, LEVEL_m)
-stn1_2_wide <- na.omit(stn1_2_wide)
-
-colnames(stn1_2_wide) <- c("DateTime","Station_3","Station_1")
-
-stn1_2_wide$dif <- stn1_2_wide$Station_3 - stn1_2_wide$Station_1
 
 

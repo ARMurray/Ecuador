@@ -3,10 +3,32 @@ library(tidyverse)
 library(here)
 library(plotly)
 
+# Can we interpolate the missing data?
+level <- read.csv(here("data_4_analysis/WaterLevel_Cleaned.csv"))
+level$DateTime <- as.POSIXct(as.character(level$DateTime),format = "%Y-%m-%d %H:%M")
+
+# Try to get station 1 from station 3
+
+# Here I filter data only to times where both station 1 and 3 recorded
+# level data. I then use linear regression to test the relationship 
+# between them
+stn1_2 <- level%>%
+  filter(Serial == "2020436" | Serial == "2020421")%>%
+  select(DateTime, LEVEL_m, Serial)
+stn1_2_wide <- spread(stn1_2, Serial, LEVEL_m)
+stn1_2_wide <- na.omit(stn1_2_wide)
+colnames(stn1_2_wide) <- c("DateTime","Station_3","Station_1")
+
+lm <- lm(stn1_2_wide$Station_1~stn1_2_wide$Station_3)
+
+
+stn1_2_wide$dif <- stn1_2_wide$Station_3 - stn1_2_wide$Station_1
+
+
+
+
 discharge <- read.csv(here("data_4_analysis/recorded_discharge.csv"))
 
-level <- read.csv(here("FieldData/LevelLogger/WaterLevel_All.csv"))
-level$DateTime <- as.POSIXct(as.character(level$DateTime),format = "%Y-%m-%d %H:%M")
 
 
 
