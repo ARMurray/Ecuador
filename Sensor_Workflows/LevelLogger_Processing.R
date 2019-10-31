@@ -1,15 +1,29 @@
 library(here)
+library(dplyr)
+library(ggplot2)
 
-date <- "07152019"
+paths <- list.files(here("FieldData/LevelLogger/Last_Collection/"),pattern = ".csv", full.names = TRUE)
+files <- list.files(here("FieldData/LevelLogger/Last_Collection/"),pattern = ".csv", full.names = FALSE)
 
-# LEvel Logger #1
 
-data <- read.csv(here("FieldData/LevelLogger", paste0("lvllgr01", paste0(date,".csv"))), skip = 11)
+df <- read.csv(paths[1])
+df <- df%>%
+  mutate(DateTime = as.POSIXct(paste0(df$Date," ",df$Time), format = "%m/%d/%Y %H:%M:%OS"),
+         Serial = substr(files[1],7,13))%>%
+  select(DateTime,LEVEL_m,TEMP_c,Serial)
 
-data$DateTime <- paste0(data$Date," ",data$Time)
-data$DateTime <- as.POSIXct(data$DateTime, format = "%m/%d/%Y %I:%M:%OS %p")
+for(n in 2:length(files)){
+  file <- read.csv(paths[n])
+  file$DateTime <- as.POSIXct(paste0(file$Date," ",file$Time), format = "%m/%d/%Y %H:%M:%OS")
+  file$Serial <- substr(files[n],7,13)
+  file <- file%>%
+    select(DateTime,LEVEL_m,TEMP_c, Serial)
+  df <- rbind(df,file)
+}
 
-lvl <- data%>%
-  select(DateTime, LEVEL, TEMPERATURE)
+write.csv(df, here("FieldData/LevelLogger/WaterLevel_All.csv"))
 
-write.csv(lvl, here("Outputs", paste0("lvllgr", date, ".csv")))
+plot <- ggplot(df)+
+  geom_point(aes(x = DateTime, y = LEVEL_m, group = Serial, color = Serial))
+
+plot

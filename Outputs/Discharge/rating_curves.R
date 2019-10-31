@@ -1,28 +1,61 @@
 library(ggplot2)
 library(tidyverse)
 library(here)
+library(plotly)
 
-df <- read.csv(here("Outputs/Discharge/discharge_prelim.csv"))
+discharge <- read.csv(here("data_4_analysis/recorded_discharge.csv"))
+
+level <- read.csv(here("FieldData/LevelLogger/WaterLevel_All.csv"))
+level$DateTime <- as.POSIXct(as.character(level$DateTime),format = "%Y-%m-%d %H:%M")
+
+
 
 # Reformat the dates
-df$Month <- sapply(strsplit(as.character(df$Date),"-"), '[',2)
-df$Month <- paste0("0",match(df$Month,month.abb))
+discharge$DateTime <- as.POSIXct(paste0(discharge$Date," ",discharge$Time),format = "%m/%d/%Y %H:%M")
 
-df$Day <- sapply(strsplit(as.character(df$Date),"-"), '[',1)
 
-df$Year <- "2019"
+# Clean errors from Level data
+level <- level%>%
+  filter(LEVEL_m > .08) # These are the times loggers were out of the water
 
-# Make the dates POSIXct
-df$Posix <- as.POSIXct(paste0(df$Year,"-",df$Month,"-",df$Day),format = "%Y-%m-%d")
+# Level logger 1 read deep water erroneously on July 23-25
+# We determined it ended up in a backpack and went back down to
+# Quito which explains the increase in logged pressure
+Lvl_1 <- level%>%
+  filter(Serial == "2020436")
 
-# Clean up the table
-df <- df%>%
-  select(Posix,Discharge.m.3.s.,Water.Level..m.,Station)
-  colnames(df) <- c("Date","Discharge_m","Level_m","Station")
+# Create data frame of stn 1 before bad data
+Lvl1_pre23 <- Lvl_1%>%
+  filter(DateTime < as.POSIXct("2019-07-23 13:45"))
 
-df$Station <- as.factor(df$Station)
+# Create data frame for stn 1 after bad data
+Lvl1_post25 <- Lvl_1%>%
+  filter(DateTime > as.POSIXct("2019-07-25 15:30"))
 
-# Plot Everything
-plot <- ggplot(df)+
-  geom_point(aes(x = Discharge_m, y = Level_m, color = as.factor(Date), shape = Station ), size=3)
-plot
+# put the two new data frames together
+Lvl1_fix <- rbind(Lvl1_pre23,Lvl1_post25)
+
+# Replace the old with the new
+level <- level%>%
+  filter(!Serial == "2020436")
+
+level <- rbind(level, Lvl1_fix)
+
+level$Serial <- as.factor(level$Serial)
+# Plot stream level
+lvlPlot <- ggplot(level)+
+  geom_point(aes(x = DateTime, y = LEVEL_m, group = Serial, col = Serial))
+
+ggplotly(lvlPlot)
+
+
+# Estimate water level at station 1 on July 24 at 1:00 PM
+stn1_2 <- level%>%
+  filter(Serial == "2020436" | Serial == "2020421")%>%
+  select(DateTime, LEVEL_m, Serial)
+stn1_2_wide <- spread(stn1_2, Serial, LEVEL_m)
+stn1_2_wide <- na.omit(stn1_2_wide)
+
+colnames(stn1_2_wide) <- c("DateTime","Station_3","Station_1")
+
+stn1_2_wide$dif <- stn1_2_wide$Station_3 - stn1_2_wide$Station_1
