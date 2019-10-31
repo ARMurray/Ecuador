@@ -17,4 +17,4 @@ Dist
 Elev<-GPSPts$ele[35]-GPSPts$ele[34]
 Elev
 ```
-#Uploading 
+##Calculating Henry's Constant
