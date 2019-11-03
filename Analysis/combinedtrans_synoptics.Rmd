@@ -44,9 +44,8 @@ library(matrixStats)
 
  
 
-date<- "08012019" 
 
-eos2 <- read.csv(here("FieldData/EosFD",paste0("eos2_08142019.csv"))) 
+eos2 <- read.csv(here("FieldData/EosFD/eos2_08142019.csv"))
 
 eos2$Year <- paste0("20",eos2$Year) 
 
@@ -754,7 +753,7 @@ combined4 <- combined3 +
 
  geom_errorbar(data = c, aes(x= Distance,y= AverageFlux, ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="purple") +   
 
-  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "purple", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw()
+  geom_point(data = c, aes(x= Distance, y= AverageFlux), color = "purple", size = 2) + labs(x = "Synoptic Site Distance from Wetland (m)", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw(base_size = 18)
 
 combined4
 
@@ -1098,7 +1097,7 @@ labs(x = "7-22-2019 Collar", y = "Average FLux")
 avgplot2
 
 allplotz <- avgplot1 +  geom_errorbar(data = a, aes(x= 1:8,ymin= AverageFlux - StdDev, ymax= AverageFlux + StdDev), width=0.2, size=1, color="green") +
-  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "green", size = 2)+ theme_bw()
+  geom_point(data = a, aes(x= 1:8, y= AverageFlux), color = "green", size = 2)+ theme_bw(base_size = 18)
 
 ```
 
@@ -1874,7 +1873,7 @@ Transect near spring- Darkest Green col5 (most water), lightest green col8 (leas
 
 ```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 12}
 
-cplot <- ggplot() + geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =.5 ) + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =.5 )+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =.5 ) + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =.5 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =.5 )+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =.5 ) + geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =.5 )+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =.5 )+ geom_point(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =2 ) + geom_point(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =2 )+ geom_point(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =2 ) + geom_point(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =2 )+ geom_point(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =2 )+ geom_point(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =2 )+ geom_point(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =2 )+ geom_point(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =2 ) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw()
+cplot <- ggplot() + geom_line(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =.5 ) + geom_line(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =.5 )+ geom_line(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =.5 ) + geom_line(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =.5 )+ geom_line(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =.5 )+ geom_line(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =.5 ) + geom_line(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =.5 )+ geom_line(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =.5 )+ geom_point(data = c1, aes(x= z, y=c1, group = 1), color = "lightskyblue", size =2 ) + geom_point(data = c2, aes(x= z, y=c2, group = 1), color = "steelblue1", size =2 )+ geom_point(data = c3, aes(x= z, y=c3, group = 1), color = "dodgerblue3", size =2 ) + geom_point(data = c4, aes(x= z, y=c4, group = 1), color = "blue", size =2 )+ geom_point(data = c5, aes(x= z, y=c5, group = 1), color = "darkgreen", size =2 )+ geom_point(data = c6, aes(x= z, y=c6, group = 1), color = "olivedrab4", size =2 )+ geom_point(data = c7, aes(x= z, y=c7, group = 1), color = "olivedrab3", size =2 )+ geom_point(data = c8, aes(x= z1, y=c8, group = 1), color = "darkolivegreen1", size =2 ) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw(base_size = 18)
 cplot
 ```
 Green is eos2 which was in soil beside flotation at eos1. 
@@ -1915,7 +1914,7 @@ row.names(water) <- NULL
 
 
 landwater <- ggplot() + geom_line(data = land, aes(x= DateTime, y= Flux_eos2), color = "green", size = 1) +
-  geom_line(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date",y = "Average FLux (μmol/CO2/m2/s)")+ theme_bw()
+  geom_line(data = water, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date",y = "Average FLux (μmol/CO2/m2/s)")+ theme_bw(base_size = 18)
 
 landwater
 ```
@@ -1930,7 +1929,7 @@ row.names(eos1night) <- NULL
 
 
 nightplot<- ggplot() + geom_line(data = col1night, aes(x= DateTime, y= Flux_eos2), color = "red", size = 1) +
-  geom_line(data = eos1night, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)")+ theme_bw()
+  geom_line(data = eos1night, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)")+ theme_bw(base_size = 18)
 nightplot 
 
 ```
@@ -1958,7 +1957,7 @@ eos1same <- eos1[1670:1842,]
 row.names(eos1same) <- NULL
 
 wetplot <- ggplot() + geom_line(data = wetlnd, aes(x= DateTime, y= Flux_eos2), color = "purple", size = 1) +
-  geom_line(data = eos1same, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw()
+  geom_line(data = eos1same, aes(x=DateTime, y= Flux_eos1), color = "blue", size = 1) + labs(x = "Date", y = "Average FLux (μmol/CO2/m2/s)") + theme_bw(base_size = 18)
 wetplot
 
 labss <- c("1", "2", "3", "4", "5", "6", "7")
@@ -1967,7 +1966,6 @@ allplotz <- allplotz + ylim(0,10) + labs(x = "Collar", y = "Average FLux (μmol/
 wtf <- ggarrange(allplotz, combined4) 
 wtf
 
-allplotz <- allplotz +
-    facet_grid(~group,scales='free')
+
 allplotz
 ```
