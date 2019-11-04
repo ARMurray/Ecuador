@@ -34,12 +34,27 @@ ggplot(df)+
 ```
 
 ## Calculate Flux using my equation
-```{r}
+```{r flux12}
 df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q
 
 ```
 
+
+```{r flux14}
+df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q
+```
+
 ## Plot data
+
+### Histogram of Flux
+```{r}
+ggplot(df)+
+  geom_histogram(aes(x = flux_12),binwidth = 10)+
+  xlim(-20,250)
+```
+
+
+### ppt and Flux
 ```{r plot}
 pptDaily <- read.csv(here("data_4_analysis/ppt.csv"))
 pptDaily$DateTime <- as.POSIXct(pptDaily$DateTime)
@@ -79,6 +94,18 @@ nonInjections <- rbind(nonInjection1,nonInjection2,nonInjection3,nonInjection4,n
 
 ggplot()+
   geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12/50))
+  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12/50))+
+  labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 2")
+
+ggplot()+
+  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
+  geom_point(data = nonInjections,aes(x = DateTime, y = flux_14/50))+
+  labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 4")
+```
+
+```{r}
+ggplot(df)+
+  geom_point(aes(x=flux_14, y = Flux_1, col=Flux_2))+
+  labs(x = "Vaisala 1 -> Vaisala 4 flux", y = "EosFD 1 Flux")
 ```
 
