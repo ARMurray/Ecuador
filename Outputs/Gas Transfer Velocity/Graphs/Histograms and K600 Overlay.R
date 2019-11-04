@@ -3,10 +3,10 @@ library(tidyverse)
 library(pracma)
 
 ##Histograms of Raymond Paper Method
-Syn1<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Raymond Method Total.csv")
-axis<-axis(side = 1,at=seq(0,10000,by=1000), labels=TRUE)
-breaks<-seq(0,10000, by=200)
-Plot<-hist(Syn1$K600.Mid,breaks,main = "Histogram of K600 Raymond Method 08_12", xlab = "K600 (m/Day)", ylim = c(0,20) ,col = "blue",freq = TRUE)
+Syn<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/K600 All Days for Histogram.csv")
+axis<-axis(side = 1,at=seq(0,25000,by=200), labels=FALSE)
+breaks<-seq(0,25000, by=1000)
+Plot<-hist(Syn$K600,main = "Histogram of K600 Raymond Method Total Syn", xlab = "K600 (m/Day)",breaks=breaks, ylim = c(0,80) ,col = "blue",freq = TRUE)
 lines(frequency(Syn1$K600.Avg..by.Dist.))
 
 ##Overlaying K600 Graphs By Color
