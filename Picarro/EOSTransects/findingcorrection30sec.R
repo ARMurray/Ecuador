@@ -48,3 +48,12 @@ combocorrect$DailyCorrection <- as.numeric(c(combocorrect$EcuLinearityAvg - comb
 write.csv(combocorrect, here("Picarro/EOSTransects/", "30secdailycorrections_1aug09.csv"))
 
 
+pbetter2 <- ggplot(sumalltransects, aes(x= Sample, y= CorrectedAverage, color=day))+
+  geom_point(size=8)+
+  geom_line()+
+  xlab('Collar') +
+  ylab('Delta30_Avg') +
+  ggtitle("EOS Delta30 i_CO2 Corrected Summary") +
+  scale_color_manual(values=wes_palette("Zissou1", n=6, type = c("continuous")))+
+  theme(legend.position = "right")
+pbetter2
