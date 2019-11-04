@@ -12,15 +12,15 @@ july23 <- read.csv(here("Picarro/EOSTransects/072219/", "July23alldayecuavg.csv"
 july23$Day <- as.character("July23")
 july30 <- read.csv(here("Picarro/EOSTransects/072919/", "July30alldayecuavg.csv"))
 aug02 <- read.csv(here("Picarro/EOSTransects/080119/", "Aug02alldayecuavg.csv"))
-aug09 <- read.csv(here("Picarro/EOSTransects/080819/", "Aug09alldayecuavg.csv"))
+aug09 <- read.csv(here("Picarro/EOSTransects/071619/", "Aug09alldayecuavg2.csv"))
 aug13 <- read.csv(here("Picarro/EOSTransects/081319/", "Aug13alldayecuavg.csv"))
 
 
 comboecuavg <- rbind(july17, july23, july30, aug02, aug09, aug13)
 
-write.csv(comboecuavg, here("Picarro/EOSTransects/", "averageecuperday_30sec.csv"))
+write.csv(comboecuavg, here("Picarro/EOSTransects/", "averageecuperday_30sec_1aug09.csv"))
 
-samplenumber_day <- read.csv(here("Picarro/EOSTransects/samplenumbers_30secdays.csv"))
+samplenumber_day <- read.csv(here("Picarro/EOSTransects/samplenumbers_30secdays_1aug09.csv"))
 
 comboecu <- cbind(comboecuavg, samplenumber_day)
 
@@ -40,12 +40,12 @@ c(comboecu$Avg_iCO2-(2*comboecu$stderror), comboecu$Avg_iCO2+(2*comboecu$stderro
 comboecu$lowbound <- c(comboecu$Avg_iCO2-(2*comboecu$stderror))
 comboecu$highbound <- c(comboecu$Avg_iCO2+(2*comboecu$stderror))
 
-write.csv(comboecu, here("Picarro/EOSTransects/statsecusamples_day30sec.csv"))
+write.csv(comboecu, here("Picarro/EOSTransects/statsecusamples_day30sec_1aug09.csv"))
 
 comboecuclean <- comboecu %>%
   select(Day, SampleNumber, Avg_iCO2, stderror, lowbound, highbound)
 
-write.csv(comboecuclean, here("Picarro/EOSTransects/statsecusamples_day30sec_clean.csv"))
+write.csv(comboecuclean, here("Picarro/EOSTransects/statsecusamples_day30sec_clean_1aug09.csv"))
 
 
 #let's graph this
@@ -69,4 +69,4 @@ day$stderror <- as.character(day$comboecuclean.stderror)
 day <- day %>%
   select(Day, Avg_ico2, stderror,BelowCutoff)
 
-write.csv(day, here("Picarro/EOSTransects/oneperecenttest_days30sec.csv"))
+write.csv(day, here("Picarro/EOSTransects/oneperecenttest_days30sec_1aug09.csv"))
