@@ -1,3 +1,10 @@
+install.packages("tmaptools")
+install.packages("ggplot2")
+install.packages("here")
+install.packages("dplyr")
+install.packages("plotly")
+install.packages("wesanderson")
+
 library(tmaptools)
 library(ggplot2)
 library(here)
@@ -39,6 +46,9 @@ plot <- ggplot(subsaug09)+
 
 plot
 ggplotly(plot)
+
+#new starting point to just read in aug 9 data
+allaug09 <- read.csv(here("Picarro/EOSTransects/080819/alldeltaaug09.csv"))
 
 #Now let's get the exact sample times that we need for 30 seconds 
 
@@ -99,6 +109,8 @@ sumaug09ecu <- rbind(ecu1avg, ecu2avg)
 
 write.csv(sumaug09ecu, here("Picarro/EOSTransects/080819/", "sumecuaug09.csv"))
 
+sumecu <- read.csv(here("Picarro/EOSTransects/080819/sumecuaug09.csv"))
+
 
 #now let's get the ecuador averages for this day combinded
 
@@ -107,8 +119,9 @@ write.csv(sumaug09ecu, here("Picarro/EOSTransects/080819/", "sumecuaug09.csv"))
 ecutogether <- rbind(ecu1, ecu2)
 
 Aug09avg <- data.frame("Day" = "Aug09", "Avg_iCO2" = mean(ecutogether$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecutogether$Delta_30s_iCO2))
+Aug09avg <- data.frame("Day" = "Aug09", "Avg_iCO2" = sumecu$Avg_iCO2[2], "StdDev_iCO2" = sumecu$StdDev_iCO2[2])
 
-write.csv(Aug09avg, here("Picarro/EOSTransects/071619/", "Aug09alldayecuavg.csv"))
+write.csv(Aug09avg, here("Picarro/EOSTransects/071619/", "Aug09alldayecuavg2.csv"))
 
 
 #ok we need to get a summary table just for the collars for each day 
