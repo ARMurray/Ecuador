@@ -2,6 +2,7 @@
 library(here)
 library(tidyr)
 library(dplyr)
+library(zoo)
 
 
 # Vaisala Data
@@ -14,6 +15,35 @@ Vaisala <- Vaisala%>%
 Vaisala <- Vaisala[!duplicated(Vaisala[,'ID']),]%>%
   select(-X, -ID)%>%
   spread(VID,PPM)
+
+# Need to get rid of the seconds in Vaisala times because they are staggering data
+V1 <- Vaisala%>%
+  select(DateTime,V1)
+V1$DateTime <- as.character(V1$DateTime)
+V1$DateTime <- as.POSIXct(substr(V1$DateTime,1,16))
+V1 <- V1[complete.cases(V1),]
+
+V2 <- Vaisala%>%
+  select(DateTime,V2)
+V2$DateTime <- as.character(V2$DateTime)
+V2$DateTime <- as.POSIXct(substr(V2$DateTime,1,16))
+V2 <- V2[complete.cases(V2),]
+
+V3 <- Vaisala%>%
+  select(DateTime,V3)
+V3$DateTime <- as.character(V3$DateTime)
+V3$DateTime <- as.POSIXct(substr(V3$DateTime,1,16))
+V3 <- V3[complete.cases(V3),]
+
+V4 <- Vaisala%>%
+  select(DateTime,V4)
+V4$DateTime <- as.character(V4$DateTime)
+V4$DateTime <- as.POSIXct(substr(V4$DateTime,1,16))
+V4 <- V4[complete.cases(V4),]
+
+vMerge <- merge(V1,V2)
+vMerge <- merge(vMerge,V3)
+vMerge <- merge(vMerge,V4)
 
 # C6 Data
 C6 <- read.csv(here("data_4_analysis/C6.csv"))%>%
@@ -50,7 +80,7 @@ colnames(watTemp) <- c("DateTime","tempC_421_m","tempC_425_m","tempC_430_m",
                        "tempC_435_m","tempC_436_m","tempC_437_m","tempC_442_m")
 watTemp$DateTime <- as.POSIXct(as.character(watTemp$DateTime))
 # Merge
-merge <- merge(Vaisala,C6, all = TRUE)
+merge <- merge(vMerge,C6, all = TRUE)
 merge <- merge(merge, eosFD, all = TRUE)%>%
   distinct()
 merge <- merge(merge,ppt, all = TRUE)
@@ -93,6 +123,15 @@ for(n in 2449:nrow(merge)){
 df <- merge(merge,ppt24Df, all = TRUE)
 df <- merge(df,ppt48Df, all = TRUE)
 df <- merge(df,ppt72Df, all = TRUE)
+
+
+# We don't want to go too crazy with interpolating data we did not collect
+# HOWEVER, there is some data we can do this for, such as water level since we collected it consistently
+# and we are interpolating very short periods of time for the purpose of having values in every row
+# to go along with the other variables such as pCO2
+
+# linear estimation of water level
+try <- na.approx(df$lvl_421_m)
 
 
 
