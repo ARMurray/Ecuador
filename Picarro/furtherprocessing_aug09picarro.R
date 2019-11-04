@@ -148,10 +148,10 @@ write.csv(sumaug09_30, here("Picarro/EOSTransects/080819/", "sumaug09_30sec_unco
 
 #ok now let's do the correction 
 
-sumaug09_30$Correction <- as.numeric("-2.393811676")
+sumaug09_30$Correction <- as.numeric("-0.107759384")
 sumaug09_30$CorrectedAverage <- as.numeric(c(sumaug09_30$Avg_iCO2 + sumaug09_30$Correction))
 
-write.csv(sumaug09_30, here("Picarro/EOSTransects/080819/", "sumaug09_30sec_corrected.csv"))
+write.csv(sumaug09_30, here("Picarro/EOSTransects/080819/", "sumaug09_30sec_corrected_1aug09.csv"))
 
 
 

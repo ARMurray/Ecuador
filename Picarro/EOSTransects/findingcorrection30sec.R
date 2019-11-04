@@ -8,7 +8,7 @@ library(wesanderson)
 
 #for per day
 comboecu30 <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec.csv"))
-comboecuclean30 <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec_clean.csv"))
+comboecuclean30 <- read.csv(here("Picarro/EOSTransects/statsecusamples_day30sec_clean_1aug09.csv"))
 
 #ok all we want in this table is avg, low bound, high bound, eculinearity, correction, ecuavg first day, ecu avg 2nd day 
 
@@ -31,20 +31,29 @@ combocorrect$EcuLinearityAvg[6] <- as.numeric("-23.62")
 
 #save this 
 
-write.csv(combocorrect, here("Picarro/", "fullday30seccorrection.csv"))
+write.csv(combocorrect, here("Picarro/", "fullday30seccorrection_1aug09.csv"))
 
 #ok now let's find the daily correction 
 
 combocorrect$EcuLinearityAvg <- as.numeric(combocorrect$EcuLinearityAvg)
 combocorrect$Avg_iCO2 <- as.numeric(combocorrect$Avg_iCO2)
 
-combocorrect$DailyCorrection[1] <- as.numeric(combocorrect$EcuLinearityAvg[1] - combocorrect$Avg_iCO2[1])
+
 
 
 combocorrect$DailyCorrection <- as.numeric(c(combocorrect$EcuLinearityAvg - combocorrect$Avg_iCO2))
 
 #save this 
 
-write.csv(combocorrect, here("Picarro/EOSTransects/", "30secdailycorrections.csv"))
+write.csv(combocorrect, here("Picarro/EOSTransects/", "30secdailycorrections_1aug09.csv"))
 
 
+pbetter2 <- ggplot(sumalltransects, aes(x= Sample, y= CorrectedAverage, color=day))+
+  geom_point(size=8)+
+  geom_line()+
+  xlab('Collar') +
+  ylab('Delta30_Avg') +
+  ggtitle("EOS Delta30 i_CO2 Corrected Summary") +
+  scale_color_manual(values=wes_palette("Zissou1", n=6, type = c("continuous")))+
+  theme(legend.position = "right")
+pbetter2
