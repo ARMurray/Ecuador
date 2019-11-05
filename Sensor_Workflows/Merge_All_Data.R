@@ -79,6 +79,21 @@ watTemp <- read.csv(here("data_4_analysis/WaterLevel_Cleaned.csv"))%>%
 colnames(watTemp) <- c("DateTime","tempC_421_m","tempC_425_m","tempC_430_m",
                        "tempC_435_m","tempC_436_m","tempC_437_m","tempC_442_m")
 watTemp$DateTime <- as.POSIXct(as.character(watTemp$DateTime))
+
+# EC
+EC <- read.csv(here("data_4_analysis/all_EC.csv"))%>%
+  select(DateTime, uS, Station)%>%
+  spread(Station, uS)
+colnames(EC) <- c("DateTime","DO1_uS","DO2_uS","DO4_uS")
+EC$DateTime <- as.POSIXct(EC$DateTime)
+
+# DO
+DO <- read.csv(here("data_4_analysis/all_DO.csv"))%>%
+  select(DateTime,DO_mg_L,Station)%>%
+  spread(Station, DO_mg_L)
+colnames(DO) <- c("DateTime","EC1_uS","EC2_uS","EC4_uS")
+DO$DateTime <- as.POSIXct(DO$DateTime)
+
 # Merge
 merge <- merge(vMerge,C6, all = TRUE)
 merge <- merge(merge, eosFD, all = TRUE)%>%
@@ -87,7 +102,9 @@ merge <- merge(merge,ppt, all = TRUE)
 merge <- merge(merge,lvl, all = TRUE)
 merge <- merge(merge,watTemp, all = TRUE)
 merge <- merge(merge, air, all = TRUE)
-# STILL NEED DO EC AND LEVEL
+merge <- merge(merge, EC, all = TRUE)
+merge <- merge(merge,DO, all=TRUE)
+
 
 ## Create new precipitation variables
 ppt24Df <- data.frame()
@@ -124,7 +141,8 @@ df <- merge(merge,ppt24Df, all = TRUE)
 df <- merge(df,ppt48Df, all = TRUE)
 df <- merge(df,ppt72Df, all = TRUE)
 
-
+plot <- ggplot(df)+
+  geom_point(aes(x=DateTime, y=lvl_436_m))
 # We don't want to go too crazy with interpolating data we did not collect
 # HOWEVER, there is some data we can do this for, such as water level since we collected it consistently
 # and we are interpolating very short periods of time for the purpose of having values in every row
@@ -133,12 +151,42 @@ df <- merge(df,ppt72Df, all = TRUE)
 # linear estimation of water level
 try <- na.approx(df$lvl_421_m)
 
+NAs <- which(!is.na(df$lvl_421_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = try[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+
+lvl_421 <- df.new
+colnames(lvl_421) <- c("DateTime","lvl_421_m")
 
 
-# Write the data
+
+### Do the rest of the levels ####
+
+
+
+
 write.csv(df, here("data_4_analysis/All_Stream_Data.csv"))
 
 
-plot <- ggplot(merge)+
-  geom_point(aes(x = DateTime, y = airTemp_c))
+plot <- ggplot(lvl_421)+
+  geom_point(aes(x = DateTime, y = lvl_421_m))
 plot
