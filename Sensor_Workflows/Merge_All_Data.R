@@ -149,7 +149,8 @@ plot <- ggplot(df)+
 # to go along with the other variables such as pCO2
 
 # linear estimation of water level
-try <- na.approx(df$lvl_421_m)
+# 421
+aprx <- na.approx(df$lvl_421_m)
 
 NAs <- which(!is.na(df$lvl_421_m))       #Find the locations of NAs
 recFirst <- NAs[1]
@@ -164,7 +165,7 @@ for (n in 2:recFirst-1){
 
 for (n in recFirst:recLast){
   row <- df[n,]
-  new <- data.frame(DateTime = row$DateTime, lvl = try[n-recFirst+1])
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
   df.new <- rbind(df.new, new)
 }
 
@@ -179,14 +180,176 @@ colnames(lvl_421) <- c("DateTime","lvl_421_m")
 
 
 
-### Do the rest of the levels ####
+# 425
+aprx <- na.approx(df$lvl_425_m)
+NAs <- which(!is.na(df$lvl_425_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+lvl_425 <- df.new
+colnames(lvl_425) <- c("DateTime","lvl_425_m")
+
+# 430
+aprx <- na.approx(df$lvl_430_m)
+NAs <- which(!is.na(df$lvl_430_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+
+lvl_430 <- df.new
+colnames(lvl_430) <- c("DateTime","lvl_430_m")
+
+# 435
+aprx <- na.approx(df$lvl_435_m)
+NAs <- which(!is.na(df$lvl_435_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+lvl_435 <- df.new
+colnames(lvl_435) <- c("DateTime","lvl_435_m")
+
+# 436
+aprx <- na.approx(df$lvl_436_m)
+NAs <- which(!is.na(df$lvl_436_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+lvl_436 <- df.new
+colnames(lvl_436) <- c("DateTime","lvl_436_m")
+
+# 437
+aprx <- na.approx(df$lvl_437_m)
+NAs <- which(!is.na(df$lvl_437_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+lvl_437 <- df.new
+colnames(lvl_437) <- c("DateTime","lvl_437_m")
+
+# 442
+aprx <- na.approx(df$lvl_442_m)
+NAs <- which(!is.na(df$lvl_442_m))       #Find the locations of NAs
+recFirst <- NAs[1]
+recLast <- NAs[length(NAs)]
+df.new <- data.frame()   #Iterate to insert iterpolated numbers into data
+for (n in 2:recFirst-1){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+for (n in recFirst:recLast){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = aprx[n-recFirst+1])
+  df.new <- rbind(df.new, new)
+}
+for (n in recLast:nrow(df)){
+  row <- df[n,]
+  new <- data.frame(DateTime = row$DateTime, lvl = NA)
+  df.new <- rbind(df.new, new)
+}
+lvl_442 <- df.new
+colnames(lvl_442) <- c("DateTime","lvl_442_m")
+
+# Merge the new level data together
+dt <- lvl_421$DateTime
+lvl_421 <- lvl_421%>%
+  select(lvl_421_m)
+lvl_425 <- lvl_425%>%
+  select(lvl_425_m)
+lvl_430 <- lvl_430%>%
+  select(lvl_430_m)
+lvl_435 <- lvl_435%>%
+  select(lvl_435_m)
+lvl_436 <- lvl_436%>%
+  select(lvl_436_m)
+lvl_437 <- lvl_437%>%
+  select(lvl_437_m)
+lvl_442 <- lvl_442%>%
+  select(lvl_442_m)
+
+lvlBind <- cbind(dt,lvl_421,lvl_425,lvl_430,lvl_435,lvl_436,lvl_437,lvl_442)
 
 
+# Merge the level data into the main data frame
+lvlBind <- lvlBind[1:nrow(lvlBind)-1,]%>%
+  select(-dt)
+dfFinal <- df%>%
+  select(-lvl_421_m,-lvl_425_m,-lvl_430_m,-lvl_435_m,-lvl_436_m,-lvl_437_m,-lvl_442_m)%>%
+  cbind(lvlBind)
 
-
-write.csv(df, here("data_4_analysis/All_Stream_Data.csv"))
-
-
-plot <- ggplot(lvl_421)+
-  geom_point(aes(x = DateTime, y = lvl_421_m))
-plot
+write.csv(dfFinal, here("data_4_analysis/All_Stream_Data.csv"))

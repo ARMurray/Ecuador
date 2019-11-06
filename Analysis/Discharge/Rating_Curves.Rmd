@@ -2,7 +2,10 @@
 title: "Rating Curves"
 author: "Andrew"
 date: "10/30/2019"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
@@ -14,67 +17,16 @@ library(plotly)
 ```
 
 # Can we interpolate the missing data?
-```{r}
-level <- read.csv(here("data_4_analysis/WaterLevel_Cleaned.csv"))
-level$DateTime <- as.POSIXct(as.character(level$DateTime),format = "%Y-%m-%d %H:%M")
-
+```{r loadData}
+# Sensor data with water level -  we will add discharge to this
 df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+
+# Discharge Data - we will create rating curves with this
+discharge <- read.csv(here("data_4_analysis/recorded_discharge.csv"))
+discharge$DateTime <-as.POSIXct(paste0(discharge$Date,"",discharge$Time),format = "%m/%d/%Y %H:%M")
+discharge <- discharge%>%
+  select(DateTime,Stn,Level,Discharge)
 ```
-
-```{r lvlPlot, echo=FALSE}
-level$Serial <- as.factor(level$Serial)
-ggplot(level)+
-  geom_point(aes(x=DateTime, y = LEVEL_m, group = Serial, col = Serial))+
-  labs(x = "Date", y = "Level (m)")
-
-```
-
-
-# Try to get station 1 from station 3
-Here I filter data only to times where both station 1 and 3 recorded level data. I then use linear regression to test the relationship between them.
-
-```{r lm, echo=TRUE}
-stn1_2 <- level%>%
-  filter(Serial == "2020436" | Serial == "2020421")%>%
-  select(DateTime, LEVEL_m, Serial)
-stn1_2_wide <- spread(stn1_2, Serial, LEVEL_m)
-colnames(stn1_2_wide) <- c("DateTime","Station_3","Station_1")
-
-stn1_2_complete <- na.omit(stn1_2_wide) # Keep only rows with both data points
-
-
-lm <- lm(stn1_2_complete$Station_1~stn1_2_complete$Station_3)
-summary(lm)
-```
-
-
-## Based on a reasonable r-square value we can estimate level at station 1 from level at station 3 at times we are missing station 1 level data
-
-Here I do this by filtering data to only those rows where station 1 is missing and station 3 is not. We will use the coefficient from the regression model to estimate level at station 1.
-
-```{r levelEstimate, echo=TRUE}
-lvl4est <- stn1_2_wide%>%
-  filter(is.na(Station_1) & !is.na(Station_3))
-lvl4est$Station_1 <- lvl4est$Station_3 - (lvl4est$Station_3 * 0.047655)
-```
-
-## Now we need to replace the NA values with the new estimates
-I do this by calling the orignal data and using a filter to create a dataset without the rows that were missing station 1 level data, and then I add in the new estimates from the previous step
-```{r}
-levelMod <- stn1_2_wide%>%
-  filter(!is.na(Station_1))
-levelMod <- rbind(levelMod,lvl4est)
-
-p <- ggplot(levelMod)+
-  geom_point(aes(x = DateTime, y = Station_1), col="orange")+
-  geom_point(aes(x = DateTime, y = Station_3), col="#20bab2")
-
-ggplotly(p)
-```
-
-
-# From here we can update the level values in our discharge table
-We use level data from Station 1 for discharge measurements at Station 1 and 2. We use level data from Station 3 for discharge measurements at station 3 and 4.
 
 # Now let's work on the rating curves
 ```{r discharge}
@@ -88,77 +40,235 @@ ggplot(discharge)+
 ```
 
 ## Station 1 Rating Curve
-Code is shown for Station 1 only, other stations use identical code.
-```{r stn1, echo=TRUE, warning=FALSE}
+Set up variables:
+```{r stn1var, echo=FALSE, warning=FALSE}
 stn1 <- discharge%>%
   filter(Stn == "Station 1")%>%
   na.omit()%>%
-  arrange(Discharge)
+  arrange(Level)
 
-x<-stn1$Discharge
-y<-stn1$Level
-#for simple models nls find good starting values for the parameters even if it throw a warning
-m<-nls(y~a*x/(b+x))
-
-df$stn1_Q <- predict(m,data.frame(x=df$lvl_436_m))
-
-plot(x,y)
-lines(x,predict(m),lty=2,col="red",lwd=3)
+x<-stn1$Level
+y<-stn1$Discharge
 ```
 
-## Station 2 Rating Curve
-```{r stn2, echo=FALSE, warning=FALSE}
+### Exponential model (Station 1)
+Test exponential model for station 1:
+```{r stn1Exp}
+
+exponential.model <- lm(log(y)~ x)  # Create the model
+exp.predict <- exp(predict(exponential.model,list(Level=x)))  # Create predicted values for recorded discharge values
+
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,exp.predict),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 1 Exponential Model ")
+
+# Print the Summary
+summary(exponential.model)
+```
+
+### Quadratic Model (Station 1)
+Test Quadratic model for station 1:
+```{r stn1Quad}
+
+x2 <- x^2
+quadratic.model <-lm(y ~ x + x2)
+
+# Use the model to predict values for the rating curve
+quadPred <- predict(quadratic.model,list(Level=x, Level2=x^2))
+
+# plot the predicted(line) vs observed (points)
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,quadPred),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 1 Quadratic Model ")
+
+# Print the summary of the quadratic model
+summary(quadratic.model)
+```
+
+### Decide on model and write it to dataset
+```{r stn1Choice}
+# Exponential Model:
+df$stn1_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m)))
+
+# Quadratic Model
+#df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))
+```
+
+## Station 2 Rating Curve FOR REAL
+Set up variables:
+```{r stn2var, echo=FALSE, warning=FALSE}
 stn2 <- discharge%>%
   filter(Stn == "Station 2")%>%
   na.omit()%>%
-  arrange(Discharge)
+  arrange(Level)
 
-x<-stn2$Discharge
-y<-stn2$Level
-#for simple models nls find good starting values for the parameters even if it throw a warning
-m<-nls(y~a*x/(b+x))
+x<-stn2$Level
+y<-stn2$Discharge
+```
 
-df$stn2_Q <- predict(m,data.frame(x=df$lvl_436_m))
+### Exponential model (Station 2)
+Test exponential model for station 2:
+```{r stn2Exp}
 
-plot(x,y)
-lines(x,predict(m),lty=2,col="red",lwd=3)
+exponential.model <- lm(log(y)~ x)  # Create the model
+exp.predict <- exp(predict(exponential.model,list(Level=x)))  # Create predicted values for recorded discharge values
+
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,exp.predict),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 2 Exponential Model ")
+
+# Print the Summary
+summary(exponential.model)
+```
+
+### Quadratic Model (Station 2)
+Test Quadratic model for station 2:
+```{r stn2Quad}
+
+x2 <- x^2
+quadratic.model <-lm(y ~ x + x2)
+
+# Use the model to predict values for the rating curve
+quadPred <- predict(quadratic.model,list(Level=x, Level2=x^2))
+
+# plot the predicted(line) vs observed (points)
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,quadPred),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 2 Quadratic Model ")
+
+# Print the summary of the quadratic model
+summary(quadratic.model)
+```
+
+### Decide on model and write it to dataset
+```{r stn2Choice}
+# Exponential Model:
+df$stn2_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m)))
+
+# Quadratic Model
+#df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))
 ```
 
 ## Station 3 Rating Curve
-```{r stn3, echo=FALSE, warning=FALSE}
+Set up variables:
+```{r stn3var, echo=FALSE, warning=FALSE}
 stn3 <- discharge%>%
   filter(Stn == "Station 3")%>%
   na.omit()%>%
-  arrange(Discharge)
+  arrange(Level)
 
-x<-stn3$Discharge
-y<-stn3$Level
-#for simple models nls find good starting values for the parameters even if it throw a warning
-m<-nls(y~a*x/(b+x))
+x<-stn3$Level
+y<-stn3$Discharge
+```
 
-df$stn3_Q <- predict(m,data.frame(x=df$lvl_421_m))
+### Exponential model (Station 3)
+Test exponential model for station 3:
+```{r stn3Exp}
 
-plot(x,y)
-lines(x,predict(m),lty=2,col="red",lwd=3)
+exponential.model <- lm(log(y)~ x)  # Create the model
+exp.predict <- exp(predict(exponential.model,list(Level=x)))  # Create predicted values for recorded discharge values
+
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,exp.predict),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 3 Exponential Model ")
+
+# Print the Summary
+summary(exponential.model)
+```
+
+### Quadratic Model (Station 3)
+Test Quadratic model for station 3:
+```{r stn3Quad}
+
+x2 <- x^2
+quadratic.model <-lm(y ~ x + x2)
+
+# Use the model to predict values for the rating curve
+quadPred <- predict(quadratic.model,list(Level=x, Level2=x^2))
+
+# plot the predicted(line) vs observed (points)
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,quadPred),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 3 Quadratic Model ")
+
+# Print the summary of the quadratic model
+summary(quadratic.model)
+```
+
+### Decide on model and write it to dataset
+```{r stn3Choice}
+# Exponential Model:
+df$stn3_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))
+
+# Quadratic Model
+#df$stn3_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))
 ```
 
 ## Station 4 Rating Curve
-```{r stn4, echo=FALSE, warning=FALSE}
+Set up variables:
+```{r stn4var, echo=FALSE, warning=FALSE}
 stn4 <- discharge%>%
   filter(Stn == "Station 4")%>%
   na.omit()%>%
-  arrange(Discharge)
+  arrange(Level)
 
-x<-stn4$Discharge
-y<-stn4$Level
-#for simple models nls find good starting values for the parameters even if it throw a warning
-m<-nls(y~a*x/(b+x))
-
-df$stn4_Q <- predict(m,data.frame(x=df$lvl_421_m))
-
-plot(x,y)
-lines(x,predict(m),lty=2,col="red",lwd=3)
+x<-stn4$Level
+y<-stn4$Discharge
 ```
+
+### Exponential model (Station 4)
+Test exponential model:
+```{r stn4Exp}
+
+exponential.model <- lm(log(y)~ x)  # Create the model
+exp.predict <- exp(predict(exponential.model,list(Level=x)))  # Create predicted values for recorded discharge values
+
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,exp.predict),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 4 Exponential Model ")
+
+# Print the Summary
+summary(exponential.model)
+```
+
+
+### Quadratic Model (Station 4)
+Test Quadratic model for station 4:
+```{r stn4Quad}
+
+x2 <- x^2
+quadratic.model <-lm(y ~ x + x2)
+
+# Use the model to predict values for the rating curve
+quadPred <- predict(quadratic.model,list(Level=x, Level2=x^2))
+
+# plot the predicted(line) vs observed (points)
+ggplot()+
+  geom_point(aes(x,y))+
+  geom_line(aes(x,quadPred),col = 'red')+
+  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 4 Quadratic Model ")
+
+# Print the summary of the quadratic model
+summary(quadratic.model)
+```
+
+### Decide on model and write it to dataset
+```{r stn4Choice}
+# Exponential Model:
+#df$stn4_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))
+
+# Quadratic Model
+df$stn4_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))
+```
+
+
 
 ## Export the updated data
 ```{r}
