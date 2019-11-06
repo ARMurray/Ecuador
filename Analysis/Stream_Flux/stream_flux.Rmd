@@ -16,7 +16,8 @@ library(plotly)
 ## Flux plots
 In this document we are going to calculate flux from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature.
 ```{r data, echo=FALSE, message=FALSE}
-df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
+df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
+  select(DateTime,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)
 df$DateTime <- as.POSIXct(df$DateTime)
 ```
 
@@ -49,9 +50,17 @@ df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q
 ### Histogram of Flux
 ```{r}
 ggplot(df)+
-  geom_histogram(aes(x = flux_12),binwidth = 10)+
+  geom_histogram(aes(x = flux_12),binwidth = 1)+
   xlim(-20,250)
 ```
+
+## Flux and time
+```{r fluxTime, echo=FALSE, warning=FALSE}
+fluxTime12 <- ggplot(df)+
+  geom_point(aes(x=DateTime, y= flux_12))
+
+```
+
 
 
 ### ppt and Flux
@@ -94,12 +103,12 @@ nonInjections <- rbind(nonInjection1,nonInjection2,nonInjection3,nonInjection4,n
 
 ggplot()+
   geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12/50))+
+  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12))+
   labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 2")
 
 ggplot()+
   geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = nonInjections,aes(x = DateTime, y = flux_14/50))+
+  geom_point(data = nonInjections,aes(x = DateTime, y = flux_14))+
   labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 4")
 ```
 

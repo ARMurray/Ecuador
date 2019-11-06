@@ -21,25 +21,25 @@ V1 <- Vaisala%>%
   select(DateTime,V1)
 V1$DateTime <- as.character(V1$DateTime)
 V1$DateTime <- as.POSIXct(substr(V1$DateTime,1,16))
-V1 <- V1[complete.cases(V1),]
+#V1 <- V1[complete.cases(V1),]
 
 V2 <- Vaisala%>%
   select(DateTime,V2)
 V2$DateTime <- as.character(V2$DateTime)
 V2$DateTime <- as.POSIXct(substr(V2$DateTime,1,16))
-V2 <- V2[complete.cases(V2),]
+#V2 <- V2[complete.cases(V2),]
 
 V3 <- Vaisala%>%
   select(DateTime,V3)
 V3$DateTime <- as.character(V3$DateTime)
 V3$DateTime <- as.POSIXct(substr(V3$DateTime,1,16))
-V3 <- V3[complete.cases(V3),]
+#V3 <- V3[complete.cases(V3),]
 
 V4 <- Vaisala%>%
   select(DateTime,V4)
 V4$DateTime <- as.character(V4$DateTime)
 V4$DateTime <- as.POSIXct(substr(V4$DateTime,1,16))
-V4 <- V4[complete.cases(V4),]
+#V4 <- V4[complete.cases(V4),]
 
 vMerge <- merge(V1,V2)
 vMerge <- merge(vMerge,V3)
