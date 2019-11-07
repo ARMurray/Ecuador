@@ -21,7 +21,7 @@ for(i in 2:length(july30_Files)){
   alljuly30Data <- rbind(alljuly30Data,data)
 }
 #select only the data columns we need 
-july30 <- july30 %>%
+july30 <- alljuly30Data %>%
   select(DATE, TIME, X12CO2, Delta_Raw_iCO2)
 
 
@@ -39,11 +39,16 @@ july30 <- july30 %>%
 write.csv(alljuly30Data,here("Picarro/EOSTransects/081319/", "alljuly30Data.csv"))
 
 
+#Subset data
+july30.2 <- july30[ which(july30$PosixCT > "2019-07-30 15:00:00"
+                & july30$PosixCT < "2019-07-30 17:00:00"), ]
+
+
 #Do an initial plot of C02 
-plot <- ggplot(allAug13Data_cut)+
+plot <- ggplot(july30.2)+
   geom_point(aes(x= PosixCT, y= X12CO2)) +
   labs(x = "Time", y = "CO2") +
-  ggtitle("aug13 EOS Transect Pulls") 
+  ggtitle("July 30") 
 plot
 
 #Do an initial plot of Delta_i 
