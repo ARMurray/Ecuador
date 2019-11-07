@@ -35,22 +35,32 @@ ggplot(df)+
 ```
 
 ## Calculate Flux using my equation
-```{r flux12}
+```{r fluxCalc}
+# Distances are 17,30,80
 df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q
-
-```
-
-
-```{r flux14}
+df$flux_13 <- ((df$V1-df$V2)/ 37.6) *.0018*(1000000/44.01)*df$stn2_Q
 df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q
+df$flux_23 <- ((df$V1-df$V4)/ 24) *.0018*(1000000/44.01)*df$stn2_Q
+df$flux_24 <- ((df$V1-df$V4)/ 88) *.0018*(1000000/44.01)*df$stn3_Q
+df$flux_34 <- ((df$V1-df$V4)/ 64) *.0018*(1000000/44.01)*df$stn3_Q
 ```
 
 ## Plot data
 
-### Histogram of Flux
+### Histogram of Flux Stations 1 -> 2
+```{r}
+ggplot(df, warning = FALSE, message=FALSE)+
+  geom_histogram(aes(x = flux_12),binwidth = 1)+
+  geom_vline(xintercept = 0, linetype="dotted", color = "#4B9CD3", size=1.5)+
+  xlim(-10,50)+
+  ylim(0,2600)+
+  labs(x = "Flux", y="Count of values",title = "Station 1 -> 2")
+```
+
+### Histogram of Flux Stations 1 -> 4
 ```{r}
 ggplot(df)+
-  geom_histogram(aes(x = flux_12),binwidth = 1)
+  geom_histogram(aes(x = flux_14),binwidth = 1)
 ```
 
 ## Flux and time
