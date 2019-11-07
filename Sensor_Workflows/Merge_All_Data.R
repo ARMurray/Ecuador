@@ -29,6 +29,13 @@ V2 <- Vaisala%>%
   filter(!is.na(V2))
 V2$DateTime <- as.character(V2$DateTime)
 V2$DateTime <- as.POSIXct(substr(V2$DateTime,1,16))
+
+#Need to remove erroneous data from use of campbel logger with incorrect settings
+V2 <- V2%>%
+  filter(DateTime < as.POSIXct("2019-08-01 16:31:00")|DateTime>as.POSIXct("2019-08-03 10:15:00"))%>%
+  filter(DateTime < as.POSIXct("2019-08-08 11:37:00")|DateTime>as.POSIXct("2019-08-09 10:03:00"))%>%
+  filter(DateTime < as.POSIXct("2019-07-22 21:50:00")|DateTime>as.POSIXct("2019-07-26 16:00:00"))
+
 #V2 <- V2[complete.cases(V2),]
 
 V3 <- Vaisala%>%
@@ -45,12 +52,12 @@ V4$DateTime <- as.character(V4$DateTime)
 V4$DateTime <- as.POSIXct(substr(V4$DateTime,1,16))
 #V4 <- V4[complete.cases(V4),]
 
-vMerge <- merge(V1,V2)
-vMerge <- merge(vMerge,V3)
-vMerge <- merge(vMerge,V4)
+vMerge <- merge(V1,V2, all = TRUE)
+vMerge <- merge(vMerge,V3, all=TRUE)
+vMerge <- merge(vMerge,V4, all=TRUE)
 
 vMerge <- vMerge%>%
-  filter(!is.na(V1)|!is.na(V3)|is.na(V4))%>%
+  filter(!is.na(V1)|!is.na(V3)|!is.na(V4))%>%
   distinct()
 
 # C6 Data
