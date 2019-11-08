@@ -17,8 +17,8 @@ library(plotly)
 In this document we are going to calculate flux from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature.
 ```{r data, echo=FALSE, message=FALSE}
 df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)
-df$DateTime <- as.POSIXct(df$DateTime)
+  select(DateTime,Inj,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)
+df$DateTime <- as.POSIXct(df$DateTime, format = "%m/%d/%Y %H:%M")
 ```
 
 ## Calculate ppt as a running total of the previous X hours
@@ -50,7 +50,7 @@ df$flux_34 <- ((df$V1-df$V4)/ 64) *.0018*(1000000/44.01)*df$stn3_Q
 ### Histogram of Flux Stations 1 -> 2
 ```{r}
 ggplot(df, warning = FALSE, message=FALSE)+
-  geom_histogram(aes(x = flux_12),binwidth = 1)+
+  geom_histogram(aes(x = flux_12, fill = Inj),binwidth = 1)+
   geom_vline(xintercept = 0, linetype="dotted", color = "#4B9CD3", size=1.5)+
   xlim(-10,50)+
   ylim(0,2600)+
@@ -70,6 +70,16 @@ fluxTime12 <- ggplot(df)+
 
 ```
 
+## Flux by day
+```{r}
+df$day <- as.factor(substr(as.character(df$DateTime),1,10))
+times <- substr(as.character(df$DateTime),12,16)
+df$time <- strftime(df$DateTime, format="%H:%M")
+df$time <- as.POSIXct(df$time, format="%H:%M")
+
+ggplot(df)+
+  geom_line(aes(x = time, y = flux_13, group=day, col=day))
+```
 
 
 ### ppt and Flux
@@ -86,6 +96,10 @@ pptBar
 ```
 
 ## Let's remove the injections
+
+
+
+
 ```{r}
 nonInjection1 <- df%>%
   filter(DateTime > as.POSIXct("2019-07-12")&DateTime < as.POSIXct("2019-07-16 14:00"))
