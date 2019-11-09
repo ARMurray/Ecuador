@@ -37,12 +37,12 @@ ggplot(df)+
 ## Calculate Flux using my equation
 ```{r fluxCalc}
 # Distances are 17,30,80
-df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q
-df$flux_13 <- ((df$V1-df$V2)/ 37.6) *.0018*(1000000/44.01)*df$stn2_Q
-df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q
-df$flux_23 <- ((df$V1-df$V4)/ 24) *.0018*(1000000/44.01)*df$stn2_Q
-df$flux_24 <- ((df$V1-df$V4)/ 88) *.0018*(1000000/44.01)*df$stn3_Q
-df$flux_34 <- ((df$V1-df$V4)/ 64) *.0018*(1000000/44.01)*df$stn3_Q
+df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q/1000
+df$flux_13 <- ((df$V1-df$V2)/ 37.6) *.0018*(1000000/44.01)*df$stn2_Q/1000
+df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q/1000
+df$flux_23 <- ((df$V1-df$V4)/ 24) *.0018*(1000000/44.01)*df$stn2_Q/1000
+df$flux_24 <- ((df$V1-df$V4)/ 88) *.0018*(1000000/44.01)*df$stn3_Q/1000
+df$flux_34 <- ((df$V1-df$V4)/ 64) *.0018*(1000000/44.01)*df$stn3_Q/1000
 ```
 
 ## Plot data
@@ -70,16 +70,7 @@ fluxTime12 <- ggplot(df)+
 
 ```
 
-## Flux by day
-```{r}
-df$day <- as.factor(substr(as.character(df$DateTime),1,10))
-times <- substr(as.character(df$DateTime),12,16)
-df$time <- strftime(df$DateTime, format="%H:%M")
-df$time <- as.POSIXct(df$time, format="%H:%M")
 
-ggplot(df)+
-  geom_line(aes(x = time, y = flux_13, group=day, col=day))
-```
 
 
 ### ppt and Flux
@@ -95,10 +86,16 @@ pptBar <- ggplot()+
 pptBar
 ```
 
+# Create new time variables for ease of plotting
+These new variables will help us plot each seperate day on a timescale of midnight -> midnight
+```{r}
+df$day <- as.factor(substr(as.character(df$DateTime),1,10))
+times <- substr(as.character(df$DateTime),12,16)
+df$time <- strftime(df$DateTime, format="%H:%M")
+df$time <- as.POSIXct(df$time, format="%H:%M")
+```
+
 ## Let's remove the injections
-
-
-
 
 ```{r}
 nonInjection1 <- df%>%
@@ -141,3 +138,26 @@ ggplot(df)+
   labs(x = "Vaisala 1 -> Vaisala 4 flux", y = "EosFD 1 Flux")
 ```
 
+## Flux by day
+
+
+
+```{r filt14plot}
+
+filt14 <- nonInjections%>%
+  filter(!is.na(flux_14))%>%
+  filter(!day == "2019-07-12" & !day == "2019-08-14" & !day =="2019-07-14" & !time == as.POSIXct("2019-11-09 09:57:00"))
+
+my_breaks <- c(0,15,50,166) # Create breaks
+
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(3,3,15,15))
+
+plot14 <- ggplot(filt14)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_line(aes(x = time, y = flux_14,group = day, col=stn1_Q),lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="Flux", title = "Flux station 1 -> 4")
+
+plot14
+```
