@@ -13,77 +13,16 @@ library(ggplot2)
 library(plotly)
 ```
 
-## Flux plots
-In this document we are going to calculate flux from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature.
+## Import data
+In this document we are going to calculate Evasion from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature. First we import the data and for now we will filter so we are looking at non-injections
 ```{r data, echo=FALSE, message=FALSE}
 df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)
+  select(DateTime,Inj,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
+  filter(Inj == "No")
 df$DateTime <- as.POSIXct(df$DateTime, format = "%m/%d/%Y %H:%M")
-```
 
-## Calculate ppt as a running total of the previous X hours
-We have precipitation data at five minute intervals for the entire period of data collection thanks to a weather station close to our study site. Data was obtained from the [FONAG hydrometeorolical monitoring netowrk](http://sedc.fonag.org.ec/reportes/consultas/) (Station M5024). I run an iterator to total precipitation for the previous rows. Data collection began on July 9, 2019.
-For now I'll create three variables: 24-hour / 48-hour / 72-hour rainfall. This code exists in [Merge_All_Data.R](github.com)
-
-## Plot new ppt variables
-```{r pptPlot, echo=FALSE}
-ggplot(df)+
-  geom_point(aes(x=DateTime, y = ppt24Tot, col = "24 Hour"), col="blue")+
-  geom_point(aes(x=DateTime, y = ppt48Tot, col = "48 Hour"), col="red")+
-  geom_point(aes(x=DateTime, y = ppt72Tot, col = "72 Hour"), col="green")
-
-```
-
-## Calculate Flux using my equation
-```{r fluxCalc}
-# Distances are 17,30,80
-df$flux_12 <- ((df$V1-df$V2)/ 13) *.0018*(1000000/44.01)*df$stn1_Q/1000
-df$flux_13 <- ((df$V1-df$V2)/ 37.6) *.0018*(1000000/44.01)*df$stn2_Q/1000
-df$flux_14 <- ((df$V1-df$V4)/ 100) *.0018*(1000000/44.01)*df$stn2_Q/1000
-df$flux_23 <- ((df$V1-df$V4)/ 24) *.0018*(1000000/44.01)*df$stn2_Q/1000
-df$flux_24 <- ((df$V1-df$V4)/ 88) *.0018*(1000000/44.01)*df$stn3_Q/1000
-df$flux_34 <- ((df$V1-df$V4)/ 64) *.0018*(1000000/44.01)*df$stn3_Q/1000
-```
-
-## Plot data
-
-### Histogram of Flux Stations 1 -> 2
-```{r}
-ggplot(df, warning = FALSE, message=FALSE)+
-  geom_histogram(aes(x = flux_12, fill = Inj),binwidth = 1)+
-  geom_vline(xintercept = 0, linetype="dotted", color = "#4B9CD3", size=1.5)+
-  xlim(-10,50)+
-  ylim(0,2600)+
-  labs(x = "Flux", y="Count of values",title = "Station 1 -> 2")
-```
-
-### Histogram of Flux Stations 1 -> 4
-```{r}
-ggplot(df)+
-  geom_histogram(aes(x = flux_14),binwidth = 1)
-```
-
-## Flux and time
-```{r fluxTime, echo=FALSE, warning=FALSE}
-fluxTime12 <- ggplot(df)+
-  geom_point(aes(x=DateTime, y= flux_12))
-
-```
-
-
-
-
-### ppt and Flux
-```{r plot}
 pptDaily <- read.csv(here("data_4_analysis/ppt.csv"))
 pptDaily$DateTime <- as.POSIXct(pptDaily$DateTime)
-
-pptBar <- ggplot()+
-  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = df,aes(x = DateTime, y = flux_12))
-
-
-pptBar
 ```
 
 # Create new time variables for ease of plotting
@@ -95,69 +34,107 @@ df$time <- strftime(df$DateTime, format="%H:%M")
 df$time <- as.POSIXct(df$time, format="%H:%M")
 ```
 
-## Let's remove the injections
+## Change in CO2 Station 1->4
+Let's visualize the changes in diel CO2 concentrations between a pair of sensors. Here we look at the entire reach, so stations 1 -> 4.
+```{r filt14PpmPlot}
+filt14 <- df%>%
+  filter(!is.na(V1)&!is.na(V4))%>%
+  filter(!day == "2019-07-12" & !day == "2019-08-14" & !day =="2019-07-14" & !time == as.POSIXct("2019-11-09 09:57:00")& DateTime > as.POSIXct("2019-07-12 00:00:00"))
 
-```{r}
-nonInjection1 <- df%>%
-  filter(DateTime > as.POSIXct("2019-07-12")&DateTime < as.POSIXct("2019-07-16 14:00"))
-
-nonInjection2 <- df%>%
-  filter(DateTime > as.POSIXct("2019-07-16 21:00")&DateTime < as.POSIXct("2019-07-22 14:00"))
-
-nonInjection3 <- df%>%
-  filter(DateTime > as.POSIXct("2019-07-22 21:00")&DateTime < as.POSIXct("2019-07-26 12:30"))
-
-nonInjection4 <- df%>%
-  filter(DateTime > as.POSIXct("2019-07-26 18:00")&DateTime < as.POSIXct("2019-08-01 15:30"))
-
-nonInjection5 <- df%>%
-  filter(DateTime > as.POSIXct("2019-08-01 21:00")&DateTime < as.POSIXct("2019-08-05 16:00"))
-
-nonInjection6 <- df%>%
-  filter(DateTime > as.POSIXct("2019-08-05 21:00")&DateTime < as.POSIXct("2019-08-08 12:30"))
-
-nonInjection7 <- df%>%
-  filter(DateTime > as.POSIXct("2019-08-08 16:00"))
-
-nonInjections <- rbind(nonInjection1,nonInjection2,nonInjection3,nonInjection4,nonInjection5,nonInjection6,nonInjection7)
-
-ggplot()+
-  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = nonInjections,aes(x = DateTime, y = flux_12))+
-  labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 2")
-
-ggplot()+
-  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
-  geom_point(data = nonInjections,aes(x = DateTime, y = flux_14))+
-  labs(x = "Date", y="ppt", title = "Flux: Station 1 -> 4")
-```
-
-```{r}
-ggplot(df)+
-  geom_point(aes(x=flux_14, y = Flux_1, col=Flux_2))+
-  labs(x = "Vaisala 1 -> Vaisala 4 flux", y = "EosFD 1 Flux")
-```
-
-## Flux by day
-
-
-
-```{r filt14plot}
-
-filt14 <- nonInjections%>%
-  filter(!is.na(flux_14))%>%
-  filter(!day == "2019-07-12" & !day == "2019-08-14" & !day =="2019-07-14" & !time == as.POSIXct("2019-11-09 09:57:00"))
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-3200,-3200,-100,-100))
 
 my_breaks <- c(0,15,50,166) # Create breaks
 
-dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(3,3,15,15))
+plot14Ppm <- ggplot(filt14)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_line(aes(x = time, y = V4-V1,group = day, col=stn1_Q),lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="DCO2", title = "DCO2 Change station 1 -> 4")
+
+plot14Ppm
+```
+
+So now that we know what the change in CO2 between stations, it's time to account for uptake. Uptake can be determined by taking the change in CO2 between stations before sunrise (respiration is zero) and subtracting it from the change in CO2 at all other times.
+
+![Uptake](D:/OneDrive\OneDrive - University of North Carolina at Chapel Hill\Ecuador\Github\Ecuador\Images/uptake.png)
+
+## Calculate uptake between stations 1 & 4
+Find the max change in pCO2 which will be when respiration is the least (before sunrise). This level serves as the baseline for that day (zero uptake). For every other time, we take the value of V1-V4 and subtract the zero uptake value for that day from it to determine uptake.
+```{r uptake14}
+filt14 <- filt14%>%
+  group_by(day)%>%
+  mutate(baseDeltCo2 = max(V1-V4))%>%
+  ungroup()%>%
+  mutate(Uptake = baseDeltCo2-(V1-V4))
+
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(10,10,30,30))
+
+plot14Uptake <- ggplot(filt14)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_line(aes(x = time, y = Uptake,group = day, col=stn3_Q),lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="Uptake", title = "Evasion station 1 -> 4")
+plot14Uptake
+```
+
+## Calculate Evasion using my equation
+Now that we know the change in CO2 and uptake, we can calculate evasion.
+```{r evasionCalc}
+# Distances are 17,30,80
+
+filt14$evasion_14 <- ((filt14$V1-(filt14$V4+filt14$Uptake))/ 100) *.0018*(1000000/44.01)*filt14$stn3_Q/1000
+
+```
+
+## Plot data
+
+### Histogram of Evasion Stations 1 -> 4
+```{r}
+ggplot(filt14, warning = FALSE, message=FALSE)+
+  geom_histogram(aes(x = evasion_14, fill = Inj),binwidth = 1)+
+  geom_vline(xintercept = 0, linetype="dotted", color = "#4B9CD3", size=1.5)+
+  xlim(-10,50)+
+  ylim(0,2600)+
+  labs(x = "Evasion", y="Count of values",title = "Station 1 -> 4")
+```
+
+
+
+## Evasion and time
+```{r evasionTime, echo=FALSE, warning=FALSE}
+ggplot(filt14)+
+  geom_line(aes(x=DateTime, y= evasion_14, col = time),lwd=1.5)
+
+```
+
+
+### ppt and Evasion
+```{r plot}
+pptBar <- ggplot()+
+  geom_bar(data = pptDaily,stat = "identity", aes(x = DateTime, y = ppt_mm))+
+  geom_point(data = filt14,aes(x = DateTime, y = evasion_14))
+
+
+pptBar
+```
+
+
+
+##Evasion
+```{r}
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(10,10,30,30))
 
 plot14 <- ggplot(filt14)+
   geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_line(aes(x = time, y = flux_14,group = day, col=stn1_Q),lwd=2)+
+  geom_line(aes(x = time, y = evasion_14,group = day, col=stn1_Q),lwd=2)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="Flux", title = "Flux station 1 -> 4")
+  labs(x = "Time",y="Evasion", title = "Evasion station 1 -> 4")
 
 plot14
 ```
+
+
+

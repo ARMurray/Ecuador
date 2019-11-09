@@ -122,6 +122,11 @@ merge <- merge(merge,DO, all=TRUE)
 
 
 ## Create new precipitation variables
+## Calculate ppt as a running total of the previous X hours
+#We have precipitation data at five minute intervals for the entire period of data collection thanks to a weather station close to our study site. Data was obtained from the [FONAG hydrometeorolical monitoring netowrk](http://sedc.fonag.org.ec/reportes/consultas/) (Station M5024). I run an iterator to total precipitation for the previous rows. Data collection began on July 9, 2019.
+#For now I'll create three variables: 24-hour / 48-hour / 72-hour rainfall. This code exists in [Merge_All_Data.R](github.com)
+
+
 ppt24Df <- data.frame()
 for(n in 2449:nrow(merge)){
   date <- as.POSIXct(as.character(merge[n,'DateTime']))
