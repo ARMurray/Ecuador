@@ -88,15 +88,16 @@ summary(quadratic.model)
 ```
 
 ### Decide on model and write it to dataset
+Units here are liters per second
 ```{r stn1Choice}
 # Exponential Model:
-#df$stn1_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m)))
+#df$stn1_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m)))*1000
 
 # Quadratic Model
-df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))
+df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))*1000
 ```
 
-## Station 2 Rating Curve FOR REAL
+## Station 2 Rating Curve
 Set up variables:
 ```{r stn2var, echo=FALSE, warning=FALSE}
 stn2 <- discharge%>%
@@ -145,12 +146,13 @@ summary(quadratic.model)
 ```
 
 ### Decide on model and write it to dataset
+Units here are liters per second
 ```{r stn2Choice}
 # Exponential Model:
-df$stn2_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m)))
+df$stn2_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_436_m))) *1000
 
 # Quadratic Model
-#df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))
+#df$stn1_Q <- predict(quadratic.model,list(x=df$lvl_436_m, x2=df$lvl_436_m^2))*1000
 ```
 
 ## Station 3 Rating Curve
@@ -202,12 +204,13 @@ summary(quadratic.model)
 ```
 
 ### Decide on model and write it to dataset
+Units here are liters per second
 ```{r stn3Choice}
 # Exponential Model:
-df$stn3_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))
+df$stn3_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))*1000
 
 # Quadratic Model
-#df$stn3_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))
+#df$stn3_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))*1000
 ```
 
 ## Station 4 Rating Curve
@@ -260,12 +263,13 @@ summary(quadratic.model)
 ```
 
 ### Decide on model and write it to dataset
+Units here are liters per second
 ```{r stn4Choice}
 # Exponential Model:
-#df$stn4_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))
+#df$stn4_Q <- exp(predict(exponential.model,data.frame(x=df$lvl_421_m)))*1000
 
 # Quadratic Model
-df$stn4_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))
+df$stn4_Q <- predict(quadratic.model,list(x=df$lvl_421_m, x2=df$lvl_421_m^2))*1000
 ```
 
 
