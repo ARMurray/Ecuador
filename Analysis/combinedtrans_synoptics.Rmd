@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here) 
 
 library(ggplot2) 
+#install.packages("xlsx")
+#library(xlsx)
 
 library(tidyr) 
 
@@ -1804,6 +1806,7 @@ c8a<- t(data.frame(col8.2avg, col8.2avg, col8.3avg, col8.4avg, col8.5avg, col8.6
 callavgs <- data.frame(cbind(c1a, c2a, c3a, c4a, c5a, c6a, c7a, c8a))
 row.names(callavgs) <- c("Jul16", "Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
 colnames(callavgs) <- c("col1", "col2", "col3", "col4", "col5", "col6", "col7","col8")
+
 kable(head(callavgs), format = "markdown", row.names = FALSE)
 
 allavg <- data.frame(c(mean(callavgs$col1), mean(callavgs$col2), mean(callavgs$col3), mean(callavgs$col4), mean(callavgs$col5), mean(callavgs$col6), mean(callavgs$col7), mean(callavgs$col8)))
@@ -1840,10 +1843,13 @@ c5 <- t(c5)
 c6 <- t(c6)
 c7 <- t(c7)
 c8 <- t(c8)
-z <- c("Jul16", "Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
-z1 <- c("Jul22", "Jul29", "Aug1", "Aug5", "Aug8", "Aug13")
-z1 <- data.frame(z1)
-z <- data.frame(z)
+z <- data.frame(c("2019-07-16 13:00:00", "2019-07-22 15:00:00", "2019-07-29 12:00:00", "2019-08-01 15:00:00", "2019-08-05 15:00:00", "2019-08-08 11:00:00", "2019-08-13 11:00:00"))
+colnames(z)<-"z"
+z1<- data.frame(c("2019-07-22 15:00:00", "2019-07-29 12:00:00", "2019-08-01 15:00:00", "2019-08-05 15:00:00", "2019-08-08 11:00:00", "2019-08-13 11:00:00"))
+colnames(z1)<- "z1"
+
+z$z <- as.POSIXct((z$z), format = "%Y-%m-%d %H:%M:%OS")
+z1$z1 <- as.POSIXct((z1$z1), format = "%Y-%m-%d %H:%M:%OS")
 
 c1 <- cbind(c1, z)
 c2 <- cbind(c2, z)
@@ -1854,14 +1860,6 @@ c6 <- cbind(c6, z)
 c7 <- cbind(c7, z)
 c8 <- cbind(c8, z1)
 
-c1$z <- factor(c1$z, levels = c1$z)
-c2$z <- factor(c2$z, levels = c2$z)
-c3$z <- factor(c3$z, levels = c3$z)
-c4$z <- factor(c4$z, levels = c4$z)
-c5$z <- factor(c5$z, levels = c5$z)
-c6$z <- factor(c6$z, levels = c6$z)
-c7$z <- factor(c7$z, levels = c7$z)
-c8$z1 <- factor(c8$z1, levels = c8$z1)
 cplot <- ggplot() +
 geom_point(data = c1, aes(x= z, y=c1), color = "red", size=3) + geom_point(data = c2, aes(x= z, y=c2), color = "orange", size=3)+ geom_point(data = c3, aes(x= z, y=c3), color = "yellow", size=3) + geom_point(data = c4, aes(x= z, y=c4), color = "green", size=3)+ geom_point(data = c5, aes(x= z, y=c5), color = "blue", size=3)+ geom_point(data = c6, aes(x= z, y=c6), color = "purple") +  geom_point(data = c7, aes(x= z, y=c7), color = "black", size=3)+ geom_point(data = c8, aes(x= z1, y=c8), color = "brown", size=3) + labs(x = "Date", y = "Average FLux of collar")
 cplot
@@ -1970,4 +1968,12 @@ wtf
 allplotz 
 allplotz <- allplotz + ylim(0,3)
 allplotz
+
+
+rain <- data.frame(c(33, 14.4, 16.3, 10.9, 12.3, 2.4, 6.4))
+colnames(rain) <- "Prior 48hr Precipitation(mm)"
+
+callavgs <- cbind(callavgs,rain)
+
+write.csv(callavgs, file = "/Users/default/Ecuador/callavgs.csv")
 ```
