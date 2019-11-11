@@ -130,6 +130,11 @@ write.csv(sumaug02ecu, here("Picarro/synoptics/073119/", "sumecuaug02.csv"))
 
 ecutogether <- rbind(ecu1, ecu2)
 
+#save this 
+
+write.csv(ecutogether, here("Picarro/synoptics/073119/", "rawecuaug02.csv"))
+
+
 aug02avg <- data.frame("Day" = "aug02", "Avg_iCO2" = mean(ecutogether$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecutogether$Delta_30s_iCO2))
 
 write.csv(aug02avg, here("Picarro/synoptics/073119/", "aug02alldayecuavg.csv"))

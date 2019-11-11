@@ -111,6 +111,11 @@ write.csv(samplesaug09, here("Picarro/synoptics/080619/", "samplesalldataaug09.c
 
 ecu3avg <- data.frame("Sample" = "ecu3", "Avg_iCO2" = mean(ecu3$Delta_30s_iCO2), "StdDev_iCO2" = sd(ecu3$Delta_30s_iCO2))
 
+#save this 
+
+write.csv(ecu3, here("Picarro/synoptics/080619/", "rawecuaug09.csv"))
+
+
 
 write.csv(ecu3avg, here("Picarro/synoptics/080619/", "sumecuaug09.csv"))
 
