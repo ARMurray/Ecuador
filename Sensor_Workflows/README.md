@@ -40,3 +40,10 @@ This script converts vaisala readings to flux
 |6| -78.199684 | -0.327155 | 0072020442 | by the hill |
 |7| -78.198828 | -0.322832 | 0072020437 | upper peatland downstream from lake |
 |8| -78.200033 | -0.322655 | 0078020435 | Above Big WaterFall |
+
+
+
+LevelLogger_Cleaning.R
+This script cleans all the level logger data, including estimating some missing station 1 data from station 3 data.
+
+The order of operations is: Run level logger cleaning --> run merge all data --> run rating curves.
