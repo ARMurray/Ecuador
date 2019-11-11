@@ -172,7 +172,7 @@ ggplotly(plot2)
 
 #ok now let's do the correction 
 
-sumaug02_30$Correction <- as.numeric("0.734068306")
+sumaug02_30$Correction <- as.numeric("-0.007594961")
 sumaug02_30$CorrectedAverage <- as.numeric(c(sumaug02_30$Avg_iCO2 + sumaug02_30$Correction))
 
 write.csv(sumaug02_30, here("Picarro/synoptics/073119/", "sumaug02_30sec_corrected.csv"))

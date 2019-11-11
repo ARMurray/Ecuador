@@ -8,6 +8,7 @@ library(wesanderson)
 
 #for per day
 comboecuclean30 <- read.csv(here("Picarro/synoptics/statsecusamples_day30sec_clean.csv"))
+comboecuclean302 <- read.csv(here("Picarro/EOSTransects/30secdailycorrections_1aug09.csv"))
 
 #ok all we want in this table is avg, low bound, high bound, eculinearity, correction, ecuavg first day, ecu avg 2nd day 
 
