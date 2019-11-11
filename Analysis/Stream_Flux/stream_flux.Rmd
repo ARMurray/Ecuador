@@ -18,7 +18,7 @@ library(scales)
 In this document we are going to calculate Evasion from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature. First we import the data and for now we will filter so we are looking at non-injections
 ```{r data, echo=FALSE, message=FALSE}
 df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
+  select(DateTime,Inj,V1,V2,V3,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
   filter(Inj == "No")
 df$DateTime <- as.POSIXct(df$DateTime, format = "%m/%d/%Y %H:%M")
 
@@ -65,7 +65,7 @@ plot14Ppm
 
 So now that we know what the change in CO2 between stations, it's time to account for uptake. Uptake can be determined by taking the change in CO2 between stations before sunrise (respiration is zero) and subtracting it from the change in CO2 at all other times.
 
-![Uptake](D:/OneDrive\OneDrive - University of North Carolina at Chapel Hill\Ecuador\Github\Ecuador\Images/uptake.png)
+![Uptake](C:/Users\ARMur\OneDrive - University of North Carolina at Chapel Hill\Ecuador\Github\Ecuador\Images/uptake.png)
 
 ## Calculate uptake between stations 1 & 4
 Find the max change in pCO2 which will be when respiration is the least (before sunrise). This level serves as the baseline for that day (zero uptake). For every other time, we take the value of V1-V4 and subtract the zero uptake value for that day from it to determine uptake.
