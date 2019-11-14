@@ -91,26 +91,32 @@ lvl$DateTime <- as.POSIXct(as.character(lvl$DateTime))
 watTemp <- read.csv(here("data_4_analysis/WaterLevel_Cleaned.csv"))%>%
   select(DateTime, TEMP_c,Serial)%>%
   spread(Serial,TEMP_c)
-colnames(watTemp) <- c("DateTime","tempC_421_m","tempC_425_m","tempC_430_m",
-                       "tempC_435_m","tempC_436_m","tempC_437_m","tempC_442_m")
+colnames(watTemp) <- c("DateTime","tempC_421","tempC_425","tempC_430",
+                       "tempC_435","tempC_436","tempC_437","tempC_442")
 watTemp$DateTime <- as.POSIXct(as.character(watTemp$DateTime))
 
 # EC
 EC <- read.csv(here("data_4_analysis/all_EC.csv"))%>%
   select(DateTime, uS, Station)%>%
   spread(Station, uS)
-colnames(EC) <- c("DateTime","DO1_uS","DO2_uS","DO4_uS")
+colnames(EC) <- c("DateTime","EC1_uS","EC2_uS","EC4_uS")
 EC$DateTime <- as.POSIXct(EC$DateTime)
 
 # DO
 DO <- read.csv(here("data_4_analysis/all_DO.csv"))%>%
   select(DateTime,DO_mg_L,Station)%>%
   spread(Station, DO_mg_L)
-colnames(DO) <- c("DateTime","EC1_uS","EC2_uS","EC4_uS")
+colnames(DO) <- c("DateTime","DO1_mg/L","DO2_mg/L","DO4_mg/L")
 DO$DateTime <- as.POSIXct(DO$DateTime)
 
+# Injection Times
+inj <- read.csv(here("data_4_analysis/injectionTimes.csv"))%>%
+  select(-X)
+inj$DateTime <- as.POSIXct(inj$DateTime, format = "%m/%d/%Y %H:%M")
+
 # Merge
-merge <- merge(vMerge,C6, all = TRUE)
+merge <- merge(inj,vMerge, all = TRUE)
+merge <- merge(merge,C6, all = TRUE)
 merge <- merge(merge, eosFD, all = TRUE)%>%
   distinct()
 merge <- merge(merge,ppt, all = TRUE)
