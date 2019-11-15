@@ -2,7 +2,6 @@ library(streamMetabolizer)
 library(dplyr)
 library(here)
 
-# Instructions here: http://usgs-r.github.io/streamMetabolizer/
 
 # Prep data for stream metabolizer
 

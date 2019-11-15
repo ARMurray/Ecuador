@@ -73,6 +73,3 @@ Subs <- subset(allgeogData, Category == 'Levelandbarro')
 #Now save
 
 write_shape(Subs, here("FieldData/GPS/EOStransects.shp"))
-
-
-july17 <- read.csv(here("Picarro/EOSTransects/071619/comprehensivejuly17.csv"))
