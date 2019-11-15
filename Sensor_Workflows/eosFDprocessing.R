@@ -29,12 +29,15 @@ eos_1_Data$DateTime <- as.POSIXct(as.character(paste0(eos_1_Data$Month,"/",eos_1
 eos_1_Data <- eos_1_Data%>%
   select(DateTime,Flux_1,Temp_C_1,CO2_Soil_1,
          CO2_Soil_STD_1,CO2_ATM_1,CO2_ATM_STD_1,Mode_1)
+eos1Filt <- eos_1_Data%>%
+  filter(DateTime > as.POSIXct("2019-07-31 13:36:58"))
 
-eos_1_Data <- rbind(july, eos_1_Data)
+eos_1_Data <- rbind(july, eos1Filt)
 
 # Subset data so only records at 5 minute intervals are retained
 sub.1 <- subset(eos_1_Data, format(DateTime,'%OS')=='00')
-sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+sub.2 <- subset(sub.1, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))%>%
+  distinct()
 
 ### Combine eosFD 2 data
 eos_2_Files <- list.files(path = here("FieldData/EosFD/"), pattern = "eos2")
@@ -61,7 +64,8 @@ eos_2_Data <- eos_2_Data%>%
 
 # Subset data so only records at 5 minute intervals are retained
 sub.11 <- subset(eos_2_Data, format(DateTime,'%OS')=='00')
-sub.22 <- subset(sub.11, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))
+sub.22 <- subset(sub.11, format(DateTime,'%M')%in% c("00","05","10","15","20","25","30","35","40","45","50","55","60"))%>%
+  distinct()
 
 # Merge the data into a single data frame
 bothEos <- merge(sub.2, sub.22,by="DateTime", all = TRUE)%>%
