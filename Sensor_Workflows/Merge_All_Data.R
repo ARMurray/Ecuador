@@ -111,7 +111,8 @@ DO$DateTime <- as.POSIXct(DO$DateTime)
 
 # Injection Times
 inj <- read.csv(here("data_4_analysis/injectionTimes.csv"))%>%
-  select(-X)
+  select(-X)%>%
+  distinct()
 inj$DateTime <- as.POSIXct(inj$DateTime, format = "%m/%d/%Y %H:%M")
 
 # Merge
@@ -376,6 +377,7 @@ lvlBind <- lvlBind[1:nrow(lvlBind)-1,]%>%
   select(-dt)
 dfFinal <- df%>%
   select(-lvl_421_m,-lvl_425_m,-lvl_430_m,-lvl_435_m,-lvl_436_m,-lvl_437_m,-lvl_442_m)%>%
-  cbind(lvlBind)
+  cbind(lvlBind)%>%
+  distinct()
 
 write.csv(dfFinal, here("data_4_analysis/All_Stream_Data.csv"))
