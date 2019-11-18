@@ -1,0 +1,82 @@
+---
+title: "Coefficient of Variation: Collars"
+author: "Meg Raisle"
+date: "11/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(wesanderson)
+library('knitr')
+```
+
+
+
+```{r readData, echo=FALSE}
+#import all data we want here
+
+col1 <- read.csv(here("Picarro/EOSTransects/", "col1statistics.csv"))
+col2 <- read.csv(here("Picarro/EOSTransects/", "col2statistics.csv"))
+col3 <- read.csv(here("Picarro/EOSTransects/", "col3statistics.csv"))
+col4 <- read.csv(here("Picarro/EOSTransects/", "col4statistics.csv"))
+col5 <- read.csv(here("Picarro/EOSTransects/", "col5statistics.csv"))
+col6 <- read.csv(here("Picarro/EOSTransects/", "col6statistics.csv"))
+col7 <- read.csv(here("Picarro/EOSTransects/", "col7statistics.csv"))
+col8 <- read.csv(here("Picarro/EOSTransects/", "col8statistics.csv"))
+
+allcollarCV <- read.csv(here("Picarro/EOSTransects/allcollarstatistics.csv"))
+
+```
+
+### The Coefficient of Variation and Relative Standard Deviation for Every Collar 
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(col1, format = "markdown")
+
+kable(col2, format = "markdown")
+
+kable(col3, format = "markdown")
+
+kable(col4, format = "markdown")
+
+kable(col5, format = "markdown")
+
+kable(col6, format = "markdown")
+
+kable(col7, format = "markdown")
+
+kable(col8, format = "markdown")
+
+```
+
+### Total for Each Collar
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+kable(allcollarCV, format = "markdown")
+
+
+```
+
+The coefficient of variation is defined as  the standard deviation/mean, where the relative standard deviation is 100* the standard deviation/ the absolute value of the mean. The method used to obtain the total avg and standard deviation for each day was to take the average of the daily averages for each collar and then take the standard deviation of the daily averages. 
+
+## Collars and Standard Deviation 
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 30, fig.height= 20}
+
+largernumbers <- element_text(face = "bold", size = 30)
+largernumbers2 <- element_text(face = "bold", size = 20)
+
+#let's graph this
+# Use geom_pointrange
+plot <- ggplot(allcollarCV, aes(x= Sample, y= CorrectedAverage, color=Sample)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=4) +
+  scale_color_manual(values=wes_palette("Zissou1", n=8, type = c("continuous")))+
+  theme(legend.position = "right")
+plot <- plot + theme(axis.text.y= largernumbers, axis.title.x = largernumbers, axis.title.y = largernumbers, axis.text.x = largernumbers, legend.text = largernumbers2)
+plot
+
+```
