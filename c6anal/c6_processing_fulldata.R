@@ -31,7 +31,7 @@ largernumbers <- element_text(face = "bold", size = 14)
 
 #do basic plot of each 
 plot <- ggplot(c6time)+
-  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c")+
+  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=5)+
   ggtitle("Colored Dissolved Organic Matter")
 plot <- plot + theme(axis.text.y= largernumbers)
 ggplotly(plot)
@@ -39,7 +39,7 @@ ggplotly(plot)
 plot2 <- ggplot(c6time)+
   geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")+
   ggtitle("Turbidity")
-plot2 <- plot2 +theme(axis.text.y= largernumbers)
+plot2 <- plot2 +theme(axis.text.y= largernumbers, plot.title =largernumbers)
 
 ggplotly(plot2)
 
@@ -125,3 +125,19 @@ ggplotly(plot7)
 
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot7),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))  
+
+
+#now let's do flux 
+plot9 <- ggplot(c6time)+
+  geom_point(aes(x= DateTime, y = Flux_1), color = "#e6a2c5")+
+  ggtitle("Flux Between Station 1 and 2")
+plot9 <- plot9+ theme(axis.text.y= largernumbers)
+ggplotly(plot9)
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot9),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))  
+
+
+
+
+
