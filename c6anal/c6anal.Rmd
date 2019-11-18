@@ -20,36 +20,60 @@ library('knitr')
 ```{r readData, echo=FALSE}
 c6time <- read.csv(here("c6anal/alldatac6times.csv"))
 
+#basic graph of all four 
+
+#set same x-scale for each 
 x_min <- as.POSIXct("2019-07-11 11:45:00")
 x_max <- as.POSIXct("2019-07-19 12:59:00")
 
-largernumbers <- element_text(face = "bold", size = 20)
+largernumbers <- element_text(face = "bold", size = 14)
 
 #do basic plot of each 
 plot <- ggplot(c6time)+
-  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c")
+  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c")+
+  ggtitle("Colored Dissolved Organic Matter")
 plot <- plot + theme(axis.text.y= largernumbers)
 
 
 plot2 <- ggplot(c6time)+
-  geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")
-
+  geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")+
+  ggtitle("Turbidity")
 plot2 <- plot2 +theme(axis.text.y= largernumbers)
 
 
 
 plot3 <- ggplot(c6time)+
-  geom_point(aes(x= DateTime, y= Chlorophylla_ug.L), color="#2e604a")
-
+  geom_point(aes(x= DateTime, y= Chlorophylla_ug.L), color="#2e604a")+
+  ggtitle("Chlorophyll A")
 plot3 <- plot3 + theme(axis.text.y= largernumbers)
 
 
 
 plot4 <- ggplot(c6time)+
-  geom_point(aes(x= DateTime, y= Phycocyanin_ppb), color="#dbb165")
-
+  geom_point(aes(x= DateTime, y= Phycocyanin_ppb), color="#dbb165")+
+  ggtitle("Phycocyanin")
 plot4 <- plot4 + theme(axis.text.y= largernumbers)
 
+
+
+
+plot5 <- ggplot(c6time)+
+  geom_bar(aes(x= DateTime, y = ppt_mm), color = "#1dace8", stat="identity")+
+  ggtitle("Five Minute Precipitation")
+plot5 <- plot5 + theme(axis.text.y= largernumbers)
+
+
+
+plot6 <- ggplot(c6time)+
+  geom_bar(aes(x= DateTime, y = ppt24Tot), color = "#1dace8", stat="identity")+
+  ggtitle("Previous 24 Hours of Precipitation")
+plot6 <- plot6 + theme(axis.text.y= largernumbers)
+
+plot7 <- ggplot(c6time)+
+  geom_point(aes(x= DateTime, y = V1), color = "#cecd7b")+
+  geom_point(aes(x= DateTime, y = V2), color = "#1dace8")+
+  ggtitle("Station 1 and 2 CO2")
+plot7 <- plot7 + theme(axis.text.y= largernumbers)
 
 ````
 
@@ -62,3 +86,30 @@ grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGr
 
 ````
 
+## Data with 5 Minute Precipitation Values 
+
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20, fig.height= 15}
+#first 5 min rainfall 
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot5),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))
+
+````
+
+## Data with Previous 24 Hour Precipitation
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20, fig.height= 15}
+#then 24 hour rainfall
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot6),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))           
+
+
+````
+
+## With Station 1 and 2 CO2 Data
+```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20, fig.height= 15}
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot7),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))  
+
+````
+I need to find a way to make a background rectangle highlighting the injection times. Had a bunch of difficulty with this but it would look great if i can figure it out. Currently this is a bit decieving because of the 7/12 injection - maybe subtract the injection amount from the data?
