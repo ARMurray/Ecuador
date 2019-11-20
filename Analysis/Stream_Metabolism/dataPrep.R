@@ -43,7 +43,8 @@ colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light")
 
 df1 <- df1[complete.cases(df1),]
 df1 <- df1%>%
-  distinct()
+  distinct()%>%
+  arrange(solar.time)
 
 # DO Sensor 2
 df2 <- dat%>%
@@ -52,7 +53,8 @@ colnames(df2) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light")
 
 df2 <- df2[complete.cases(df2),]
 df2 <- df2%>%
-  distinct()
+  distinct()%>%
+  arrange(solar.time)
 
 # DO Sensor 4 (We need to use water level from another sensor here, we'll use station 1 as it was most similar)
 df4 <- dat%>%
@@ -61,7 +63,8 @@ colnames(df4) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light")
 
 df4 <- df4[complete.cases(df4),]
 df4 <- df4%>%
-  distinct()
+  distinct()%>%
+  arrange(solar.time)
 
 # Baysean model parameters
 bayes_name <- mm_name(type='bayes', pool_K600='none', err_obs_iid=TRUE, err_proc_iid=TRUE)
@@ -91,3 +94,8 @@ write.csv(pred4, here("Analysis/Stream_Metabolism/ModelOutputs/DO_4_Predictions.
 
 mcmc <- get_mcmc(mm1)
 rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+
+# Plots
+plot_metab_preds(mm1)
+plot_metab_preds(mm2)
+plot_metab_preds(mm4)

@@ -106,7 +106,7 @@ EC$DateTime <- as.POSIXct(EC$DateTime)
 DO <- read.csv(here("data_4_analysis/all_DO.csv"))%>%
   select(DateTime,DO_mg_L,Station)%>%
   spread(Station, DO_mg_L)
-colnames(DO) <- c("DateTime","DO1_mg/L","DO2_mg/L","DO4_mg/L")
+colnames(DO) <- c("DateTime","DO1_mg.L","DO2_mg.L","DO4_mg.L")
 DO$DateTime <- as.POSIXct(DO$DateTime)
 
 # Injection Times
