@@ -15,7 +15,7 @@ allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
 
 c6time <- allstream[c(3022:6705),]
 
-
+c6time$DateTime <- as.POSIXct(c6time$DateTime)
 #savethis 
 
 write.csv(c6time, here("c6anal/", "alldatac6times.csv"))
@@ -98,7 +98,7 @@ grid.draw(rbind(ggplotGrob(plot6),ggplotGrob(plot), ggplotGrob(plot2), ggplotGro
 
 # Alright now let's try to roll in c02 data 
 
-x_min <- as.POSIXct("2019-07-12 13:00:0")
+x_min <- as.POSIXct("2019-07-12 13:00:00")
 x_max <- as.POSIXct("2019-07-12 16:00:00")
 
 #plot7 <- ggplot(c6time)+
@@ -109,12 +109,16 @@ x_max <- as.POSIXct("2019-07-12 16:00:00")
 #plot7 <- plot7 + theme(axis.text.y= largernumbers)
 #ggplotly(plot7)
 
+injpoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-3200,-3200,-100,-100))
+
+
 plot7 <- ggplot(c6time)+
+  geom_polygon(data = injpoly,aes(x=x,y=y),fill="#f2e198")+
   geom_point(aes(x= DateTime, y = V1), color = "#cecd7b")+
   geom_point(aes(x= DateTime, y = V2), color = "#1dace8")+
   ggtitle("Station 1 and 2 CO2")
 plot7 <- plot7 + theme(axis.text.y= largernumbers)
-ggplotly(plot7)
+plot7
 
 
 #plot8 <- ggplot(c6time)+
