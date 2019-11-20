@@ -116,10 +116,13 @@ Test exponential model for station 2:
 exponential.model <- lm(log(y)~ x)  # Create the model
 exp.predict <- exp(predict(exponential.model,list(Level=x)))  # Create predicted values for recorded discharge values
 
-ggplot()+
-  geom_point(aes(x,y))+
-  geom_line(aes(x,exp.predict),col = 'red')+
-  labs(x = "Level (m)", y = expression(paste("Discharge ", m^{3}/s^{-1})), title ="Station 2 Exponential Model ")
+plot_ly(x = x, y=y)%>%
+  add_markers()%>%
+  add_lines(x = x, y=exp.predict)%>%
+  layout(
+    xaxis = list(title = "Water Level (m)", type = "log"),
+    yaxis = list(title = "Discharge")
+  )
 
 # Print the Summary
 summary(exponential.model)

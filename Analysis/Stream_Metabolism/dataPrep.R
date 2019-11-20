@@ -91,3 +91,8 @@ write.csv(pred4, here("Analysis/Stream_Metabolism/ModelOutputs/DO_4_Predictions.
 
 mcmc <- get_mcmc(mm1)
 rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+
+# Plots
+plot_metab_preds(mm1)
+plot_metab_preds(mm2)
+plot_metab_preds(mm4)

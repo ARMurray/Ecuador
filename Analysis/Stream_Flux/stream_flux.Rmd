@@ -18,9 +18,9 @@ library(scales)
 In this document we are going to calculate Evasion from the Vaisala Sensors and compare them to the eosFD flux measurements as well as see how they relate to other variables such as precipitation and temperature. First we import the data and for now we will filter so we are looking at non-injections
 ```{r data, echo=FALSE, message=FALSE}
 df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj,V1,V2,V3,V4,Flux_1,Flux_2,tempC_436_m,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
+  select(DateTime,Inj,V1,V2,V3,V4,DO1_mg.L,DO2_mg.L,DO4_mg.L,Flux_1,Flux_2,tempC_436,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
   filter(Inj == "No")
-df$DateTime <- as.POSIXct(df$DateTime, format = "%m/%d/%Y %H:%M")
+df$DateTime <- as.POSIXct(df$DateTime)
 
 pptDaily <- read.csv(here("data_4_analysis/ppt.csv"))
 pptDaily$DateTime <- as.POSIXct(pptDaily$DateTime)
@@ -57,17 +57,132 @@ plot14Ppm <- ggplot(filt)+
   geom_point(aes(x = time, y = V4-V1,group = day, col=stn1_Q),lwd=2)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="DCO2", title = "DCO2 Change station 1 -> 4")+
+  labs(x = "Time",y="DCO2", title = "DCO2 Change station 4 minus station 1")+
   theme_bw()
 
 plot14Ppm
 ```
 
-So now that we know what the change in CO2 between stations, it's time to account for uptake. Uptake can be determined by taking the change in CO2 between stations before sunrise (respiration is zero) and subtracting it from the change in CO2 at all other times.
+So now that we know what the change in CO2 between stations, it's time to account for stream metabolism. Metabolism can be determined by taking the change in CO2 between stations before sunrise (photosynthesis is zero) and subtracting it from the change in CO2 at all other times. Let's try to confirm this by looking the changes in DO over the same period. 
 
-![Uptake](C:/Users\ARMur\OneDrive - University of North Carolina at Chapel Hill\Ecuador\Github\Ecuador\Images/uptake.png)
+**Photosynthesis:** Use CO2 and create O2 (1:1 ratio). 
 
-## Calculate uptake between stations 1 & 4
+**Respiration:** Use O2, create CO2 (1:1 ratio).
+
+Respiration can occur in the abscence of sunlight while photosynthesis cannot. At night, stream processes are respiration driven. During the day both respiration and photosynthesis occur. Is respiration constant throughout the day? if it is then pre-sunlight change in DO can be sen as respiration if no evasion of O2 is occuring. Therefore the area under the curve of the change in CO2 would be photosynthesis - respiration.
+
+![Metabolism](D:/OneDrive\OneDrive - University of North Carolina at Chapel Hill\Ecuador\Github\Ecuador\Images/metabolism.png)
+
+## Change in Dissolved Oxygen station 1 -> 2
+```{r DOchange12}
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-1,-1,1,1))
+
+plot12DO <- ggplot(filt)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
+  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
+  geom_point(aes(x = time, y = DO2_mg.L-DO1_mg.L,group = day, col=tempC_436),lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="DO (mg/L)", title = "Station 2 DO minus Station 1 DO")+
+  theme_bw()
+
+plot12DO
+```
+
+## Change in Dissolved Oxygen station 1 -> 4
+```{r DOchange14}
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(0,0,4.5,4.5))
+
+plot14DO <- ggplot(filt)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
+  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
+  geom_point(aes(x = time, y = DO4_mg.L-DO1_mg.L,group = day, col=stn1_Q),lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="DO (mg/L)", title = "Station 4 DO minus Station 1 DO")+
+  theme_bw()
+
+plot14DO
+```
+
+## DO vs CO2
+```{r DOCO2}
+filt%>%
+  plot_ly(x = ~V1, y = ~DO1_mg.L,hoverinfo = "text",
+        text = ~paste("Time: ", DateTime,
+        "<br> Discharge: ", round(stn1_Q,2), "liters per second"))%>%
+  add_markers(color = ~tempC_436)%>%
+  layout(
+    title = "Station 1 Dissolved Oxygen vs CO2",
+    xaxis = list(title = "CO2 (ppm)", type = "log"),
+    yaxis = list(title = "Dissolved Oxygen (mg/L)")
+  )
+```
+
+
+## DO vs Temperature
+```{r DOvTemp}
+filt%>%
+plot_ly(x = ~tempC_436, y = ~DO1_mg.L,hoverinfo = "text",
+        text = ~paste("Time: ", DateTime,
+        "<br> CO2: ", V1))%>%
+add_markers(color = ~V1)%>%
+  layout(
+    title = "Station 1 Dissolved Oxygen vs CO2",
+    xaxis = list(title = "Water Temperature (C)"),
+    yaxis = list(title = "Dissolved Oxygen (mg/L)")
+  )
+```
+
+
+
+## DO at each sensor
+```{r}
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(3,3,8,8))
+
+plotDO <- ggplot(filt)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
+  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
+  geom_point(aes(x = time, y = DO1_mg.L,group = day),col = "#4B9CD3",lwd=2)+
+  geom_point(aes(x = time, y = DO4_mg.L,group = day),col ="#C7DA7D",lwd=2)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
+                        breaks = my_breaks, labels = my_breaks)+
+  labs(x = "Time",y="DO (mg/L)", title = "DO at Station 1 (Blue) and Station 4 (Green)")+
+  theme_bw()
+plotDO
+```
+
+## What's up with station 4 DO
+There is a diel drop in DO in the late afternoon that seems to be related to temperature
+```{r stn4DO}
+dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(6,6,8,8))
+
+plotDO <- ggplot(filt)+
+  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
+  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
+  geom_point(aes(x = time, y = DO4_mg.L,group = day, col = tempC_436),lwd=2)+
+  labs(x = "Time",y="DO (mg/L)", title = "DO at Station 1 (Blue) and Station 4 (Green)")+
+  theme_bw()
+plotDO
+
+
+filt%>%
+  plot_ly(x =~tempC_436, y = ~DO4_mg.L)%>%
+  add_markers()%>%
+  layout(
+    title = "Station 4 Dissolved Oxygen vs Water Temperature",
+    xaxis = list(title = "Water Temperature (C)"),
+    yaxis = list(title = "Dissolved Oxygen (mg/L)")
+  )
+```
+
+
+
+## Calculate respiration between stations 1 & 4
 Find the max change in pCO2 which will be when respiration is the least (before sunrise). This level serves as the baseline for that day (zero uptake). For every other time, we take the value of V1-V4 and subtract the zero uptake value for that day from it to determine uptake.
 ```{r uptake14}
 filtsub <- filt%>%
@@ -90,7 +205,7 @@ plotUptake <- ggplot(filt)+
   geom_point(aes(x = time, y = Uptake,group = day, col=stn3_Q),lwd=2)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="Uptake", title = "CO2 Uptake station 1 -> 4")+
+  labs(x = "Time",y="Uptake", title = "CO2 Respiration station 1 -> 4")+
   theme_bw()
 plotUptake
 ```
