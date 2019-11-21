@@ -29,14 +29,85 @@ x_max <- as.POSIXct("2019-07-19 12:59:00")
 
 largernumbers <- element_text(face = "bold", size = 14)
 
+#let's make the boxplots for the 2 injections that happened during the c6 time 
+CDOMinjpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                            as.POSIXct("2019-07-12 16:00:00"),
+                            as.POSIXct("2019-07-12 16:00:00"),
+                            as.POSIXct("2019-07-12 13:00:00")),y=c(15,15,50,50))
+
+
+
+
+
+CDOMinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                             as.POSIXct("2019-07-16 20:00:00"),
+                             as.POSIXct("2019-07-16 20:00:00"),
+                             as.POSIXct("2019-07-16 14:15:00")),y=c(15,15,50,50))
+
+turbinjpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 13:00:00")),y=c(0,0,3000,3000))
+
+
+
+
+
+turbinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 14:15:00")),y=c(0,0,3000,3000))
+
+chloinjpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 13:00:00")),y=c(0,0,5,5))
+
+chloinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 14:15:00")),y=c(0,0,5,5))
+
+phycoinjpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 16:00:00"),
+                                as.POSIXct("2019-07-12 13:00:00")),y=c(0,0,1500,1500))
+
+phycoinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 20:00:00"),
+                                 as.POSIXct("2019-07-16 14:15:00")),y=c(0,0,1500,1500))
+c2injpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                                 as.POSIXct("2019-07-12 16:00:00"),
+                                 as.POSIXct("2019-07-12 16:00:00"),
+                                 as.POSIXct("2019-07-12 13:00:00")),y=c(1000,1000,5000,5000))
+
+c2injpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                                  as.POSIXct("2019-07-16 20:00:00"),
+                                  as.POSIXct("2019-07-16 20:00:00"),
+                                  as.POSIXct("2019-07-16 14:15:00")),y=c(1000,1000,5000,5000))
+fluxinjpoly <- data.frame(x = c(as.POSIXct("2019-07-12 13:00:00"),
+                              as.POSIXct("2019-07-12 16:00:00"),
+                              as.POSIXct("2019-07-12 16:00:00"),
+                              as.POSIXct("2019-07-12 13:00:00")),y=c(0,0,4,4))
+
+fluxinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
+                               as.POSIXct("2019-07-16 20:00:00"),
+                               as.POSIXct("2019-07-16 20:00:00"),
+                               as.POSIXct("2019-07-16 14:15:00")),y=c(0,0,4,4))
 #do basic plot of each 
 plot <- ggplot(c6time)+
+  geom_polygon(data = CDOMinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = CDOMinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=5)+
   ggtitle("Colored Dissolved Organic Matter")
 plot <- plot + theme(axis.text.y= largernumbers)
+plot
 ggplotly(plot)
 
 plot2 <- ggplot(c6time)+
+  geom_polygon(data = turbinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = turbinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")+
   ggtitle("Turbidity")
 plot2 <- plot2 +theme(axis.text.y= largernumbers, plot.title =largernumbers)
@@ -44,6 +115,8 @@ plot2 <- plot2 +theme(axis.text.y= largernumbers, plot.title =largernumbers)
 ggplotly(plot2)
 
 plot3 <- ggplot(c6time)+
+  geom_polygon(data = chloinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = chloinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y= Chlorophylla_ug.L), color="#2e604a")+
   ggtitle("Chlorophyll A")
 plot3 <- plot3 + theme(axis.text.y= largernumbers)
@@ -51,6 +124,8 @@ plot3 <- plot3 + theme(axis.text.y= largernumbers)
 ggplotly(plot3)
 
 plot4 <- ggplot(c6time)+
+  geom_polygon(data = phycoinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = phycoinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y= Phycocyanin_ppb), color="#dbb165")+
   ggtitle("Phycocyanin")
 plot4 <- plot4 + theme(axis.text.y= largernumbers)
@@ -101,19 +176,11 @@ grid.draw(rbind(ggplotGrob(plot6),ggplotGrob(plot), ggplotGrob(plot2), ggplotGro
 x_min <- as.POSIXct("2019-07-12 13:00:00")
 x_max <- as.POSIXct("2019-07-12 16:00:00")
 
-#plot7 <- ggplot(c6time)+
- # geom_rect(aes(xmin= as.POSIXct(x_min), xmax= as.POSIXct(x_max), ymin=0, ymax=4500), fill ="#a35e60")+
-  #geom_point(aes(x= DateTime, y = V1), color = "#cecd7b")+
- # geom_point(aes(x= DateTime, y = V2), color = "#1dace8")+
- # ggtitle("Station 1 and 2 CO2")
-#plot7 <- plot7 + theme(axis.text.y= largernumbers)
-#ggplotly(plot7)
-
-injpoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-3200,-3200,-100,-100))
 
 
 plot7 <- ggplot(c6time)+
-  geom_polygon(data = injpoly,aes(x=x,y=y),fill="#f2e198")+
+  geom_polygon(data = c2injpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = c2injpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y = V1), color = "#cecd7b")+
   geom_point(aes(x= DateTime, y = V2), color = "#1dace8")+
   ggtitle("Station 1 and 2 CO2")
@@ -133,6 +200,8 @@ grid.draw(rbind(ggplotGrob(plot7),ggplotGrob(plot), ggplotGrob(plot2), ggplotGro
 
 #now let's do flux 
 plot9 <- ggplot(c6time)+
+  geom_polygon(data = fluxinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_polygon(data = fluxinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_point(aes(x= DateTime, y = Flux_1), color = "#e6a2c5")+
   ggtitle("Flux Between Station 1 and 2")
 plot9 <- plot9+ theme(axis.text.y= largernumbers)
