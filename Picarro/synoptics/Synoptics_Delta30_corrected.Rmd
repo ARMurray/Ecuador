@@ -40,68 +40,78 @@ sumaug09 <- sumaug09 %>%
 sumjuly19 <- sumjuly19 %>%
   select(Sample, Avg_iCO2, StdDev_iCO2, Correction, CorrectedAverage)
 
+largernumbers <- element_text(face = "bold", size = 20)
+largernumbers2 <- element_text(face = "bold", size = 15)
 
 ```
 
 ### July 18th Synoptic 
-```{r data, eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+```{r , eval=TRUE, warning=FALSE, echo=FALSE}
 
 kable(sumjuly19, format = "markdown", row.names = FALSE)
 
 plot1 <- ggplot(sumjuly19)+
-  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=4)+
+  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=7)+
   labs(x="synoptic point", y="Delta_30s_Avg")+
   ggtitle("July 18th Synoptic Pull Averages")
-ggplotly(plot1)
+plot1 <- plot1 + theme(axis.text.y= largernumbers, plot.title =largernumbers, axis.title.x = largernumbers2, axis.title.y = largernumbers2)
+
+plot1
 
 
 ```
+
+
 ### July 31 Synoptic 
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+```{r , eval=TRUE, warning=FALSE, echo=FALSE}
 
 kable(sumaug02, format = "markdown", row.names = FALSE)
 
 plot2 <- ggplot(sumaug02)+
-  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=4)+
+  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=7)+
   labs(x="synoptic point", y="Delta_30s_Avg")+
   ggtitle("July 31st Synoptic Pull Averages")
-ggplotly(plot2)
+plot2 <- plot2 + theme(axis.text.y= largernumbers, plot.title =largernumbers, axis.title.x = largernumbers2, axis.title.y = largernumbers2)
+plot2
 ```
 ### August 6th Synoptic 
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+```{r , eval=TRUE, warning=FALSE, echo=FALSE}
 
 kable(sumaug09, format = "markdown", row.names = FALSE)
 
 plot3 <- ggplot(sumaug09)+
-  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=4)+
+  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=7)+
   labs(x="synoptic point", y="Delta_30s_Avg")+
   ggtitle("August 6th Synoptic Pull Averages")
-ggplotly(plot3)
+plot3 <- plot3 + theme(axis.text.y= largernumbers, plot.title =largernumbers, axis.title.x = largernumbers2, axis.title.y = largernumbers2)
+plot3
 ```
 ### August 12th Synoptic 
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20}
+```{r , eval=TRUE, warning=FALSE, echo=FALSE}
 
 kable(sumaug13, format = "markdown", row.names = FALSE)
 
 plot4 <- ggplot(sumaug13)+
-  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=4)+
+  geom_point(aes(x=Sample, y=CorrectedAverage), color="purple", size=7)+
   labs(x="synoptic point", y="Delta_30s_Avg")+
   ggtitle("August 12th Synoptic Pull Averages")
-ggplotly(plot4)
+plot4 <- plot4 + theme(axis.text.y= largernumbers, plot.title =largernumbers, axis.title.x = largernumbers2, axis.title.y = largernumbers2)
+plot4
 ```
 
 ## All Delta_iCO2 30 Second Values 
-```{r , eval=TRUE, warning=FALSE, echo=FALSE, fig.width = 20, fig.height= 15}
+```{r , eval=TRUE, warning=FALSE, echo=FALSE}
 
 #try doing it all together instead 
 
 pbetter2 <- ggplot(sumalltransects, aes(x= Relativestreamdistance, y= CorrectedAverage, color=day))+
-  geom_point(size=8)+
+  geom_point(size=3)+
   xlab('Relative Stream Distance') +
   ylab('Delta30_Avg') +
   ggtitle("Synoptic Delta30 i_CO2 Corrected Summary") +
   scale_color_manual(values=wes_palette("Zissou1", n=4, type = c("continuous")))+
   theme(legend.position = "right")
+pbetter2 <- pbetter2 + theme(axis.text.y= largernumbers, plot.title =largernumbers, axis.title.x = largernumbers2, axis.title.y = largernumbers2)
 pbetter2
 
 ```
