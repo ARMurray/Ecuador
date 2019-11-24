@@ -11,6 +11,7 @@ allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
 
 
 
+
 # Let's move it to only the times the c6 was on
 
 c6time <- allstream[c(3022:6705),]
@@ -99,7 +100,7 @@ fluxinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
 plot <- ggplot(c6time)+
   geom_polygon(data = CDOMinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_polygon(data = CDOMinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
-  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=5)+
+  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=3)+
   ggtitle("Colored Dissolved Organic Matter")
 plot <- plot + theme(axis.text.y= largernumbers)
 plot
@@ -210,7 +211,14 @@ ggplotly(plot9)
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot9),ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4)))  
 
+# now let's add discharge 
 
-
-
+plot10 <- ggplot(c6time)+
+  #geom_polygon(data = fluxinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  #geom_polygon(data = fluxinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
+  geom_point(aes(x= DateTime, y = stn1_Q), color = "#e6a2c5")+
+  geom_point(aes(x= DateTime, y = stn2_Q), color = "#ff7722")+
+  ggtitle("Discharge at Stations 1 and 2")
+plot10 <- plot10+ theme(axis.text.y= largernumbers)
+ggplotly(plot10)
 
