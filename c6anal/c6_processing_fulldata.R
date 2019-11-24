@@ -99,7 +99,7 @@ fluxinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
 plot <- ggplot(c6time)+
   geom_polygon(data = CDOMinjpoly,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
   geom_polygon(data = CDOMinjpoly2,aes(x=x,y=y),fill="#ff7722", alpha = .5)+
-  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=5)+
+  geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c", size=3)+
   ggtitle("Colored Dissolved Organic Matter")
 plot <- plot + theme(axis.text.y= largernumbers)
 plot
