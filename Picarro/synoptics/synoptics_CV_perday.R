@@ -99,3 +99,16 @@ aug12all$RelativeStdDev <- 100*(aug12all$StdDev_iCO2/abs(aug12all$CorrectedAvera
 
 write.csv(aug12all, here("Picarro/synoptics/071819", "aug12CV_statistics.csv"))
 
+#alright now let's combine these all together 
+
+allsynCV <- rbind(july18all, july31all, aug06all, aug12all)
+
+#save this 
+
+write.csv(allsynCV, here("Picarro/synoptics", "allsynCV_statscorrected.csv"))
+
+#ok now let's do plots per day with the error bars using the corrected distance 
+
+
+
+
