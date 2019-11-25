@@ -339,6 +339,7 @@ color = wes_palette("Zissou1")[c(1,3,5)]
 
 up <- adjustEvasion%>%
   select(date,AdjEvasion12,ER_CO2uMol12,GPP_CO2uMol12)%>%
+  rename("Evasion" = "AdjEvasion12", "Respiration"="ER_CO2uMol12", "Photosynthesis" = "GPP_CO2uMol12")%>%
   gather(Var,Val,-date)
 
 var <- levels(up$Var)
@@ -355,10 +356,21 @@ up%>%
   )
 
 
+# Downstream Plot
+down <- adjustEvasion%>%
+  select(date,AdjEvasion34,ER_CO2uMol34,GPP_CO2uMol34)%>%
+  rename("Evasion" = "AdjEvasion34", "Respiration"="ER_CO2uMol34", "Photosynthesis" = "GPP_CO2uMol34")%>%
+  gather(Var,Val,-date)
 
-
-
-
+down%>%
+  plot_ly(x = ~date, y = ~abs(Val))%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50)%>%
+  layout(
+    title = "Daily Evasion & Respiration (Downstream)",
+    xaxis = list(title = "Date"),
+    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
+  )
 
 
 
