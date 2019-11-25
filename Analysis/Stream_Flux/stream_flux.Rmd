@@ -375,34 +375,5 @@ down%>%
 
 
 
-# Upstream Plot
-adjustEvasion%>%
-  plot_ly(x = ~date, hoverinfo = "text",
-        text = ~paste("Evasion: ",round(AdjEvasion12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
-                      "<br> GPP: ", round(GPP_CO2uMol12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
-        "<br> ER: ", round(ER_CO2uMol12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>"))%>%
-  add_markers(y = ~AdjEvasion12, color = "Evasion", colors = ~setNames(color[2], "Evasion"), size=50)%>%
-  add_markers(y = ~ER_CO2uMol12, color = "Respiration",colors = ~setNames(color[2], "Respiration"), size = 50)%>%
-  add_markers(y = ~abs(GPP_CO2uMol12), color = "Photosynthesis", colors = ~setNames(color[5], "Photosynthesis"),size=50)%>%
-  layout(
-    title = "Daily Evasion & Respiration (Upstream)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
-  )
-
-# Downstream Plot
-adjustEvasion%>%
-  plot_ly(x = ~date, y = ~AdjEvasion34,hoverinfo = "text",
-        text = ~paste("Evasion: ",round(AdjEvasion34,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
-                      "<br> GPP: ", round(GPP_CO2uMol34,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
-        "<br> ER: ", round(ER_CO2uMol34,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>"))%>%
-  add_markers(color = "Evasion", size=50)%>%
-  add_markers(y = ~ER_CO2uMol34, color = "Respiration", size = 50)%>%
-  add_markers(y = ~abs(GPP_CO2uMol34), color = "Photosynthesis", size=50)%>%
-  layout(
-    title = "Daily Evasion & Respiration (Downstream)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
-  )
 ```
 
