@@ -11,6 +11,7 @@ library(here)
 library(dplyr)
 library(plotly)
 library(wesanderson)
+library(viridis)
 
 dis35 <- 0 
 
@@ -32,11 +33,14 @@ dis5 <- 217.6
 
 dis1<- 245.2 
 
-dis <- data.frame(Distance = c(dis35, dis29, dis23, dis20, waterfalldis, dis14, dis11, dis8, dis5, dis1)) 
 
-rownames(dis) <- c("syn35", "syn29", "syn23", "syn20", "synBW", "syn14", "syn11", "syn8", "syn 5", "syn1") 
+dis <- data.frame(Distance = c(dis1, dis5, dis8, dis11, dis14, waterfalldis, dis20, dis23, dis29, dis35)) 
 
-c <- cbind(a,dis) 
+rownames(dis) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "synBW", "syn20", "syn23", "syn29", "syn34") 
+
+dis2 <- data.frame(Distance = c(dis1, dis5, dis8, dis11, dis14, waterfalldis, dis20, dis23, dis29))
+
+rownames(dis2) <- c("syn1", "syn5", "syn8", "syn11", "syn14", "synBW", "syn20", "syn23", "syn29") 
 
 #read in data for every day 
 
@@ -110,5 +114,115 @@ write.csv(allsynCV, here("Picarro/synoptics", "allsynCV_statscorrected.csv"))
 #ok now let's do plots per day with the error bars using the corrected distance 
 
 
+waterfallpoly <- data.frame(x = c(as.numeric("122"),
+                                  as.numeric("124"),
+                                  as.numeric("124"),
+                                  as.numeric("122")),y=c(-16,-16,-12,-12))
 
+july18all <- july18all[c(1:10),]
+july18all <- cbind(july18all, dis)
+
+#version with waterfall 
+plot <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("July 18th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
+plot
+
+#w/o waterfall
+plot2 <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage, color=Sample)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("July 18th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  xlim(0,250)+
+  ylim(-18,-10)
+  
+plot2
+
+
+
+july31all <- july31all[c(1:10),]
+july31all <- cbind(july31all, dis)
+
+#version with waterfall 
+plot3 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("July 31th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
+plot3
+
+#w/o waterfall
+plot4 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage, color=Sample)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("July 31th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  xlim(0,250)+
+  ylim(-18,-10)
+
+plot4
+
+
+aug06all <- aug06all[c(1:9),]
+aug06all <- cbind(aug06all, dis2)
+
+#version with waterfall 
+plot5 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("August 6th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
+plot5
+
+#w/o waterfall
+plot6 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage, color=Sample)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("August 6th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  xlim(0,250)+
+  ylim(-18,-10)
+
+plot6
+
+
+aug12all <- aug12all[c(1:10),]
+aug12all <- cbind(aug12all, dis)
+
+#version with waterfall 
+plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("August 12th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
+plot7
+
+#w/o waterfall
+plot8 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage, color=Sample)) + 
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
+  scale_color_viridis(option = "B", discrete = TRUE)+
+  ggtitle("August 12th")+
+  labs(x="Distance from Wetland (m)", y="Delta_i")+
+  theme(legend.position = "right")+
+  xlim(0,250)+
+  ylim(-18,-10)
+
+plot8
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot2),ggplotGrob(plot4), ggplotGrob(plot6), ggplotGrob(plot8))) 
 
