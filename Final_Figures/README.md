@@ -3,6 +3,7 @@
 
 |Owner|Figure Path|Path (figure creation)|Path (data)|Description|Thumb|
 |:---|:---|:---|:---|:---|:----------|
+|<img width=200/>|<img width=500/>|
 | Andrew       | Andrew/DailyEvasionMetabolism34.png | Analysis/Stream_Flux/stream_flux.Rmd | "data_4_analysis/All_Stream_Data.csv"| Figure showing evasion, respiration and photosynthesis between stations 3 and 4| ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Andrew/DailyEvasionMetabolism34.png)
 | Next Person  | Next Figure |  | | | |
 |  |  |  | | |
