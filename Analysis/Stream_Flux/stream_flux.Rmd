@@ -117,10 +117,10 @@ plot24DO <- ggplot(filt34)+
   geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
   geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
   geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = DO4_mg.L-DO2_mg.L,group = day, col=tempC_436),lwd=2)+
+  geom_point(aes(x = time, y = DO2_mg.L,group = day, col=tempC_436),lwd=2)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="DO (mg/L)", title = "DO Change (station 4 minus station 2")+
+  labs(x = "Time",y="DO (mg/L)", title = "DO Change (station 4 minus station 2)")+
   theme_bw()
 plot24DO
 
@@ -372,8 +372,13 @@ down%>%
     yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
   )
 
-
+# Try changing to mols
+# Try changing to per second
 
 
 ```
 
+
+
+## Compare with eosFD numbers
+Synoptic points show ~ 19g per day of CO2 / 1 uMol
