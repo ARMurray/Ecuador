@@ -15,6 +15,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(scales)
+library(wesanderson)
 ```
 
 # Data
@@ -333,15 +334,44 @@ adjustEvasion <- metabAvg%>%
          AdjEvasion34 = DailyChange34+GPP_CO2uMol34+ER_CO2uMol34,
          date = as.POSIXct(date))
 
+color = wes_palette("Zissou1")[c(1,3,5)]
+
+
+up <- adjustEvasion%>%
+  select(date,AdjEvasion12,ER_CO2uMol12,GPP_CO2uMol12)%>%
+  gather(Var,Val,-date)
+
+var <- levels(up$Var)
+
+# Upstream Plot
+up%>%
+  plot_ly(x = ~date, y = ~abs(Val))%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50)%>%
+  layout(
+    title = "Daily Evasion & Respiration (Upstream)",
+    xaxis = list(title = "Date"),
+    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
+  )
+
+
+
+
+
+
+
+
+
+
 # Upstream Plot
 adjustEvasion%>%
-  plot_ly(x = ~date, y = ~AdjEvasion12,hoverinfo = "text",
+  plot_ly(x = ~date, hoverinfo = "text",
         text = ~paste("Evasion: ",round(AdjEvasion12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
                       "<br> GPP: ", round(GPP_CO2uMol12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>",
         "<br> ER: ", round(ER_CO2uMol12,1),"uMols CO<sub>2</sub> m<sup>2</sup>d<sup>-1</sup>"))%>%
-  add_markers(color = "Evasion", size=50)%>%
-  add_markers(y = ~ER_CO2uMol12, color = "Respiration", size = 50)%>%
-  add_markers(y = ~abs(GPP_CO2uMol12), color = "Photosynthesis", size=50)%>%
+  add_markers(y = ~AdjEvasion12, color = "Evasion", colors = ~setNames(color[2], "Evasion"), size=50)%>%
+  add_markers(y = ~ER_CO2uMol12, color = "Respiration",colors = ~setNames(color[2], "Respiration"), size = 50)%>%
+  add_markers(y = ~abs(GPP_CO2uMol12), color = "Photosynthesis", colors = ~setNames(color[5], "Photosynthesis"),size=50)%>%
   layout(
     title = "Daily Evasion & Respiration (Upstream)",
     xaxis = list(title = "Date"),
