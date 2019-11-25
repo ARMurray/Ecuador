@@ -12,6 +12,9 @@ library(dplyr)
 library(plotly)
 library(wesanderson)
 library(viridis)
+library(grid)
+library(gridExtra)
+
 
 #read in data for every day 
 
@@ -189,7 +192,10 @@ plot1 <- ggplot(syn1all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 1")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#EDCB64"))+
+  ylim(-17.5,-10)
+plot1 <- plot1 + theme(legend.position = "none")
 plot1
 
 
@@ -204,7 +210,10 @@ plot2 <- ggplot(syn5all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 5")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#EDCB64"))+
+  ylim(-17.5,-10)
+plot2 <- plot2 + theme(legend.position = "none")
 plot2
 
 syn8all <- syn8all[c(1:4),]
@@ -217,7 +226,10 @@ plot3 <- ggplot(syn8all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 8")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#EDCB64"))+
+  ylim(-17.5,-10)
+plot3 <- plot3 + theme(legend.position = "none")
 plot3
 
 
@@ -231,7 +243,10 @@ plot4 <- ggplot(syn11all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 11")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#EDCB64"))+
+  ylim(-17.5,-10)
+plot4 <- plot4 + theme(legend.position = "none")
 plot4
 
 syn14all <- syn14all[c(1:4),]
@@ -244,7 +259,10 @@ plot5 <- ggplot(syn14all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 14")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#EDCB64"))+
+  ylim(-17.5,-10)
+plot5 <- plot5 + theme(legend.position = "none")
 plot5
 
 synBWall <- synBWall[c(1:4),]
@@ -257,7 +275,10 @@ plot6 <- ggplot(synBWall, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn BW")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#DAECED"))+
+  ylim(-17.5,-10)
+plot6 <- plot6 + theme(legend.position = "none")
 plot6
 
 syn20all <- syn20all[c(1:4),]
@@ -270,7 +291,10 @@ plot7 <- ggplot(syn20all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 20")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#CECD7B"))+
+  ylim(-17.5,-10)
+plot7 <- plot7 + theme(legend.position = "none")
 plot7
 
 syn23all <- syn23all[c(1:4),]
@@ -283,7 +307,10 @@ plot8 <- ggplot(syn23all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 23")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#CECD7B"))+
+  ylim(-17.5,-10)
+plot8 <- plot8 + theme(legend.position = "none")
 plot8
 
 syn29all <- syn29all[c(1:4),]
@@ -296,7 +323,10 @@ plot9 <- ggplot(syn29all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 29")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#CECD7B"))+
+  ylim(-17.5,-10)
+plot9 <- plot9 + theme(legend.position = "none")
 plot9
 
 syn35all <- syn35all[c(1:4),]
@@ -304,14 +334,19 @@ syn35all$Day[1] <- "1July18"
 syn35all$Day[2] <- "2July31"
 syn35all$Day[3] <- "3Aug06"
 syn35all$Day[4] <- "4Aug12"
+
 plot10 <- ggplot(syn35all, aes(x= Day, y= CorrectedAverage, color=Day)) + 
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 35")+
   labs(x="Day", y="Delta_i")+
-  theme(legend.position = "right")
+  theme(legend.position = "right", 
+        panel.background = element_rect(fill = "#CECD7B"))+
+  ylim(-17.5,-10)
+plot10 <- plot10 + theme(legend.position = "none")
 plot10
 
 grid.newpage()
-grid.draw(rbind(ggplotGrob(plot1),ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4),ggplotGrob(plot5),ggplotGrob(plot6),ggplotGrob(plot7),ggplotGrob(plot8),ggplotGrob(plot9), ggplotGrob(plot10))) 
+grid.arrange(plot10, plot9, plot8, plot7, plot6, plot5, plot4, plot3, plot2, plot1, nrow=2)
+#grid.draw(rbind(ggplotGrob(plot1),ggplotGrob(plot2), ggplotGrob(plot3), ggplotGrob(plot4),ggplotGrob(plot5),ggplotGrob(plot6),ggplotGrob(plot7),ggplotGrob(plot8),ggplotGrob(plot9), ggplotGrob(plot10))) 
 
