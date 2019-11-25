@@ -2,6 +2,6 @@
 
 | Owner        | Figure Name    | Path (figure creation)           | Path (data) | Description| Thumb |
 |:------------ |:---------------|:------------------------|:--------------|:------------|:------------------|
-| Andrew       | My Cool Figure | Ecuador/figs/figure.png | Ecuador/data/data.csv| This is my really cool figure that everyone loves| ![alt text](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Andrew/DailyEvasionMetabolism34.png "Logo Title Text 1")
+| Andrew       | Evasion Stn 3 -> 4 | Ecuador/figs/figure.png | Ecuador/data/data.csv| Figure showing evasion, respiration and photosynthesis between stations 3 and 4| ![alt text](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Andrew/DailyEvasionMetabolism34.png)
 | Next Person  | Next Figure    |  |
 |  |  |  | | |
