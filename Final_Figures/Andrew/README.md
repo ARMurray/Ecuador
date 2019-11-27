@@ -5,10 +5,7 @@
 |DailyEvasionMetabolism34.png|Analysis/Stream_Flux/stream_flux.Rmd|data_4_analysis/All_Stream_Data.csv|
 
 
-micro: <p>#U+00B5</p>
 
-micromoles? <p>#U+00B5;</p>mols
-
-<p>I will display &euro;</p>
-<p>I will display &#181;</p>
-<p>I will display &#x20AC;</p>
+<p>I will display &#181;</p>mols
+<p>I will display &#181;mols</p>
+<p>I will display &#181; mols</p>
