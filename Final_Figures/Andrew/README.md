@@ -5,6 +5,6 @@
 |DailyEvasionMetabolism34.png|Analysis/Stream_Flux/stream_flux.Rmd|data_4_analysis/All_Stream_Data.csv|
 
 
-micro: U+00B5
+micro: <p>U+00B5</p>
 
-micromoles? U+00B5mols
+micromoles? <p>U+00B5</p>mols
