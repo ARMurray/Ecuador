@@ -73,6 +73,7 @@ plot13Ppm <- ggplot(filt13)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
   labs(x = "Time",y="DCO2", title = "DCO2 Change (station 3 minus station 1)")+
+  ylim(-2650,150)+
   theme_bw()
 plot13Ppm
 
@@ -84,6 +85,7 @@ plot34Ppm <- ggplot(filt34)+
   scale_color_gradient(name = "Discharge (L/s)", trans = "log",
                         breaks = my_breaks, labels = my_breaks)+
   labs(x = "Time",y="DCO2", title = "DCO2 Change (station 4 minus station 3)")+
+  ylim(-2650,150)+
   theme_bw()
 
 plot34Ppm
@@ -334,7 +336,8 @@ adjustEvasion <- metabAvg%>%
          AdjEvasion34 = DailyChange34+GPP_CO2uMol34+ER_CO2uMol34,
          date = as.POSIXct(date))
 
-color = wes_palette("Zissou1")[c(1,3,5)]
+#color = wes_palette("Zissou1")[c(1,3,5)]    #WesAnderson
+color = c("#4B9CD3","#16b55b","#f57f11")
 
 
 up <- adjustEvasion%>%
@@ -342,17 +345,58 @@ up <- adjustEvasion%>%
   rename("Evasion" = "AdjEvasion12", "Respiration"="ER_CO2uMol12", "Photosynthesis" = "GPP_CO2uMol12")%>%
   gather(Var,Val,-date)
 
+up$Var <- as.factor(up$Var)
+
 var <- levels(up$Var)
+```
+
+
+```{r fontSettings}
+# Axis font
+xaxisFont <- list(
+  family = "Arial, sans-serif",
+  size = 16,
+  color = "black"
+)
+
+yaxisFont <- list(
+  family = "Arial, sans-serif",
+  size = 12,
+  color = "black"
+)
+
+labelFont <- list(
+  family = "Arial, sans-serif",
+  size = 18,
+  color = "black"
+)
+```
+
+
+
+## <p>Daily Evasion & Metabolism in &#181;mols</p>
+
+```{r evasion_uMolsPerDay, echo=FALSE,warning=FALSE,message=FALSE, fig.width=10}
+
 
 # Upstream Plot
-up%>%
+uplot <- up%>%
   plot_ly(x = ~date, y = ~abs(Val))%>%
   add_markers(color = ~Var,
               colors = ~setNames(color, var),  size=50)%>%
   layout(
-    title = "Daily Evasion & Respiration (Upstream)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
+    title = "Daily Evasion & Metabolism (Upstream)",
+    xaxis = list(title = "Date", titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont,
+  exponentformat = "E"),
+    yaxis = list(title = "&mu;mols m<sup>2</sup>d<sup>-1</sup>", type = "log",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont,
+  range = c(3,7)),
+  showlegend=FALSE
   )
 
 
@@ -362,16 +406,26 @@ down <- adjustEvasion%>%
   rename("Evasion" = "AdjEvasion34", "Respiration"="ER_CO2uMol34", "Photosynthesis" = "GPP_CO2uMol34")%>%
   gather(Var,Val,-date)
 
-down%>%
+dplot <- down%>%
   plot_ly(x = ~date, y = ~abs(Val))%>%
   add_markers(color = ~Var,
               colors = ~setNames(color, var),  size=50)%>%
   layout(
-    title = "Daily Evasion & Respiration (Downstream)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "uMols m<sup>2</sup>d<sup>-1</sup>", type = "log")
+    title = "Daily Evasion & Metabolism (Downstream)",
+    xaxis = list(title = "Date", titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont,
+  exponentformat = "E"),
+    yaxis = list(title = "", type = "log",titlefont = labelFont,
+  showticklabels = FALSE,
+  tickangle = 0,
+  tickfont = yaxisFont,
+  range = c(3,7)),
+  showlegend=TRUE
   )
 
+subplot(uplot,dplot, titleY = TRUE, titleX = TRUE)
 # Try changing to mols
 # Try changing to per second
 
