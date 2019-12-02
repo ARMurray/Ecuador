@@ -274,6 +274,8 @@ subplot(hist13,hist34, shareY = TRUE, titleX = TRUE)
 
 
 ## CO2 Change over time
+
+May or may not use this plot, if so, needs to be cleaned up.
 ```{r CO2ChangeTime, echo=FALSE, warning=FALSE, fig.width= 10}
 solarNoon <- as.POSIXct("12:19", format = "%H:%M")
 
@@ -281,14 +283,14 @@ filt13$noonDif <- as.integer(filt13$time - solarNoon)
 filt34$noonDif <- as.integer(filt34$time - solarNoon)
 
 cChange13 <- ggplot(filt13)+
-  geom_point(aes(x=DateTime, y= uMols_13, col = noonDif))+
-  scale_color_gradient2(low = "black",mid = "#f2db79", high = "black",name = "Time")+
+  geom_point(aes(x=DateTime, y= uMols_13, col = noonDif), size = .5)+
+  scale_color_gradient2(low = "black",mid = "#f2db79", high = "red",name = "Time")+
   theme_bw()+
   ylim(-10,60)
 
 cChange34 <- ggplot(filt34)+
-  geom_point(aes(x=DateTime, y= uMols_34, col = noonDif))+
-  scale_color_gradient2(low = "black",mid = "#f2db79", high = "black",name = "Time")+
+  geom_point(aes(x=DateTime, y= uMols_34, col = noonDif), size = .5)+
+  scale_color_gradient2(low = "black",mid = "#f2db79", high = "red",name = "Time")+
   theme_bw()+
   ylim(-10,60)
 
@@ -301,7 +303,7 @@ subplot(cChange13,cChange34, shareY = TRUE)
 ```{r CO2Change, echo = FALSE, message=FALSE, warning = FALSE, fig.width=10}
 
 ## Plotly
-legendtitle <- list(yref='paper',xref="paper",y=.75,x=1.25, text="Discharge<br> [L/s<sup>-1</sup>]",showarrow=F)
+legendtitle <- list(yref='paper',xref="paper",y=.75,x=1.2, text="Discharge<br> [L/s<sup>-1</sup>]",showarrow=F)
 
 CO2uMols13 <- filt13%>%
   plot_ly(x = ~time, y = ~uMols_13)%>%
@@ -315,7 +317,7 @@ CO2uMols13 <- filt13%>%
     showticklabels = TRUE,
   tickangle = 325,
   tickfont = xaxisFont, tickformat = "%H:%M"),
-    title = "CO2 Change (Station 3-1 / Station 4-3)",
+    title = "&#916;CO<sub>2</sub> (Station 3-1 / Station 4-3) [&mu;mols/m<sup>2</sup>/s<sup>-1</sup>]",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
@@ -342,7 +344,7 @@ CO2uMols34 <- filt34%>%
   showticklabels = TRUE,
   tickangle = 325,
   tickfont = xaxisFont, tickformat = "%H:%M"),
-    title = "DO Change (Station 2-1 / Station 4-2)",
+    title = "&#916;CO<sub>2</sub> (Station 3-1 / Station 4-3) [&mu;mols/m<sup>2</sup>/s<sup>-1</sup>]",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
@@ -354,6 +356,7 @@ CO2uMols34 <- filt34%>%
   tickfont = yaxisFont),
   showlegend = T,
   annotations = legendtitle,
+  margin = list(t = 40),
   legend = list(x = 1, y = .5))%>%
   hide_colorbar()
 
@@ -378,16 +381,28 @@ pred4 <- read.csv(here("Analysis/Stream_Metabolism/ModelOutputs/DO_4_Predictions
 metab <- rbind(pred1,pred2,pred4)%>%
   mutate(DateTime = as.POSIXct(date))
 
+
+# Legend Title
+legendtitle <- list(yref='paper',xref="paper",y=.62,x=1.08, text="<b>Station</b>",showarrow=F)
+
 metab%>%
   plot_ly(x = ~DateTime, y = ~GPP,hoverinfo = "text",
         text = ~paste("Station: ", Station,
         "<br> Date: ", DateTime,
         "<br> ER: ", round(ER,2)))%>%
-  add_markers(color = ~Station)%>%
+  add_markers(color = ~Station, size=50)%>%
   layout(
     title = "Gross Primary Productivity (DO)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "GPP (g/m^2/d^-1)")
+    xaxis = list(title = "Date", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  type = "date",
+  tickformat = "%b %d"),
+    yaxis = list(title = "GPP [g/m<sup>2</sup>d<sup>-1</sup>]", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+    legend = list (x = 1, y=.5),
+    annotations = legendtitle
   )
 
 metab%>%
@@ -395,11 +410,19 @@ metab%>%
         text = ~paste("Station: ", Station,
         "<br> Date: ", DateTime,
         "<br> GPP: ", round(GPP,2)))%>%
-  add_markers(color = ~Station)%>%
+  add_markers(color = ~Station, size = 50)%>%
   layout(
     title = "Ecosystem Respiration (DO)",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "GPP (g/m^2/d^-1)")
+    xaxis = list(title = "Date", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  type = "date",
+  tickformat = "%b %d"),
+    yaxis = list(title = "GPP [g/m<sup>2</sup>d<sup>-1</sup>]", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+    legend = list (x = 1, y=.5),
+    annotations = legendtitle
   )
 
 ```
@@ -411,6 +434,9 @@ metabCO2 <- metab%>%
   mutate(GPP_CO2uMol = GPP/31.9988*-1000000,
          ER_CO2uMol = ER/31.9988*-1000000)
 
+# Legend Title
+legendtitle <- list(yref='paper',xref="paper",y=.62,x=1.08, text="<b>Station</b>",showarrow=F)
+
 metabCO2%>%
   plot_ly(x = ~DateTime, y = ~GPP_CO2uMol,hoverinfo = "text",
         text = ~paste("Station: ", Station,
@@ -418,9 +444,17 @@ metabCO2%>%
         "<br> ER: ", round(ER_CO2uMol,2)))%>%
   add_markers(color = ~Station, size = 50)%>%
   layout(
-    title = "Gross Primary Productivity",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "CO<sub>2</sub> [&mu;mols m<sup>2</sup>d<sup>-1</sup>]")
+    title = "Gross Primary Productivity (CO<sub>2</sub>)",
+    xaxis = list(title = "Date", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  type = "date",
+  tickformat = "%b %d"),
+    yaxis = list(title = "CO<sub>2</sub> [&mu;mols m<sup>2</sup>d<sup>-1</sup>]", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+    legend = list (x = 1, y=.5),
+    annotations = legendtitle
   )
 
 
@@ -431,9 +465,17 @@ metabCO2%>%
         "<br> ER: ", round(GPP_CO2uMol,2)))%>%
   add_markers(color = ~Station, size = 50)%>%
   layout(
-    title = "Ecosystem Respiration",
-    xaxis = list(title = "Date"),
-    yaxis = list(title = "CO<sub>2</sub> [&mu;mols m<sup>2</sup>d<sup>-1</sup>]")
+    title = "Ecosystem Respiration (CO<sub>2</sub>)",
+    xaxis = list(title = "Date", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  type = "date",
+  tickformat = "%b %d"),
+    yaxis = list(title = "CO<sub>2</sub> [&mu;mols m<sup>2</sup>d<sup>-1</sup>]", titlefont = labelFont,showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+    legend = list (x = 1, y=.5),
+    annotations = legendtitle
   )
 ```
 
@@ -507,10 +549,12 @@ var <- levels(up$Var)
 
 
 
-## <p>Daily Evasion & Metabolism in &#181;mols</p>
+## Daily Evasion & Metabolism in &#181;mols
 
 ```{r evasion_uMolsPerDay, echo=FALSE,warning=FALSE,message=FALSE, fig.width=10}
 
+legendtitle <- list(yref='paper',xref="paper",y=.65,x=1.3, text="<b>Process</b>",showarrow=F)
+note <- list(yref='paper',xref="paper",y=.2,x=1.45, text="<i>*Respiration is<br>shown as<br>absolute value.</i>",showarrow=F)
 
 # Upstream Plot
 uplot <- up%>%
@@ -519,17 +563,19 @@ uplot <- up%>%
               colors = ~setNames(color, var),  size=50, legendgroup = ~Var)%>%
   layout(
     title = "Daily Evasion & Metabolism (Upstream)",
-    xaxis = list(title = "Date", titlefont = labelFont,
+    xaxis = list(title = "Date", titlefont = labelFont, type = "date",
   showticklabels = TRUE,
-  tickangle = 325,
+  tickangle = 0,
   tickfont = xaxisFont,
+  tickformat = "%b %d",
   exponentformat = "E"),
     yaxis = list(title = "&mu;mols m<sup>2</sup>d<sup>-1</sup>", type = "log",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
   tickfont = yaxisFont,
   range = c(3,7)),
-  showlegend=F
+  showlegend=F,
+  legend = list(x=1, y=.5)
   )
 
 
@@ -545,16 +591,19 @@ dplot <- down%>%
               colors = ~setNames(color, var),  size=50, legendgroup = ~Var, showlegend = F)%>%
   layout(
     title = "Daily Evasion & Metabolism",
-    xaxis = list(title = "Date", titlefont = labelFont,
+    xaxis = list(title = "Date", titlefont = labelFont, type="date",
   showticklabels = TRUE,
-  tickangle = 325,
+  tickangle = 0,
   tickfont = xaxisFont,
+  tickformat = "%b %d",
   exponentformat = "E"),
     yaxis = list(title = "", type = "log",titlefont = labelFont,
   showticklabels = FALSE,
   tickangle = 0,
   tickfont = yaxisFont,
-  range = c(3,7))
+  range = c(3,7)),
+  annotations = list(legendtitle,note),
+  legend = list(x=1, y=.5)
   )
 
 subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
@@ -564,5 +613,157 @@ subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
 
 ```
 
-## Compare with eosFD numbers
-Synoptic points show ~ 19g per day of CO2 / 1 uMol
+## As &mu;mols m<sup>2</sup>s<sup>-1</sup>
+
+```{r evasionUmolsPerSec, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10}
+
+legendtitle <- list(yref='paper',xref="paper",y=.65,x=1.3, text="<b>Process</b>",showarrow=F)
+note <- list(yref='paper',xref="paper",y=.2,x=1.45, text="<i>*Respiration is<br>shown as<br>absolute value.</i>",showarrow=F)
+
+
+uplot <- up%>%
+  plot_ly(x = ~date, y = ~abs(Val)/86400)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var)%>%
+  layout(
+    title = "Daily Evasion & Metabolism (Upstream)",
+    xaxis = list(type = "date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "&mu;mols m<sup>2</sup>s<sup>-1</sup>", type = "log",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend=F,
+  legend = list(x=1, y=.5)
+  )
+
+# Downstream
+dplot <- down%>%
+  plot_ly(x = ~date, y = ~abs(Val)/86400)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var, showlegend = F)%>%
+  layout(
+    title = "Daily Evasion & Metabolism",
+    xaxis = list(type="date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "", type = "log",titlefont = labelFont,
+  showticklabels = FALSE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  annotations = list(legendtitle,note),
+  legend = list(x=1, y=.5)
+  )
+
+subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
+```
+
+## As moles m<sup>2</sup>d<sup>-1</sup>
+```{r evasionMolsPerDay, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10}
+
+legendtitle <- list(yref='paper',xref="paper",y=.65,x=1.3, text="<b>Process</b>",showarrow=F)
+note <- list(yref='paper',xref="paper",y=.2,x=1.45, text="<i>*Respiration is<br>shown as<br>absolute value.</i>",showarrow=F)
+
+
+uplot <- up%>%
+  plot_ly(x = ~date, y = ~abs(Val)/1000000)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var)%>%
+  layout(
+    title = "Daily Evasion & Metabolism (Upstream)",
+    xaxis = list(type = "date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "mols m<sup>2</sup>d<sup>-1</sup>", type = "",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend=F,
+  legend = list(x=1, y=.5)
+  )
+
+# Downstream
+dplot <- down%>%
+  plot_ly(x = ~date, y = ~abs(Val)/1000000)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var, showlegend = F)%>%
+  layout(
+    title = "Daily Evasion & Metabolism",
+    xaxis = list(type="date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "", type = "",titlefont = labelFont,
+  showticklabels = FALSE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  annotations = list(legendtitle,note),
+  legend = list(x=1, y=.5)
+  )
+
+subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
+```
+
+
+## As moles m<sup>2</sup>d<sup>-1</sup>
+```{r evasionMolsPerDayLog, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10}
+
+legendtitle <- list(yref='paper',xref="paper",y=.65,x=1.3, text="<b>Process</b>",showarrow=F)
+note <- list(yref='paper',xref="paper",y=.2,x=1.45, text="<i>*Respiration is<br>shown as<br>absolute value.</i>",showarrow=F)
+
+
+uplot <- up%>%
+  plot_ly(x = ~date, y = ~abs(Val)/1000000)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var)%>%
+  layout(
+    title = "Daily Evasion & Metabolism (Upstream)",
+    xaxis = list(type = "date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "mols m<sup>2</sup>d<sup>-1</sup>", type = "log",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend=F,
+  legend = list(x=1, y=.5)
+  )
+
+# Downstream
+dplot <- down%>%
+  plot_ly(x = ~date, y = ~abs(Val)/1000000)%>%
+  add_markers(color = ~Var,
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var, showlegend = F)%>%
+  layout(
+    title = "Daily Evasion & Metabolism",
+    xaxis = list(type="date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = "E"),
+    yaxis = list(title = "", type = "log",titlefont = labelFont,
+  showticklabels = FALSE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  annotations = list(legendtitle,note),
+  legend = list(x=1, y=.5)
+  )
+
+subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
+```
