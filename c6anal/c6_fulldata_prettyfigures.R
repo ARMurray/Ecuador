@@ -37,7 +37,7 @@ x_max <- as.POSIXct("2019-07-19 12:59:00")
 
 largernumbers <- element_text(face = "bold", size = 10)
 largernumbers3 <- element_text(face = "bold", size = 12)
-largernumbers2 <- element_text(size = 10)
+largernumbers2 <- element_text(size = 8)
 largertitle <- element_text(size = 12)
 
 #let's make the boxplots for the 2 injections that happened during the c6 time 
@@ -130,7 +130,7 @@ plot5 <- ggplot(c6time)+
   ylim(.0001, .8)
 plot5 <- plot5+ theme(axis.text.y= largernumbers, 
                       axis.title.y= largernumbers2, title = largertitle, 
-                      plot.title = element_text(margin = margin(t= 10, b = -20)),
+                      plot.title = element_text(margin = margin(t= 10, b = -50)),
                       axis.text.x=element_blank(),
                       plot.margin=unit(c(1,1,-.25,1), "cm"))
 plot5 <- plot5 + scale_y_reverse()
@@ -153,7 +153,7 @@ plot7 <- ggplot(c6time)+
   labs(y=expression(CO["2"]~(ppm)), x="")+
   ylim(900, 5000)
 plot7 <-plot7+ theme(axis.text.y= largernumbers, 
-                     axis.title.y= largernumbers, title = largertitle, 
+                     axis.title.y= largernumbers2, title = largertitle, 
                      plot.title = element_text(margin = margin(t= 10, b = -20)),
                      axis.text.x=element_blank(),
                      plot.margin=unit(c(-.25,1,-.25,1), "cm"))
@@ -169,10 +169,10 @@ plot7
 plot9 <- ggplot(c6time)+
   geom_point(aes(x= DateTime, y = Flux_1), color = "#e6a2c5")+
   ggtitle("Aquatic Flux")+
-  labs(x="", y=expression(Flux~('umol'/~m^2s^-1)))
+  labs(x="", y=expression(Flux~('umol'/~m^2~s^-1)))
   
 plot9 <- plot9+ theme(axis.text.y= largernumbers, 
-                      axis.title.y= largernumbers, title = largertitle, 
+                      axis.title.y= largernumbers2, title = largertitle, 
                       plot.title = element_text(margin = margin(t= 10, b = -20)),
                       axis.text.x=element_blank(),
                       plot.margin=unit(c(-.25,1,-.25,1), "cm"))
@@ -188,9 +188,9 @@ ggplotly(plot9)
 plot11 <- ggplot(c6time)+
   geom_point(aes(x= DateTime, y = stn1_Q), color = "#76a08a")+
   ggtitle("Discharge")+
-  labs(x="", y=expression(Discharge~('l's^-1)))
+  labs(x="", y=expression(Discharge~(L~s^-1)))
   plot11 <- plot11+ theme(axis.text.y= largernumbers, 
-                          axis.title.y= largernumbers, title = largertitle, 
+                          axis.title.y= largernumbers2, title = largertitle, 
                           plot.title = element_text(margin = margin(t= 10, b = -20)),
                           axis.text.x=element_blank(),
                           plot.margin=unit(c(-.25,1,-.25,1), "cm"))
