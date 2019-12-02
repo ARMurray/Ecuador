@@ -1,5 +1,5 @@
-## Final Submissions for Spring 2019
-  This folder holds final figures for everyones work over spring semester (2019)
+## Final Submissions for Fall 2019
+  This folder holds final figures for everyones work over fall semester (2019)
 
 |Owner|Figure Path|Description|Thumb|
 |:---|:---|:---|:----------|
@@ -14,7 +14,10 @@
 | Chloe| chloe/landvwater.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the saturated soil adjacent to the eos in the water. It is over a small time but it shows diel variability in the water but not in the soil. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/landvwater.png)| 
 | Chloe| chloe/watervcol.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the unsaturated soil adjacent to the eos in the water further up on the hill. It is over a small time but it shows opposite diel variability in the water versus the soil.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/watervcol.png)|
 | Chloe| chloe/watervwetland.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the far wetland where there was no movement in standing water. It is over a small time but it shows similar diel variability in the water, yet shows scale of moving vs stagnent water. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/watervwetland.png)|
-
+|Maribel|
+|Maribel|
+|Maribel|
+|Maribel|
 |Nehemiah|
 
 
