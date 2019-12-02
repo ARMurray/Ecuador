@@ -12,6 +12,18 @@ library(dplyr)
 library(plotly)
 library(wesanderson)
 library(viridis)
+library(grid)
+library(gridExtra)
+
+
+#make a legend function
+
+get_legend<-function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
 
 dis35 <- 0 
 
@@ -138,7 +150,11 @@ plot2 <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage, color=Sample)) 
   scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 18th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "none",
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        axis.title.y=element_blank())+
   xlim(0,250)+
   ylim(-18,-10)
   
@@ -165,7 +181,11 @@ plot4 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage, color=Sample)) 
   scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 31th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "none",
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        axis.title.y=element_blank())+
   xlim(0,250)+
   ylim(-18,-10)
 
@@ -191,7 +211,11 @@ plot6 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage, color=Sample)) +
   scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 6th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "none",
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        axis.title.y=element_blank())+
   xlim(0,250)+
   ylim(-18,-10)
 
@@ -211,18 +235,30 @@ plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) +
   geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
 plot7
 
+largernumbers <- element_text(size = 14)
+
 #w/o waterfall
 plot8 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage, color=Sample)) + 
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 12th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "none",
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        axis.title.y=element_blank(),
+        axis.title.x=largernumbers)+
   xlim(0,250)+
   ylim(-18,-10)
 
 plot8
 
-grid.newpage()
-grid.draw(rbind(ggplotGrob(plot2),ggplotGrob(plot4), ggplotGrob(plot6), ggplotGrob(plot8))) 
+legend <- get_legend(plot8)
+
+#grid.newpage()
+#grid.draw(rbind(ggplotGrob(plot2),ggplotGrob(plot4), ggplotGrob(plot6), ggplotGrob(plot8))) 
+
+#grid.arrange(plot2, plot4, plot6, plot8, legend, nrow=4, ncol=2)
+
+grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), legend, ncol = 2, 
+             widths = c(2.8, .4))
 
