@@ -65,11 +65,18 @@ labelFont <- list(
 )
 ```
 
-# CO2 Change
 
-## Change in CO2
-  The first step in calculating flux from the stream is to calculate change in CO2 concentrations between two points within the stream. We will look at two pairs of sensors (1->3 & 3->4). Once we determine change in CO2 concentration, we will convert ppm to uMols and then account for stream metabolism (respiration and photosynthesis) to calculate flux. First, let's visualize change in CO2 accross the pairs of sensors
-```{r filt14PpmPlot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+```{r dischargeClassify, echo=FALSE}
+df <- df%>%
+  arrange(stn3_Q)%>%
+  mutate(Discharge = ifelse( stn3_Q <20, "< 20",
+                                   ifelse(stn3_Q > 20 & stn3_Q <45, "< 45",
+                                          ifelse(stn3_Q > 45 & stn3_Q <90, "< 90",
+                                                 ifelse(stn3_Q > 90 & stn3_Q < Inf, "< 250", NA)))))
+```
+
+
+```{r dataSep, echo=FALSE, message=FALSE, warning=FALSE}
 filt13 <- df%>%
   filter(!is.na(V1)&!is.na(V3))%>%
   filter(DateTime > as.POSIXct("2019-07-13 00:00:00"))%>%
@@ -84,64 +91,51 @@ filt34 <- df%>%
   filter(DateTime < as.POSIXct("2019-08-13 19:00:00")|DateTime > as.POSIXct("2019-08-14 23:59"))%>%
   filter(DateTime < as.POSIXct("2019-07-14 00:00")|DateTime > as.POSIXct("2019-07-14 23:59"))%>%
   filter(!DateTime == as.POSIXct("2019-08-09 09:57:00"))
+```
 
-dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-2600,-2600,100,100))
 
-my_breaks <- c(0,15,50,166) # Create breaks
+# CO2 Change
 
-plot13Ppm <- ggplot(filt13)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = V3-V1,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge [L/s]", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y= "&#916;CO<sub>2</sub> [ppm]", title = "DCO2 Change (station 3 minus station 1)")+
-  ylim(-2650,150)+
-  theme_bw()
+## Change in CO2
+  The first step in calculating flux from the stream is to calculate change in CO2 concentrations between two points within the stream. We will look at two pairs of sensors (1->3 & 3->4). Once we determine change in CO2 concentration, we will convert ppm to uMols and then account for stream metabolism (respiration and photosynthesis) to calculate flux. First, let's visualize change in CO2 accross the pairs of sensors
 
-plot34Ppm <- ggplot(filt34)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = V4-V3,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge [L/s]", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="&Delta;CO<sub>2</sub>", title = "DCO2 Change (Station 2-1 / Station 4-3)")+
-  ylim(-2650,150)+
-  theme_bw()
+ 
+```{r filt14PpmPlot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=9}
 
-#subplot(plot13Ppm,plot34Ppm, shareY = TRUE)
+legendtitle <- list(yref='paper',xref="paper",y=.75,x=1.2, text="Discharge<br> [L/s<sup>-1</sup>]",showarrow=F)
 
-#Plotly replacement
 plotly13Ppm <- filt13%>%
+  arrange(stn3_Q)%>%
   plot_ly(x = ~time, y = ~V3-V1)%>%
-  add_markers(color=~log10(stn1_Q))%>%
+  add_markers(color = ~factor(Discharge, c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"), legendgroup = ~Discharge, showlegend = F)%>%
+  colorbar(title = "Discharge [L/s<sup>-1</sup>]")%>%
   layout(
     xaxis = list(
     range= c(as.numeric(todayStart)*1000,
              as.numeric(todayEnd)*1000),
     type = "date",
     title = "Time", titlefont = labelFont,
-  showticklabels = TRUE,
+    showticklabels = TRUE,
   tickangle = 325,
-  tickfont = xaxisFont),
+  tickfont = xaxisFont, tickformat = "%H:%M"),
     title = "DCO2 Change (Station 2-1 / Station 4-3)",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
-                    x0 = "2019-11-30 06:15", x1 = "2019-11-30 18:21", xref = "x",
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
                     y0 = -2500, y1 = 100, yref = "y")),
-  yaxis = list(title = "CO<sub>2</sub> [ppm]",titlefont = labelFont,
+  yaxis = list(title = "&#916;CO<sub>2</sub> [ppm]",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
-  tickfont = yaxisFont,
-  showlegend=FALSE))
-#plotly13Ppm
+  tickfont = yaxisFont),
+  showlegend=T)
+
 
 plotly34Ppm <- filt34%>%
-  plot_ly(x = ~time, y = ~V4-V3)%>%
-  add_markers(color=~log10(stn3_Q))%>%
+  arrange(stn3_Q)%>%
+  plot_ly(x = ~time, y = ~V4-V3, sort = FALSE)%>%
+  add_markers(color = ~factor(Discharge, levels = c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"),legendgroup = ~Discharge)%>%
+  colorbar(title = "Discharge [L/s<sup>-1</sup>]")%>%
   layout(
     xaxis = list(
     range= c(as.numeric(todayStart)*1000,
@@ -150,21 +144,24 @@ plotly34Ppm <- filt34%>%
     title = "Time", titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 325,
-  tickfont = xaxisFont),
+  tickfont = xaxisFont, tickformat = "%H:%M"),
     title = "DCO2 Change (Station 2-1 / Station 4-3)",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
-                    x0 = "2019-11-30 06:15", x1 = "2019-11-30 18:21", xref = "x",
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
                     y0 = -2500, y1 = 100, yref = "y")),
-  yaxis = list(title = "CO<sub>2</sub> [ppm]",titlefont = labelFont,
+  yaxis = list(title = "&Delta;CO<sub>2</sub> [ppm]",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
-  tickfont = yaxisFont,
-  showlegend=FALSE))
+  tickfont = yaxisFont),
+  showlegend = T,
+  annotations = legendtitle,
+  legend = list(x = 1, y = .5))%>%
+  hide_colorbar()
 
 
-subplot(plotly13Ppm,plotly34Ppm, shareY = TRUE, shareX = TRUE)
+subplot(plotly13Ppm,plotly34Ppm, shareY = T)
 ```
 
 So now that we know what the change in CO2 between stations, it's time to account for stream metabolism. Stream metabolism includes Ecosystem Respiration (ER) and Gross Primary Production / phtosynthesis (GPP). Both of these processes include a 1:1 exchange of CO2 and DO molecules. 
@@ -177,31 +174,66 @@ Respiration can occur in the abscence of sunlight while photosynthesis cannot. A
 # Dissolved Oxygen
 
 ## Change in Dissolved Oxygen
-```{r DOchange, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
-dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-1,-1,8,8))
+```{r DOchange, echo=FALSE, message=FALSE, warning=FALSE, fig.width=9}
+legendtitle <- list(yref='paper',xref="paper",y=.75,x=1.2, text="Discharge<br> [L/s<sup>-1</sup>]",showarrow=F)
 
-plot12DO <- ggplot(filt13)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = DO2_mg.L-DO1_mg.L,group = day, col=tempC_436),lwd=1)+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="DO (mg/L)", title = "DO Change (station 2 minus station 1)")+
-  theme_bw()
+plotly13DOPpm <- filt13%>%
+  plot_ly(x = ~time, y = ~DO2_mg.L-DO1_mg.L)%>%
+  add_markers(color = ~factor(Discharge, c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"), legendgroup = ~Discharge, showlegend = F)%>%
+  colorbar(title = "Discharge [L/s<sup>-1</sup>]")%>%
+  layout(
+    xaxis = list(
+    range= c(as.numeric(todayStart)*1000,
+             as.numeric(todayEnd)*1000),
+    type = "date",
+    title = "Time", titlefont = labelFont,
+    showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont, tickformat = "%H:%M"),
+    title = "DO Change (Station 2-1 / Station 4-2)",
+         shapes = list(
+               list(type = "rect",
+                    fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
+                    y0 = -1.5, y1 = 4.5, yref = "y")),
+  yaxis = list(title = "&#916;DO [mg/L]",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend=T)
 
-plot24DO <- ggplot(filt34)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = DO2_mg.L,group = day, col=tempC_436),lwd=1)+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
-  labs(x = "Time",y="DO (mg/L)", title = "DO Change (station 2-1 / Station 4-2)")+
-  theme_bw()
 
-subplot(plot12DO,plot24DO,shareY = TRUE)
+plotly34DOPpm <- filt34%>%
+  arrange(stn3_Q)%>%
+  plot_ly(x = ~time, y = ~DO4_mg.L-DO2_mg.L, sort = FALSE)%>%
+  add_markers(color = ~factor(Discharge, levels = c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"),legendgroup = ~Discharge)%>%
+  colorbar(title = "Discharge [L/s<sup>-1</sup>]")%>%
+  layout(
+    xaxis = list(
+    range= c(as.numeric(todayStart)*1000,
+             as.numeric(todayEnd)*1000),
+    type = "date",
+    title = "Time", titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont, tickformat = "%H:%M"),
+    title = "DO Change (Station 2-1 / Station 4-2)",
+         shapes = list(
+               list(type = "rect",
+                    fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
+                    y0 = -1.5, y1 = 4.5, yref = "y")),
+  yaxis = list(title = "&Delta;DO [mg/L]",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend = T,
+  annotations = legendtitle,
+  legend = list(x = 1, y = .5))%>%
+  hide_colorbar()
 
+
+subplot(plotly13DOPpm,plotly34DOPpm, shareY = T)
 ```
 
 # Mass Conversion
@@ -242,7 +274,7 @@ subplot(hist13,hist34, shareY = TRUE, titleX = TRUE)
 
 
 ## CO2 Change over time
-```{r CO2ChangeTime, echo=FALSE, warning=FALSE}
+```{r CO2ChangeTime, echo=FALSE, warning=FALSE, fig.width= 9.5}
 solarNoon <- as.POSIXct("12:19", format = "%H:%M")
 
 filt13$noonDif <- as.integer(filt13$time - solarNoon)
@@ -265,7 +297,7 @@ subplot(cChange13,cChange34, shareY = TRUE)
 ```
 
 
-##Change in CO2 (uMols)
+## Change in CO2 (umols)
 ```{r CO2Change, echo = FALSE, message=FALSE, warning = FALSE, fig.width=10}
 dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-10,-10,65,65))
 
@@ -276,8 +308,7 @@ cChguMols13 <- ggplot(filt13)+
   geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
   geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
   geom_point(aes(x = time, y = uMols_13,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log")+
   labs(x = "Time",y="Evasion", title = "CO2 Change 1 -> 3 (uMols)")+
   theme_bw()
 
@@ -286,8 +317,7 @@ cChangeuMols34 <- ggplot(filt34)+
   geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
   geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
   geom_point(aes(x = time, y = uMols_34,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log",
-                        breaks = my_breaks, labels = my_breaks)+
+  scale_color_gradient(name = "Discharge (L/s)", trans = "log")+
   labs(x = "Time",y="Evasion", title = "CO2 Change 3 -> 4 (uMols)")+
   theme_bw()
 
@@ -455,7 +485,7 @@ var <- levels(up$Var)
 uplot <- up%>%
   plot_ly(x = ~date, y = ~abs(Val))%>%
   add_markers(color = ~Var,
-              colors = ~setNames(color, var),  size=50)%>%
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var)%>%
   layout(
     title = "Daily Evasion & Metabolism (Upstream)",
     xaxis = list(title = "Date", titlefont = labelFont,
@@ -468,7 +498,7 @@ uplot <- up%>%
   tickangle = 0,
   tickfont = yaxisFont,
   range = c(3,7)),
-  showlegend=FALSE
+  showlegend=F
   )
 
 
@@ -481,7 +511,7 @@ down <- adjustEvasion%>%
 dplot <- down%>%
   plot_ly(x = ~date, y = ~abs(Val))%>%
   add_markers(color = ~Var,
-              colors = ~setNames(color, var),  size=50)%>%
+              colors = ~setNames(color, var),  size=50, legendgroup = ~Var, showlegend = F)%>%
   layout(
     title = "Daily Evasion & Metabolism",
     xaxis = list(title = "Date", titlefont = labelFont,
@@ -493,8 +523,7 @@ dplot <- down%>%
   showticklabels = FALSE,
   tickangle = 0,
   tickfont = yaxisFont,
-  range = c(3,7)),
-  showlegend=TRUE
+  range = c(3,7))
   )
 
 subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
