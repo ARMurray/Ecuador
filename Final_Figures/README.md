@@ -4,8 +4,8 @@
 |Owner|Figure Path|Description|Thumb|
 |:---|:---|:---|:----------|
 | Andrew | Andrew/DailyEvasionMetabolism34.png| Figure showing evasion, respiration and photosynthesis between stations 3 and 4| ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Andrew/DailyEvasionMetabolism34.png)|
-| Megan | c6anal/c6_fulldata_prettyfigures.R| Figure showing 5 minute precipitation, discharge, dissolved CO2, flux, CDOM, turbidity, and chlorophyll A during the July14-15 storm event|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/c6plotfinal.pdf) | 
-|  |  |  |  |
+| Megan |Meg/c6plotfinal.pdf| Figure showing 5 minute precipitation, discharge, dissolved CO2, flux, CDOM, turbidity, and chlorophyll A during the July14-15 storm event|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/c6plotfinal.pdf) | 
+| Megan |  Meg/synoptics_persite_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at each of the 10 sites. | ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_persite_final.pdf) |
 
 |Nehemiah|
 
