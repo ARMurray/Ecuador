@@ -175,7 +175,11 @@ write.csv(syn35all, here("Picarro/synoptics/", "syn35CV_statistics.csv"))
 
 syntotals <- rbind(syn1total, syn5total, syn8total, syn11total, syn14total, synBWtotal, syn20total, syn23total, syn29total, syn35total)
 
+#save all data
 
+allsyn <- rbind(syn1all, syn5all, syn8all, syn11all, syn14all, synBWall, syn20all, syn23all, syn29all, syn35all)
+
+write.csv(allsyn, here("Picarro/synoptics", "eachsyn_persite_corrected.csv"))
 #save this 
 
 write.csv(syntotals, here("Picarro/synoptics", "allsyn_persiteCV_statscorrected.csv"))
