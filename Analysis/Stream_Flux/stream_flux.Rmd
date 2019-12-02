@@ -274,7 +274,7 @@ subplot(hist13,hist34, shareY = TRUE, titleX = TRUE)
 
 
 ## CO2 Change over time
-```{r CO2ChangeTime, echo=FALSE, warning=FALSE, fig.width= 9.5}
+```{r CO2ChangeTime, echo=FALSE, warning=FALSE, fig.width= 10}
 solarNoon <- as.POSIXct("12:19", format = "%H:%M")
 
 filt13$noonDif <- as.integer(filt13$time - solarNoon)
@@ -299,35 +299,66 @@ subplot(cChange13,cChange34, shareY = TRUE)
 
 ## Change in CO2 (umols)
 ```{r CO2Change, echo = FALSE, message=FALSE, warning = FALSE, fig.width=10}
-dayPoly <- data.frame(x = c(as.POSIXct("06:15", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("18:21", format = "%H:%M"),as.POSIXct("06:15", format = "%H:%M")),y=c(-10,-10,65,65))
-
-
-## ggplot
-cChguMols13 <- ggplot(filt13)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = uMols_13,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log")+
-  labs(x = "Time",y="Evasion", title = "CO2 Change 1 -> 3 (uMols)")+
-  theme_bw()
-
-cChangeuMols34 <- ggplot(filt34)+
-  geom_polygon(data = dayPoly,aes(x=x,y=y),fill="#f2e198")+
-  geom_vline(aes(xintercept = as.POSIXct("06:15", format = "%H:%M")))+
-  geom_vline(aes(xintercept = as.POSIXct("18:21", format = "%H:%M")))+
-  geom_point(aes(x = time, y = uMols_34,group = day, col=stn1_Q))+
-  scale_color_gradient(name = "Discharge (L/s)", trans = "log")+
-  labs(x = "Time",y="Evasion", title = "CO2 Change 3 -> 4 (uMols)")+
-  theme_bw()
-
-subplot(cChguMols13,cChangeuMols34, shareY = TRUE)
 
 ## Plotly
-cChguMols13 <- filt13%>%
-  group_by(day)%>%
+legendtitle <- list(yref='paper',xref="paper",y=.75,x=1.25, text="Discharge<br> [L/s<sup>-1</sup>]",showarrow=F)
+
+CO2uMols13 <- filt13%>%
   plot_ly(x = ~time, y = ~uMols_13)%>%
-  add_markers(color = ~stn1_Q)
+  add_markers(color = ~factor(Discharge, c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"), legendgroup = ~Discharge, showlegend = F)%>%
+  layout(
+    xaxis = list(
+    range= c(as.numeric(todayStart)*1000,
+             as.numeric(todayEnd)*1000),
+    type = "date",
+    title = "Time", titlefont = labelFont,
+    showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont, tickformat = "%H:%M"),
+    title = "CO2 Change (Station 3-1 / Station 4-3)",
+         shapes = list(
+               list(type = "rect",
+                    fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
+                    y0 = -10, y1 = 65, yref = "y")),
+  yaxis = list(title = "&#916;CO<sub>2</sub> [&mu;mols]",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend=T)
+
+
+CO2uMols34 <- filt34%>%
+  arrange(stn3_Q)%>%
+  plot_ly(x = ~time, y = ~uMols_34, sort = FALSE)%>%
+  add_markers(color = ~factor(Discharge, levels = c('< 20', '< 45', '< 90', '< 250')), colors = c("#a1dab4","#41b6c4","#2c7fb8","#253494"),legendgroup = ~Discharge)%>%
+  colorbar(title = "Discharge [L/s<sup>-1</sup>]")%>%
+  layout(
+    xaxis = list(
+    range= c(as.numeric(todayStart)*1000,
+             as.numeric(todayEnd)*1000),
+    type = "date",
+    title = "Time", titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 325,
+  tickfont = xaxisFont, tickformat = "%H:%M"),
+    title = "DO Change (Station 2-1 / Station 4-2)",
+         shapes = list(
+               list(type = "rect",
+                    fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
+                    x0 = paste0(Sys.Date(), " 06:15"), x1 = paste0(Sys.Date(), " 18:21"), xref = "x",
+                    y0 = -10, y1 = 65, yref = "y")),
+  yaxis = list(title = "&Delta;CO<sub>2</sub> [&mu;mols]",titlefont = labelFont,
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend = T,
+  annotations = legendtitle,
+  legend = list(x = 1, y = .5))%>%
+  hide_colorbar()
+
+
+subplot(CO2uMols13,CO2uMols34, shareY = T)
   
 ```
 
