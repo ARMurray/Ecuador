@@ -7,7 +7,7 @@
 | Megan |Meg/c6plotfinal.pdf| Figure showing 5 minute precipitation, discharge, dissolved CO2, flux, CDOM, turbidity, and chlorophyll A during the July14-15 storm event|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/c6plotfinal.pdf) | 
 | Megan |  Meg/synoptics_persite_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at each of the 10 sites displayed as 10 plots (one plot for each site). | ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_persite_final.pdf)|
 | Megan | Meg/synoptics_perday_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at ecah of the 10 sites displayed as 4 plots (one plot for each day). |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_perday_final.pdf)|
-
+| Chloe| Meg/collars.pdf| Figure showing comparison in flux over time from collars separated by condition. Top figure shows flux of the four collars in unsaturated soil, second shows the three collars that were in saturated soil conditions, last shows the flux of the collar in the bubbling spring.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/collars.pdf)|
 |Nehemiah|
 
 
