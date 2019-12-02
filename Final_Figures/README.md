@@ -4,7 +4,7 @@
 |Owner|Figure Path|Description|Thumb|
 |:---|:---|:---|:----------|
 | Andrew | Andrew/DailyEvasionMetabolism34.png| Figure showing evasion, respiration and photosynthesis between stations 3 and 4| ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Andrew/DailyEvasionMetabolism34.png)|
-| Megan |Meg/c6plotfinal.pdf| Figure showing 5 minute precipitation, discharge, dissolved CO2, flux, CDOM, turbidity, and chlorophyll A during the July14-15 storm event|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/c6plotfinal.png) | 
+| Megan |Meg/c6plotfinal.pdf OR Meg/cgplotfinal_notitles.pdf| Figure showing 5 minute precipitation, discharge, dissolved CO2, flux, CDOM, turbidity, and chlorophyll A during the July14-15 storm event|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/c6plotfinal.png) |
 | Megan |  Meg/synoptics_persite_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at each of the 10 sites displayed as 10 plots (one plot for each site). | ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_persite_final.png)|
 | Megan | Meg/synoptics_perday_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at ecah of the 10 sites displayed as 4 plots (one plot for each day). |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_perday_final.png)|
 | Megan | Meg/collar_percollar_final.pdf|Corrected and average and std. deviation of delta iCO2 for each day at each collar with color-coding by degree of dry/wetness | ![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/collar_percollar_final.png)
