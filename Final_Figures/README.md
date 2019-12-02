@@ -9,6 +9,7 @@
 | Megan | Meg/synoptics_perday_final.pdf| Figure showing the corrected values with std. deviation for the 4 synoptic days at ecah of the 10 sites displayed as 4 plots (one plot for each day). |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Meg/synoptics_perday_final.pdf)|
 | Chloe| chloe/collars.pdf| Figure showing comparison in flux over time from collars separated by condition. Top figure shows flux of the four collars in unsaturated soil, second shows the three collars that were in saturated soil conditions, last shows the flux of the collar in the bubbling spring.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/collars.pdf)|
 | Chloe| chloe/collar.png| Figure showing comparison in flux between each collar over all of the days of transect collection. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/collar.png)|
+| Chloe| chloe/compare.png| Figure showing comparison in flux between collar flux and flux along positions of the stream. The goal of this figure is to compare magnitude of flux in different soil conditions to stream conditions. It is seen that collar flux and flux of stream is comparable after the waterfall, but is much larger in stream before waterfall. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/compare.png)|
 |Nehemiah|
 
 
