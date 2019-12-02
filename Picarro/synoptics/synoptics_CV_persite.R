@@ -182,6 +182,9 @@ write.csv(syntotals, here("Picarro/synoptics", "allsyn_persiteCV_statscorrected.
 
 #ok now let's do plots per day with the error bars 
 
+largernumbers <- element_text(face = "bold", size = 12)
+largernumbers2 <- element_text(face = "bold", size = 10)
+
 syn1all <- syn1all[c(1:4),]
 syn1all$Day[1] <- "1July18"
 syn1all$Day[2] <- "2July31"
@@ -191,9 +194,16 @@ plot1 <- ggplot(syn1all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 1")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#EDCB64"))+
+        panel.background = element_rect(fill = "#EDCB64"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(0,-.25,1,0), "cm"))+
   ylim(-17.5,-10)
 plot1 <- plot1 + theme(legend.position = "none")
 plot1
@@ -209,9 +219,16 @@ plot2 <- ggplot(syn5all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 5")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#EDCB64"))+
+        panel.background = element_rect(fill = "#EDCB64"),
+        axis.title.y=element_blank(),
+        title = largernumbers,
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(0,-.25,1,0), "cm"))+
   ylim(-17.5,-10)
 plot2 <- plot2 + theme(legend.position = "none")
 plot2
@@ -225,9 +242,16 @@ plot3 <- ggplot(syn8all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 8")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#EDCB64"))+
+        panel.background = element_rect(fill = "#EDCB64"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(0,-.25,1,0), "cm"))+
   ylim(-17.5,-10)
 plot3 <- plot3 + theme(legend.position = "none")
 plot3
@@ -242,12 +266,20 @@ plot4 <- ggplot(syn11all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 11")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#EDCB64"))+
+        panel.background = element_rect(fill = "#EDCB64"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(0,-.25,1,0), "cm"))+
   ylim(-17.5,-10)
 plot4 <- plot4 + theme(legend.position = "none")
 plot4
+
 
 syn14all <- syn14all[c(1:4),]
 syn14all$Day[1] <- "1July18"
@@ -258,9 +290,16 @@ plot5 <- ggplot(syn14all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 14")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#EDCB64"))+
+        panel.background = element_rect(fill = "#EDCB64"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(0,-.25,1,0), "cm"))+
   ylim(-17.5,-10)
 plot5 <- plot5 + theme(legend.position = "none")
 plot5
@@ -274,12 +313,20 @@ plot6 <- ggplot(synBWall, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn BW")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#DAECED"))+
+        panel.background = element_rect(fill = "#DAECED"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(1,-.25,-.25,0), "cm"),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank())+
   ylim(-17.5,-10)
 plot6 <- plot6 + theme(legend.position = "none")
 plot6
+
 
 syn20all <- syn20all[c(1:4),]
 syn20all$Day[1] <- "1July18"
@@ -290,9 +337,16 @@ plot7 <- ggplot(syn20all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 20")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#CECD7B"))+
+        panel.background = element_rect(fill = "#CECD7B"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(1,-.25,-.25,0), "cm"),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank())+
   ylim(-17.5,-10)
 plot7 <- plot7 + theme(legend.position = "none")
 plot7
@@ -306,9 +360,16 @@ plot8 <- ggplot(syn23all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 23")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#CECD7B"))+
+        panel.background = element_rect(fill = "#CECD7B"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(1,-.25,-.25,0), "cm"),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank())+
   ylim(-17.5,-10)
 plot8 <- plot8 + theme(legend.position = "none")
 plot8
@@ -322,9 +383,16 @@ plot9 <- ggplot(syn29all, aes(x= Day, y= CorrectedAverage, color=Day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 29")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#CECD7B"))+
+        panel.background = element_rect(fill = "#CECD7B"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),
+        plot.margin=unit(c(1,-.25,-.25,0), "cm"),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank())+
   ylim(-17.5,-10)
 plot9 <- plot9 + theme(legend.position = "none")
 plot9
@@ -335,13 +403,22 @@ syn35all$Day[2] <- "2July31"
 syn35all$Day[3] <- "3Aug06"
 syn35all$Day[4] <- "4Aug12"
 
+
+
 plot10 <- ggplot(syn35all, aes(x= Day, y= CorrectedAverage, color=Day)) + 
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_viridis(option = "D", discrete = TRUE)+
   ggtitle("Syn 35")+
-  labs(x="Day", y="Delta_i")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme(legend.position = "right", 
-        panel.background = element_rect(fill = "#CECD7B"))+
+        panel.background = element_rect(fill = "#CECD7B"),
+        title = largernumbers,
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)),   
+        plot.margin=unit(c(1,-.25,-.25,0), "cm"),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank())+
   ylim(-17.5,-10)
 plot10 <- plot10 + theme(legend.position = "none")
 plot10
