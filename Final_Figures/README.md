@@ -19,7 +19,7 @@
 |Maribel|pending|
 |Maribel|pending|
 |Nehemiah|
-
+|Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
 
 ## How to edit the above table
 
