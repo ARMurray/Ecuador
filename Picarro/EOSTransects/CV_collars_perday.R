@@ -153,6 +153,25 @@ col6 <- col6[c(1:6),]
 col7 <- col7[c(1:6),]
 col8 <- col8[c(1:5),]
 
+#combine all of these files so i can then separate by day 
+allcorrected <- rbind(col1,col2,col3,col4,col5,col6,col7,col8)
+
+#save this 
+write.csv(allcorrected, here("Picarro/EOSTransects/allcollarscorrected_CV.csv"))
+
+
+#ok now let's separate by day 
+
+#all days 
+july17 <- allcorrected[ which(allcorrected$day == "July17"), ]
+july23 <- allcorrected[ which(allcorrected$day == "July23"), ]
+july30 <- allcorrected[ which(allcorrected$day == "July30"), ]
+aug02 <- allcorrected[ which(allcorrected$day == "Aug02"), ]
+aug09 <- allcorrected[ which(allcorrected$day == "Aug09"), ]
+aug13 <- allcorrected[ which(allcorrected$day == "Aug13"), ]
+
+
+
 
 #plotting time 
 
