@@ -27,3 +27,4 @@
 | chloe/watervwetland.png
 | Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the far wetland where there was no movement in standing water. It is over a small time but it shows similar diel variability in the water, yet shows scale of moving vs stagnent water. 
 |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/watervwetland.png)|
+  

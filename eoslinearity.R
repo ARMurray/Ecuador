@@ -17,4 +17,4 @@ Ecuaug13 <- aug13[ which(aug13$Sample == "ecu3"
                           
 Ecuaug13$Day <- as.character("aug13")
 
-write.csv(Ecuaug13, here("Picarro/EOSTransects/081319/", "ecusamplesaug13.csv"))
+#write.csv(Ecuaug13, here("Picarro/EOSTransects/081319/", "ecusamplesaug13.csv"))

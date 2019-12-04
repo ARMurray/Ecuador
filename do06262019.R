@@ -16,5 +16,3 @@ write.csv(data, here("FieldData/DO",
 dTable <- read.table(here("FieldData/DO", "DO_06262019.csv"))
 
 dTable$datetime <- as.POSIXct(as.character(paste0(dTable$Month, "/", dTable$Day, "/", dTable$Year, " " dTable$Time)), format = "%m/%d/%Y %H:%M:%OS")
-
-                     #peanutbutter
