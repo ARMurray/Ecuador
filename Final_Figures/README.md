@@ -14,10 +14,10 @@
 | Chloe| chloe/landvwater.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the saturated soil adjacent to the eos in the water. It is over a small time but it shows diel variability in the water but not in the soil. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/landvwater.png)| 
 | Chloe| chloe/watervcol.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the unsaturated soil adjacent to the eos in the water further up on the hill. It is over a small time but it shows opposite diel variability in the water versus the soil.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/watervcol.png)|
 | Chloe| chloe/watervwetland.png| Figure showing comparison in flux between the eos in the floating platform behind station 1 (blue) and the other eos in the far wetland where there was no movement in standing water. It is over a small time but it shows similar diel variability in the water, yet shows scale of moving vs stagnent water. |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/watervwetland.png)|
-|Maribel|pending|Figure showing pCO2 from five synoptic days and an extra synoptic day done on July 12th. An estimated discharge is added for each day.|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/finalfigure_synoptic%20copy.png) |
+|Maribel|pending|Figure showing pCO2 from five synoptic days and an extra synoptic day done on July 12th. An estimated discharge is added for each day.||![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/finalfigure_synoptic%20copy.png) |
 |Maribel|pending|Figure showing the average and standard deviation pCO2 of all six synoptic days.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINAL_FIGURE.png)|
-|Maribel|pending|Figure for diego|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINALfigure_diegoo.png) |
-|Maribel|pending|Figure showing one to one graphs|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png) |
+|Maribel|pending|Figure for diego|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINALfigure_diegoo.png) |
+|Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png) |
 |Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
 
 ## How to edit the above table
