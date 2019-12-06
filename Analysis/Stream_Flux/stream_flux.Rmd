@@ -737,7 +737,7 @@ uplot <- up%>%
   tickfont = xaxisFont,
   tickformat = "%b %d",
   exponentformat = "E"),
-    yaxis = list(title = "mol/m<sup>2</sup>d<sup>-1</sup>", type = "log",titlefont = labelFont,
+    yaxis = list(title = "mol m<sup>-2</sup>d<sup>-1</sup>", type = "log",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
   tickfont = yaxisFont),
@@ -768,3 +768,47 @@ dplot <- down%>%
 
 subplot(uplot,dplot, titleY = TRUE, titleX = TRUE, shareY = TRUE)
 ```
+
+
+
+
+
+## Compare with eoSense chamber
+
+```{r eosPlotly, echo=FALSE, message=FALSE, wanring = FALSE, fig.width=10}
+
+# Filter the eos data and scale to daily values
+eos <- df%>%
+  filter(Inj == "No")%>%
+  select(DateTime,Flux_1,day)%>%
+  group_by(day)%>%
+  mutate(DailyFlux = mean(Flux_1, na.rm = TRUE)*86400/1000000)%>%
+  select(day, DailyFlux)%>%
+  distinct()%>%
+  ungroup()%>%
+  mutate(day = as.POSIXct(day))%>%
+  arrange(day)
+
+plot <- eos%>%
+  plot_ly(x=~day, y=~DailyFlux)%>%
+  add_trace(line = list(color = '#4B9CD3', width = 6)) %>%
+  add_markers(marker = list(color = 'rgb(0,0,0)',size = 10, line = list(
+        color = 'rgb(231, 99, 250)', width=2)))%>%
+  layout(
+    title = "Daily Evasion from Flux Chamber",
+    xaxis = list(type="date",
+  showticklabels = TRUE,
+  tickangle = 0,
+  tickfont = xaxisFont,
+  tickformat = "%b %d",
+  exponentformat = ""),
+    yaxis = list(title = "mol m<sup>-2</sup>d<sup>-1</sup>", type = "",titlefont = labelFont,
+  showticklabels = FALSE,
+  tickangle = 0,
+  tickfont = yaxisFont),
+  showlegend = FALSE
+  )
+
+plot
+  ```
+
