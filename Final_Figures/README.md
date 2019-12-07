@@ -19,7 +19,12 @@
 |Maribel|pending|Figure for diego|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINALfigure_diegoo.png) |
 |Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png) |
 |Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
-
+| Chloe| | final  |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/compare_fix.png) |
+| Chloe| | final agu  |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/flux.png) |
+| Chloe| | final agu |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/histogram.png) |
+| Chloe| | final agu |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/panels.png) |
+| Chloe| | final agu |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainco2.png) |
+| Chloe| | final agu |![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainvariation.png) |
 ## How to edit the above table
 
 The table above is in 'Markdown' which basically turns regular text into more stylistic text. A very useful document on how to write specific things in markdown can be found [HERE](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). First, edit this document by clicking the pencil in the top-right corner. This will bring you to the raw-text version of this markdown file. The columns are denoted by the words inbetween '|' symbols. You will notice in my example row, the text was too long for one line. You can ignore this because it will automatically 'wrap' to the next line and still show up as one line in the table.
