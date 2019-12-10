@@ -43,7 +43,7 @@ labelFont <- list(
   color = "black"
 )
 
-legendtitle <- list(yref='paper',xref="paper",y=.65,x=1.1, text="<b>Station</b>",showarrow=F)
+legendtitle <- list(yref='paper',xref="paper",y=.95,x=.85, text="<b>Station</b>",showarrow=F)
 
 
 plot <- filter%>%
@@ -54,16 +54,17 @@ plot <- filter%>%
   add_lines(line = list(color = 'rgb(0, 0, 0)'), showlegend=FALSE)%>%
   add_markers(color = ~Station)%>%
   layout(
-    title = "Change in CO<sub>2</sub>[ppm]",
-    xaxis = list(showticklabels = TRUE,
+    title = "<b>Change in CO<sub>2</sub>[ppm]</b>",
+    xaxis = list(title = "Distance [m]", type = "",titlefont = labelFont,
+                showticklabels = TRUE,
                  tickangle = 0,
                  tickfont = xaxisFont,
                  exponentformat = "E"),
-    yaxis = list(title = "This is the Y axis!", type = "",titlefont = labelFont,
-                 showticklabels = FALSE,
+    yaxis = list(title = "logCO<sub>2</sub>[ppm]", type = "",titlefont = labelFont,
+                 showticklabels = TRUE,
                  tickangle = 0,
                  tickfont = yaxisFont),
     annotations = list(legendtitle),
-    legend = list(x=1, y=.5)
+    legend = list(x=.75, y=.9)
   )
 plot
