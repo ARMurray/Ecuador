@@ -17,9 +17,9 @@
 |Maribel|pending|Figure showing pCO2 from five synoptic days and an extra synoptic day done on July 12th. An estimated discharge is added for each day.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/finalfigure_synoptic%20copy.png)|
 |Maribel|pending|Figure showing the average and standard deviation pCO2 of all six synoptic days.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINAL_FIGURE.png)|
 |Maribel|pending|Figure for diego|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINALfigure_diegoo.png) |
-|Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png) |
+|Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png)|
 |Maribel|pending|Injection 1 July 12 13:00-16:00|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot18.png) |
-|Maribel|pending|Injection 3 July 22 16:25-19:35|
+|Maribel|pending|Injection 3 July 22 16:25-19:35|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/injection3.png)|
 |Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
 | Chloe| | final  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/compare_fix.png) |
 | Chloe| | final agu  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/flux.png) |
