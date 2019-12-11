@@ -21,7 +21,7 @@
 |Maribel|pending|Injection 1 July 12 13:00-16:00|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot18.png) |
 |Maribel|pending|Injection 3 July 22 16:25-19:35|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/injection3.png)|
 |Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
-| Chloe| | final  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/compare.png) |
+| Chloe| | final  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/comparison.png) |
 | Chloe| | final agu  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/flux.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/histogram.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/panels.png) |
