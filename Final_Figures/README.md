@@ -27,6 +27,7 @@
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/panels.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainco2.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainvariation.png) |
+| Chloe| | final agu with corrected y axis|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/pannel_flux.png) |
 |Nehemiah|Nehemiah/Histogram of K600 Total 11_28 Update.png|Final|Figure showing the density of Kinematic K600 magnitudes. This figure demonstrates that in spite of a few abnormal cases, our K600 values lie in average around what most others calculate.|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/Histogram%20of%20K600%20Total%2011_28%20Update.png|
 |Nehemiah|Nehemiah/K600 With All Regression Lines.png|Final figure showing the comparison between effective K and Kinematic K with all regression lines.|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/K600%20With%20All%20Regression%20Lines.png|
 |Nehemiah|Nehemiah/K600 Comparison July 18 Regression.png|Final figure showing the regression of just July 18th data and a one to one line|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/K600%20Comparison%20July%2018%20Regression.png|
