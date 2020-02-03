@@ -2,15 +2,17 @@ install.packages("streamMetabolizer", dependencies=TRUE,
                  repos=c("https://owi.usgs.gov/R","https://cran.rstudio.com"))
 update.packages(oldPkgs=c("streamMetabolizer","unitted"), dependencies=TRUE,
                 repos=c("https://owi.usgs.gov/R", "https://cran.rstudio.com"))
+
+
 library(streamMetabolizer)
 library(dplyr)
 library(unitted)
 library(here)
 library(lubridate)
-library(unitted)
+
 
 #read in file
-dat <- read.csv("C:/Users/kriddie/Documents/kriddie_personal/Ecuador Proyecto IRU/Ecuador/Analysis/Stream_Metabolism/EC_IRU1_2020-01-21_XX.csv")
+dat <- read.csv(here::here("Analysis/Stream_Metabolism/EC_IRU1_2020-01-21_XX.csv"))
 #rename columns
 names(dat)[names(dat) == "Discharge_m3s"] <- "discharge"
 names(dat)[names(dat) == "DO_mgL"] <- "DO.obs"
