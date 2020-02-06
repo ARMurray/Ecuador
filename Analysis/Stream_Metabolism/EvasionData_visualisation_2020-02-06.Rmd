@@ -62,7 +62,8 @@ evasion.df$Flux_1[evasion.df$DateTime > "2019-08-06 11:10:00" &
 library(lubridate)
 #read in data 
 
-evasion.df$change <- evasion.df$V1 - evasion.df$V3
+evasion.df$change_v1V3 <- evasion.df$V1 - evasion.df$V3
+evasion.df$change_v1V2 <- evasion.df$V1 - evasion.df$V2
 
 evasion.df.inj  <- evasion.df[ which(evasion.df$Inj=="Yes" ),]
 
@@ -71,7 +72,7 @@ evasion.df  <- evasion.df[ which(evasion.df$Inj=="No" ),]
 
 #evasion.df <- evasion.df[which(evasion.df$DateTime > "2019-07-13 00:00:00" &
 #                                 evasion.df$DateTime <"2019-07-14 12:00:00"),]
-evasion.df <- evasion.df[!with(evasion.df,is.na(Flux_1)& is.na(change)),]
+evasion.df <- evasion.df[!with(evasion.df,is.na(Flux_1)& is.na(change_v1V3)),]
 
 evasion.df.night <-  with( evasion.df , evasion.df[ hour( DateTime ) <= 6 | hour( DateTime ) > 18 , ] )
 #Only daytime
@@ -116,8 +117,8 @@ abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
-plot(df$Flux_1, df$change)
-abline(fit <- lm(df$change ~ df$Flux_1), col="red")
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
@@ -131,7 +132,7 @@ ay <- list(
 )
 p <- plot_ly() %>%
   add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
-  add_lines(x = df$DateTime, y = df$change, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
   layout(
     title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
     xaxis = list(title="x")
@@ -162,8 +163,8 @@ abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
-plot(df$Flux_1, df$change)
-abline(fit <- lm(df$change ~ df$Flux_1), col="red")
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
@@ -208,8 +209,8 @@ abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
-plot(df$Flux_1, df$change)
-abline(fit <- lm(df$change ~ df$Flux_1), col="red")
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
@@ -223,7 +224,7 @@ ay <- list(
 )
 p <- plot_ly() %>%
   add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
-  add_lines(x = df$DateTime, y = df$change, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
   layout(
     title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
     xaxis = list(title="x")
@@ -252,8 +253,8 @@ abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
-plot(df$Flux_1, df$change)
-abline(fit <- lm(df$change ~ df$Flux_1), col="red")
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
@@ -267,7 +268,7 @@ ay <- list(
 )
 p <- plot_ly() %>%
   add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
-  add_lines(x = df$DateTime, y = df$change, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
   layout(
     title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
     xaxis = list(title="x")
@@ -298,8 +299,8 @@ abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
-plot(df$Flux_1, df$change)
-abline(fit <- lm(df$change ~ df$Flux_1), col="red")
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
@@ -313,7 +314,7 @@ ay <- list(
 )
 p <- plot_ly() %>%
   add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
-  add_lines(x = df$DateTime, y = df$change, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
   layout(
     title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
     xaxis = list(title="x")
