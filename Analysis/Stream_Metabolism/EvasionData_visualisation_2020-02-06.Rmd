@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This R markdown is to succincly show the data exploration I have been preforming 
 
-#TO DO
+
 First we clean the data
 
 ```{r data_clean, include=FALSE}
@@ -60,10 +60,27 @@ evasion.df$Flux_1[evasion.df$DateTime > "2019-08-06 11:10:00" &
 
 ```{r data}
 library(lubridate)
-#read in data 
+# Distances are 17,30,80
 
+#find the change in co2 concentration between station 1 and station 3
 evasion.df$change_v1V3 <- evasion.df$V1 - evasion.df$V3
+#find the change in co2 concentration between station 1 and station 2
 evasion.df$change_v1V2 <- evasion.df$V1 - evasion.df$V2
+#units on EOS = micromoles/m2/s2
+#convert measurment of CO2 change between V1 and V3 ppm to micromoles
+#eq 1  
+  # [CO2]*discharge*distance btw viasala = flux
+#1 mole of CO2 is 44.01g
+#length of stream btw V1 and V3: 13m
+#width of stream:  .5m
+#stream surface area:
+filt13$uMols_13 <- ((filt13$V1-filt13$V3)/ 37.6) *.0018*(1000000/44.01)*filt13$stn1_Q/1000 
+
+filt34$uMols_34 <- ((filt34$V3-filt34$V4)/ 64) *.0018*(1000000/44.01)*filt34$stn3_Q/1000
+
+
+
+
 
 evasion.df.inj  <- evasion.df[ which(evasion.df$Inj=="Yes" ),]
 
@@ -99,6 +116,7 @@ rm(evasion.df_1,evasion.df_2,evasion.df_3,evasion.df_4,evasion.df_5)
 
 ```{r all, echo=FALSE}
 library(plotly)
+library(ggplot2)
 
 df <- evasion.df
 
@@ -122,6 +140,12 @@ abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
 p1 <- plot_ly() %>%
   add_markers(x = df$Flux_1, y = df$change_v1V3, color = as.numeric(as.POSIXct(strptime(df$DateTime, "%Y-%m-%d %H:%M:%S")))) %>%
   
