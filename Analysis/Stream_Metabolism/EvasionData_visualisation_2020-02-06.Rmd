@@ -16,7 +16,7 @@ First we clean the data
 
 ```{r data_clean, include=FALSE}
 evasion <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))
-evasion.df <- evasion[,c("DateTime", "Inj","V1","V2","V3","Flux_1","ppt_mm", "DO2_mg.L")]
+evasion.df <- evasion[,c("DateTime", "Inj","V1","V2","V3","Flux_1","ppt_mm", "DO2_mg.L", "stn1_Q")]
 evasion.df$DateTime <- as.POSIXct(strptime(evasion.df$DateTime, "%Y-%m-%d %H:%M:%S"))
 
 ##Viasala started logging 2019-07-09 at 12:00. Lets remove the first 2 hours of data to allow the sensors time to adjust to thier new environment
@@ -122,6 +122,26 @@ abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
 legend("topright", bty="n", legend=paste("R2 is", 
          format(summary(fit)$adj.r.squared, digits=4)))
 
+p1 <- plot_ly() %>%
+  add_markers(x = df$Flux_1, y = df$change_v1V3, color = as.numeric(as.POSIXct(strptime(df$DateTime, "%Y-%m-%d %H:%M:%S")))) %>%
+  
+  layout(
+    title = "EOS (flux) vs change in CO2 V3-V1, date", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p1
+
+p2 <- plot_ly() %>%
+  add_markers(x = df$Flux_1, y = df$change_v1V3, color = df$stn1_Q) %>%
+  
+  layout(
+    title = "EOS (flux) vs change in CO2 V3-V1, discharge", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p2
+
 
 library(plotly)
 ay <- list(
@@ -130,7 +150,7 @@ ay <- list(
   side = "right",
   title = "second y axis"
 )
-p <- plot_ly() %>%
+p3 <- plot_ly() %>%
   add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
   add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
   layout(
@@ -138,7 +158,7 @@ p <- plot_ly() %>%
     xaxis = list(title="x")
   )
 
-p
+p3
 ```
 
 ##plot all data just during injections
