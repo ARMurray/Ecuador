@@ -15,6 +15,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(scales)
+library(lubridate)
 ```
 
 # Data
@@ -552,7 +553,7 @@ var <- levels(up$Var)
 
 
 
-## Daily Evasion & Metabolism in &#181;mols
+## Daily Evasion & Metabolism in &#181;mol
 
 ```{r evasion_uMolsPerDay, echo=FALSE,warning=FALSE,message=FALSE, fig.width=10}
 
@@ -789,7 +790,8 @@ eos <- df%>%
   distinct()%>%
   ungroup()%>%
   mutate(day = as.POSIXct(day))%>%
-  arrange(day)
+  arrange(day)%>%
+  mutate(day = ymd(day))
 
 plot <- eos%>%
   plot_ly(x=~day, y=~DailyFlux)%>%
@@ -813,6 +815,50 @@ plot <- eos%>%
 
 plot
 ```
+
+## Try integrating to get daily estimates of flux from eos
+Here we integrate instead of using the daily average and compare to see if they are different.
+```{r integrate}
+
+eosInt <- df%>%
+  filter(Inj == "No")%>%
+  select(DateTime,Flux_1,day)
+
+complete <- eosInt[complete.cases(eosInt), ]
+  
+integrate <- complete%>%
+  arrange(DateTime)%>%
+  mutate(Interval = DateTime - lag(DateTime),
+         FluxInt = Flux_1 * Interval*60/1000000)%>%
+  group_by(day)%>%
+  mutate(DailyFluxInt = sum(FluxInt))%>%
+  select(day,DailyFluxInt)%>%
+  ungroup()%>%
+  distinct()%>%
+  mutate(day = ymd(day))
+
+
+join <- left_join(eos,integrate)
+join <- join[complete.cases(join),]
+join$Date <- seq(1,nrow(join))
+
+join%>%
+  plot_ly()%>%
+  add_segments(x=0,y=0,xend=.25,yend=.25)%>%
+  add_markers(x = ~DailyFlux, y = ~DailyFluxInt, color = ~Date,
+              hoverinfo = "text",
+              text = ~paste("Integrated: ", DailyFluxInt, " [mol m<sup>-2</sup>d<sup>-1</sup>]<br>",
+                            "Daily Average: ", DailyFlux, " [mol m<sup>-2</sup>d<sup>-1</sup>]<br>",
+                            "Date: ", day))%>%
+  layout(xaxis = list(title = "Daily Average"),
+         yaxis = list(title = "Integrated Daily"))
+  
+
+
+  
+```
+
+
 
 ## X/Y
 ```{r xyFlux, echo=FALSE, warning=FALSE, message = FALSE, fig.width=10}
