@@ -10,7 +10,15 @@ library(gridExtra)
 
 allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
 
+try <- allstream%>%
+  select(DateTime,EC1_uS,EC2_uS,EC4_uS)%>%
+  mutate(time = lubridate::ymd_hms(DateTime))%>%
+  plot_ly()%>%
+  add_markers(x=~time,y=~EC1_uS)%>%
+  add_markers(x=~time,y=~EC2_uS)%>%
+  add_markers(x=~time,y=~EC4_uS)
 
+try
 
 
 # Let's move it to only the times the c6 was on
@@ -21,6 +29,8 @@ c6time$DateTime <- as.POSIXct(c6time$DateTime)
 #savethis 
 
 write.csv(c6time, here("c6anal/", "alldatac6times.csv"))
+
+c6time <- read.csv(here("c6anal/alldatac6times.csv"))
 
 #make a table that excludes the co2 injection entirely 
 
@@ -185,6 +195,24 @@ plot11
 ggplotly(plot11)
 
 
+plot12 <- ggplot(c6time)+
+  geom_point(aes(x= DateTime, y= DO1_mg.L), color= "#27223c")+
+  labs(y="DO mg/L", x="")
+plot12 <- plot12+ theme(axis.text.y= largernumbers, 
+                    axis.text.x=element_blank(),
+                    plot.margin=unit(c(-.25,1,-.25,1), "cm"))
+
+plot12
+
+
+plot13 <- ggplot(allstream)+
+  geom_point(aes(x= DateTime, y= EC4_uS), color= "#27223c")+
+  ggtitle("EC Station 1")+
+  labs(y="EC uS", x="")
+
+#ggplotly(plot)
+
+
 #Stacked panel with the following in this order 
 # 5 min invereted precip, discharge, CDOM, chlorophyll, turbidity, flux, station 1 co2 
 
@@ -194,12 +222,117 @@ ggplotly(plot11)
 
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot5),ggplotGrob(plot11), ggplotGrob(plot7), ggplotGrob(plot9),
-                ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot3)))  
+                ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot12), ggplotGrob(plot3)))  
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot5),ggplotGrob(plot11)))
+
+
+#attempting to combine plot 5 and plot 11
+
+testplot <- c6time %>% ggplot()+
+  geom_bar(aes(x= DateTime, y = ppt_mm), color = "#1dace8", stat="identity")+
+  labs(y="Precip (mm)", x="")+
+  ylim(.0001, .8)
+testplot <- testplot +  
+  geom_point(aes(x= DateTime, y = stn1_Q * .8/320), color = "#76a08a")
+testplot 
+
+testplot3 <- testplot + scale_y_continuous(
+  name = expression("Precip [mm]"), 
+  sec.axis = sec_axis(~ . * 320 / .8 , name = expression("Discharge"~[L~s^-1])), 
+  limits = c(0, .8)) 
+
+testplot3 <- testplot3 + theme(axis.title.x=element_blank(),axis.text.x = largernumbers)
+testplot3
 
 
 
-#grid.newpage()
-#grid.draw(rbind(ggplotGrob(plot2), ggplotGrob(plot3)))  
+grid.newpage()
+grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(plot7), ggplotGrob(plot9),
+                ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot12), ggplotGrob(plot3)))  
+
+#combine co2 and flux 
+
+combo <- c6time %>% ggplot()+
+  geom_point(aes(x= DateTime, y = Flux_1), color = "#1C366B")+
+  ylim(0, 4.1)
+combo <- combo + 
+  geom_point(aes(x= DateTime, y = V1 * 4.1/4200), color = "#cecd7b")
+combo 
+
+combo2 <- combo + scale_y_continuous(
+  name = expression("Flux~('umol'/~m^2~s^-1)"), 
+  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression("pCO"["2"]~"(ppm)")), 
+  limits = c(0, 4.1))
+ 
+combo2
+combo2 <- combo2 + theme(axis.title.x=element_blank(),axis.text.x = largernumbers)
+combo2
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
+                ggplotGrob(plot), ggplotGrob(plot2), ggplotGrob(plot12), ggplotGrob(plot3)))
+
+
+#combine turbidity and CDOM 
+
+#turbidity = plot2 
+#CDOM = plot
+#ok learned from above need to do the one that starts at 0 first, so need to do turbidity first 
+#max of turbidity is 3000
+#max of CDOM is 50 
+
+
+cute <- c6time %>% ggplot()+
+  geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")+
+  ylim(0, 3000)
+cute <- cute + 
+  geom_point(aes(x= DateTime, y= CDOM_ppb * 3000/50), color= "#27223c")
+cute
+
+
+cute2 <- cute + scale_y_continuous(
+  name = "Turbidity (NTU)", 
+  sec.axis = sec_axis(~ . * 50 / 3000 , name = "CDOM (ppb)"), 
+  limits = c(0, 3000))
+
+cute2
+cute2 <- cute2 +theme(axis.title.x=element_blank(),axis.text.x = largernumbers)
+cute2
+  
+grid.newpage()
+grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
+                ggplotGrob(cute2), ggplotGrob(plot12), ggplotGrob(plot3)))
+
+
+#combine DO and chlorophyll 
+#ok so need to try to do DO and then chlorophyll
+#DO = plot 12
+#chloro = plot3
+# DO max = 7.5 
+#chloro max 4.5
+
+bob <- c6time %>% ggplot()+
+  geom_point(aes(x= DateTime, y= DO1_mg.L), color= "#FFA500")+
+  ylim(0, 7.5)
+bob <- bob + 
+  geom_point(aes(x= DateTime, y= Chlorophylla_ug.L * 7.5/4.5), color="#2e604a")
+bob
+
+bob2 <- bob + scale_y_continuous(
+  name = "DO mg/L", 
+  sec.axis = sec_axis(~ . * 4.5 / 7.5 , name = "Chlorophyll A (ug/l)"), 
+  limits = c(0, 7.5))
+
+bob2
+
+bob2 <- bob2 + theme(axis.title.x=element_blank(),axis.text.x = largernumbers, legend.position="right") 
+bob2
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
+                ggplotGrob(cute2), ggplotGrob(bob2)))
 
 
 
