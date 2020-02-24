@@ -10,16 +10,6 @@ library(gridExtra)
 
 allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
 
-try <- allstream%>%
-  select(DateTime,EC1_uS,EC2_uS,EC4_uS)%>%
-  mutate(time = lubridate::ymd_hms(DateTime))%>%
-  plot_ly()%>%
-  add_markers(x=~time,y=~EC1_uS)%>%
-  add_markers(x=~time,y=~EC2_uS)%>%
-  add_markers(x=~time,y=~EC4_uS)
-
-try
-
 
 # Let's move it to only the times the c6 was on
 
@@ -238,14 +228,17 @@ testplot <- testplot +
   geom_point(aes(x= DateTime, y = stn1_Q * .8/320), color = "#76a08a")
 testplot 
 
+
+
 testplot3 <- testplot + scale_y_continuous(
   name = expression("Precip [mm]"), 
-  sec.axis = sec_axis(~ . * 320 / .8 , name = expression("Discharge"~[L~s^-1])), 
-  limits = c(0, .8)) 
+  sec.axis = sec_axis(~ . * 320 / .8,name = expression("Discharge"~"["~L~s^-1~"]")),
+  limits = c(0, .8))
+
 
 testplot3 <- testplot3 + theme(axis.title.x=element_blank(),axis.text.x = largernumbers)
 testplot3
-
+ 
 
 
 grid.newpage()
@@ -262,11 +255,12 @@ combo <- combo +
 combo 
 
 combo2 <- combo + scale_y_continuous(
-  name = expression("Flux~('umol'/~m^2~s^-1)"), 
-  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression("pCO"["2"]~"(ppm)")), 
+  name = expression("Flux"~"["~"umol/"~m^2~s^-1~"]"), 
+  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression("pCO"["2"]~"[ppm]")), 
   limits = c(0, 4.1))
  
-combo2
+
+
 combo2 <- combo2 + theme(axis.title.x=element_blank(),axis.text.x = largernumbers)
 combo2
 
@@ -293,8 +287,8 @@ cute
 
 
 cute2 <- cute + scale_y_continuous(
-  name = "Turbidity (NTU)", 
-  sec.axis = sec_axis(~ . * 50 / 3000 , name = "CDOM (ppb)"), 
+  name = "Turbidity [NTU]", 
+  sec.axis = sec_axis(~ . * 50 / 3000 , name = "CDOM [ppb]"), 
   limits = c(0, 3000))
 
 cute2
@@ -321,8 +315,8 @@ bob <- bob +
 bob
 
 bob2 <- bob + scale_y_continuous(
-  name = "DO mg/L", 
-  sec.axis = sec_axis(~ . * 4.5 / 7.5 , name = "Chlorophyll A (ug/l)"), 
+  name = "DO [mg/L]", 
+  sec.axis = sec_axis(~ . * 4.5 / 7.5 , name = "Chlorophyll A [ug/l]"), 
   limits = c(0, 7.5))
 
 bob2
