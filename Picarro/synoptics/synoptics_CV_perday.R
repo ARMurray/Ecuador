@@ -73,7 +73,7 @@ sumsynoptics <- rbind(july18, july31, aug06, aug12)
 
 #save this 
 
-write.csv(sumsynoptics, here("Picarro/synoptics/", "sumsynoptics_corrected.csv"))
+#write.csv(sumsynoptics, here("Picarro/synoptics/", "sumsynoptics_corrected.csv"))
 
 #select just what we need,  find the syn avg and std deviation, and the coefficient of variation and relative standard deviation 
 #save this 
@@ -85,7 +85,7 @@ july18all <- rbind(july18, july18total)
 july18all$CV <- july18all$StdDev_iCO2/july18all$CorrectedAverage
 july18all$RelativeStdDev <- 100*(july18all$StdDev_iCO2/abs(july18all$CorrectedAverage))
 
-write.csv(july18all, here("Picarro/synoptics/071819", "july18CV_statistics.csv"))
+#write.csv(july18all, here("Picarro/synoptics/071819", "july18CV_statistics.csv"))
 
 july31 <- july31 %>%
   select(Sample, Day, CorrectedAverage, StdDev_iCO2)
@@ -94,7 +94,7 @@ july31all <- rbind(july31, july31total)
 july31all$CV <- july31all$StdDev_iCO2/july31all$CorrectedAverage
 july31all$RelativeStdDev <- 100*(july31all$StdDev_iCO2/abs(july31all$CorrectedAverage))
 
-write.csv(july31all, here("Picarro/synoptics/073119", "july31CV_statistics.csv"))
+#write.csv(july31all, here("Picarro/synoptics/073119", "july31CV_statistics.csv"))
 
 
 aug06 <- aug06 %>%
@@ -104,7 +104,7 @@ aug06all <- rbind(aug06, aug06total)
 aug06all$CV <- aug06all$StdDev_iCO2/aug06all$CorrectedAverage
 aug06all$RelativeStdDev <- 100*(aug06all$StdDev_iCO2/abs(aug06all$CorrectedAverage))
 
-write.csv(aug06all, here("Picarro/synoptics/080619", "aug06CV_statistics.csv"))
+#write.csv(aug06all, here("Picarro/synoptics/080619", "aug06CV_statistics.csv"))
 
 aug12 <- aug12 %>%
   select(Sample, Day, CorrectedAverage, StdDev_iCO2)
@@ -113,7 +113,7 @@ aug12all <- rbind(aug12, aug12total)
 aug12all$CV <- aug12all$StdDev_iCO2/aug12all$CorrectedAverage
 aug12all$RelativeStdDev <- 100*(aug12all$StdDev_iCO2/abs(aug12all$CorrectedAverage))
 
-write.csv(aug12all, here("Picarro/synoptics/071819", "aug12CV_statistics.csv"))
+#write.csv(aug12all, here("Picarro/synoptics/071819", "aug12CV_statistics.csv"))
 
 #alright now let's combine these all together 
 
@@ -121,7 +121,7 @@ allsynCV <- rbind(july18all, july31all, aug06all, aug12all)
 
 #save this 
 
-write.csv(allsynCV, here("Picarro/synoptics", "allsynCV_statscorrected.csv"))
+#write.csv(allsynCV, here("Picarro/synoptics", "allsynCV_statscorrected.csv"))
 
 #ok now let's do plots per day with the error bars using the corrected distance 
 
@@ -136,11 +136,11 @@ july18all <- cbind(july18all, dis)
 
 #version with waterfall 
 plot <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage)) + 
-  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
-  scale_color_viridis(option = "B", discrete = TRUE)+
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=1,  color="#CC7987") +
+  #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 18th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "right") +
   geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
 plot
 
@@ -167,11 +167,11 @@ july31all <- cbind(july31all, dis)
 
 #version with waterfall 
 plot3 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage)) + 
-  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
-  scale_color_viridis(option = "B", discrete = TRUE)+
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=1, color="blue") +
+  #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 31th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "right")  +
   geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
 plot3
 
@@ -197,11 +197,11 @@ aug06all <- cbind(aug06all, dis2)
 
 #version with waterfall 
 plot5 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage)) + 
-  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
-  scale_color_viridis(option = "B", discrete = TRUE)+
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=1, color = '#D55E00') +
+  #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 6th")+
   labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  theme(legend.position = "right") +
   geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
 plot5
 
@@ -227,11 +227,11 @@ aug12all <- cbind(aug12all, dis)
 
 #version with waterfall 
 plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) + 
-  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
-  scale_color_viridis(option = "B", discrete = TRUE)+
+  geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=1, color= '#009E73') +
+  #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 12th")+
-  labs(x="Distance from Wetland (m)", y="Delta_i")+
-  theme(legend.position = "right")+
+  labs(x="Distance from Wetland (m)", y="Delta_i") +
+  theme(legend.position = "right") +
   geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
 plot7
 
@@ -259,6 +259,13 @@ legend <- get_legend(plot8)
 
 #grid.arrange(plot2, plot4, plot6, plot8, legend, nrow=4, ncol=2)
 
-grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), legend, ncol = 2, 
+#grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), legend, ncol = 2, 
+             widths = c(2.8, .4))
+
+
+#grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), ncol = 2, 
+             widths = c(2.8, .4))
+
+grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4), ncol = 2, 
              widths = c(2.8, .4))
 
