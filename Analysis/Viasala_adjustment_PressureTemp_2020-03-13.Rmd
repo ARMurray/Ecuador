@@ -1,0 +1,282 @@
+---
+title: "Viasala_adjustment_PressureTemp_2020-03-13"
+author: "Kriddie"
+date: "3/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Adjust Viasala readings for pressure and temperature
+
+viasala readings need to be corrected for pressure and temperature:
+ Temperature dependence: -0.3% of reading / celcius (reference 25c/77F)
+ Pressure dependence: +0.15% of reading / hPa (reference 1013hPa)
+
+#read in data Viasala
+```{r cars}
+library(here)
+#viasala readings need to be corrected for pressure and temperature:
+# Temperature dependence: -0.3% of reading / celcius (reference 25c/77F)
+# Pressure dependence: +0.15% of reading / hPa (reference 1013hPa)
+
+#for temperature, we use the water level
+#for pressure we use barometric pressure and water level
+
+All_Stream_Data <- read.csv(here::here("/data_4_analysis/All_Stream_Data.csv"))
+
+viasala <- All_Stream_Data[,c("DateTime","Inj","V1","V2","V3","V4")]
+viasala$DateTime <- as.POSIXct(viasala$DateTime, format="%Y-%m-%d %H:%M:%S", tz='Etc/GMT+5')
+
+```
+
+read in baro data
+
+```{r baro, echo=FALSE}
+
+#Baro
+Baro <- read.csv(here::here("/FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv"),skip=10, header = TRUE, sep = ",",
+                            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+Baro$DateTime=paste(Baro$Date, Baro$Time)
+Baro$DateTime=mdy_hms(Baro$DateTime, tz='Etc/GMT+5')
+Baro$DateTime <- as.POSIXct(Baro$DateTime, format="%Y-%m-%d %H:%M:%S", tz='Etc/GMT+5')
+
+#1 kPa = 10 hPa
+#1 kPa = 0.101972 m
+
+Baro$Air_Pressure_hPa <- Baro$LEVEL * 10
+
+```
+
+use water level for pressure
+```{r Water level, include=FALSE}
+#Water level
+Lvl_stn1 <- read.csv(here::here("/FieldData/LevelLogger/Last_Collection/lvlgr_stn1_2019-08-14.csv"),skip=11, header = TRUE, sep = ",",
+                 quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+Lvl_stn1$DateTime=paste(Lvl_stn1$Date, Lvl_stn1$Time)
+Lvl_stn1$DateTime=mdy_hms(Lvl_stn1$DateTime, tz='Etc/GMT+5')
+Lvl_stn1$DateTime <- as.POSIXct(Lvl_stn1$DateTime, format="%Y-%m-%d %H:%M:%S", tz='Etc/GMT+5')
+#origional data recorded in m
+Lvl_stn1$Stn1_Pressure_hPa <- Lvl_stn1$LEVEL / 0.101972 * 10
+Lvl_stn1$Temp_c_lvl1 = Lvl_stn1$TEMPERATURE
+
+Lvl_stn3 <- read.csv(here::here("/FieldData/LevelLogger/Last_Collection/lvlgr_stn3_2019-08-14.csv"),skip=11, header = TRUE, sep = ",",
+                     quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+Lvl_stn3$DateTime=paste(Lvl_stn3$Date, Lvl_stn3$Time)
+Lvl_stn3$DateTime=mdy_hms(Lvl_stn3$DateTime, tz='Etc/GMT+5')
+Lvl_stn3$DateTime <- as.POSIXct(Lvl_stn3$DateTime, format="%Y-%m-%d %H:%M:%S", tz='Etc/GMT+5')
+#origional data recorded in kPa
+Lvl_stn3$Stn3_Pressure_hPa <- Lvl_stn3$LEVEL * 10
+Lvl_stn3$Temp_c_lvl3 = Lvl_stn3$TEMPERATURE
+```
+
+read in EC for temp data
+```{r EC, echo=FALSE}
+
+#temp data from EC at stations 1, 2, and 4 
+EC_stn1 <- read.csv(here::here("/FieldData/EC/Last_Collection/EC1_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                     quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+EC_stn1 <- EC_stn1[,2:4]
+colnames(EC_stn1)=c("DateTime", "EC_stn1", "Temp_c_EC1")
+EC_stn1$Temp_c_EC1 <- (EC_stn1$Temp_c_EC1 - 32) / 1.8 
+EC_stn1$DateTime <- as.POSIXct(EC_stn1$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+EC_stn2 <- read.csv(here::here("/FieldData/EC/Last_Collection/EC2_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                    quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+EC_stn2 <- EC_stn2[,2:4]
+colnames(EC_stn2)=c("DateTime", "EC_stn2", "Temp_c_EC2")
+EC_stn2$Temp_c_EC2 <- (EC_stn2$Temp_c_EC2 - 32) / 1.8
+EC_stn2$DateTime <- as.POSIXct(EC_stn2$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+EC_stn4 <- read.csv(here::here("/FieldData/EC/Last_Collection/EC3_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                    quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+EC_stn4 <- EC_stn4[,2:4]
+colnames(EC_stn4)=c("DateTime", "EC_stn4", "Temp_c_EC4")
+EC_stn4$Temp_c_EC4 <- (EC_stn4$Temp_c_EC4 - 32) / 1.8
+EC_stn4$DateTime <- as.POSIXct(EC_stn4$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+
+```
+
+```{r DO, echo=FALSE}
+#temp data from DO at stations 1, 2, and 4 
+DO_stn1 <- read.csv(here::here("/FieldData/DO/Last_Collection/DO_1_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                    quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+DO_stn1 <- DO_stn1[,2:4]
+colnames(DO_stn1)=c("DateTime", "DO_stn1", "Temp_c_DO1")
+DO_stn1$Temp_c_DO1 <- (DO_stn1$Temp_c_DO1 - 32) / 1.8 
+DO_stn1$DateTime <- as.POSIXct(DO_stn1$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+DO_stn2 <- read.csv(here::here("/FieldData/DO/Last_Collection/DO_2_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                    quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+DO_stn2 <- DO_stn2[,2:4]
+colnames(DO_stn2)=c("DateTime", "DO_stn2", "Temp_c_DO2")
+DO_stn2$Temp_c_DO2 <- (DO_stn2$Temp_c_DO2 - 32) / 1.8 
+DO_stn2$DateTime <- as.POSIXct(DO_stn2$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+DO_stn4 <- read.csv(here::here("/FieldData/DO/Last_Collection/DO_3_2019-08-14.csv"),skip=1, header = TRUE, sep = ",",
+                    quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+DO_stn4 <- DO_stn4[,2:4]
+colnames(DO_stn4)=c("DateTime", "DO_stn4", "Temp_c_DO4")
+DO_stn4$Temp_c_DO3 <- (DO_stn4$Temp_c_DO4 - 32) / 1.8
+DO_stn4$DateTime <- as.POSIXct(DO_stn4$DateTime, format="%m/%d/%y %I:%M:%S %p", tz='Etc/GMT+5')
+
+
+```
+
+#Create Station Dataframes
+
+Station 1: viasala 1
+
+```{r viasala stn1, echo=FALSE}
+
+a1 <- viasala[,c("DateTime","V1")]
+
+```
+
+Station 1 pressure from lvl logger 1
+
+```{r Lvl_stn1, echo=FALSE}
+
+b1 <- Lvl_stn1[,c("DateTime", "Stn1_Pressure_hPa")]
+
+```
+
+Station 1 lots of work needed here to get best temperature
+
+```{r DO, echo=FALSE}
+#Station 1: viasala, temp, and pressure
+c1 <- Lvl_stn1[,c("DateTime","Temp_c_lvl1")]
+d1 <- EC_stn1[,c("DateTime","Temp_c_EC1")]
+e1 <- DO_stn1[,c("DateTime","Temp_c_DO1")]
+temp.df.stn1 <- merge(x=c1,y=d1,by="DateTime",all=TRUE)
+temp.df.stn1 <- merge(x=temp.df.stn1,y=e1,by="DateTime",all=TRUE)
+temp.df.stn1$Temp_c_Stn1Mean <- NA
+
+temp.df.stn1[is.na(temp.df.stn1)] <- 0
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_EC1"] == 0 & temp.df.stn1[i,"Temp_c_DO1"] == 0 & temp.df.stn1[i,"Temp_c_lvl1"] ==0 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <- NA 
+  }}
+temp.df.stn1 <- na.omit(temp.df.stn1) 
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_EC1"] == 0 & temp.df.stn1[i,"Temp_c_DO1"] == 0 & temp.df.stn1[i,"Temp_c_lvl1"]>0 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <- temp.df.stn1[i,"Temp_c_lvl1"] 
+  }}
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_lvl1"] == 0 & temp.df.stn1[i,"Temp_c_DO1"] == 0 & temp.df.stn1[i,"Temp_c_EC1"]>0 ){ 
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <- temp.df.stn1[i,"Temp_c_EC1"] 
+  }}
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_EC1"] == 0 & temp.df.stn1[i,"Temp_c_lvl1"] == 0 & temp.df.stn1[i,"Temp_c_DO1"]>0 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <- temp.df.stn1[i,"Temp_c_DO1"] 
+  }}
+
+temp.df.stn1$P_ERROR_Lvl1Ec1 <- abs( temp.df.stn1$Temp_c_lvl1 - temp.df.stn1$Temp_c_EC1)/ temp.df.stn1$Temp_c_lvl1
+temp.df.stn1$P_ERROR_Lvl1Do1 <- abs( temp.df.stn1$Temp_c_lvl1 - temp.df.stn1$Temp_c_DO1)/ temp.df.stn1$Temp_c_lvl1
+temp.df.stn1$P_ERROR_Do1Ec1 <- abs( temp.df.stn1$Temp_c_DO1 - temp.df.stn1$Temp_c_EC1)/ temp.df.stn1$Temp_c_DO1
+temp.df.stn1[is.na(temp.df.stn1)] <- 1
+
+temp.df.stn1$Temp_c_LvlEcDo  <- rowMeans(temp.df.stn1[c("Temp_c_lvl1","Temp_c_EC1","Temp_c_DO1")], na.rm=TRUE)
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] < 0.1 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.1 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] < 0.1 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlEcDo"]
+  }} 
+
+temp.df.stn1$Temp_c_EcDo  <- rowMeans(temp.df.stn1[c("Temp_c_EC1","Temp_c_DO1")], na.rm=TRUE)
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] > 0.1 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] > 0.1 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] < 0.1 ){
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_EcDo"]
+  }} 
+
+temp.df.stn1$Temp_c_LvlDo  <- rowMeans(temp.df.stn1[c("Temp_c_lvl1","Temp_c_DO1")], na.rm=TRUE)
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] > 0.15 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.15 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] > 0.15 ){ 
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlDo"]
+  }} 
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] > 0.1 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.1 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] > 0.1 ){ 
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlDo"]
+  }} 
+
+temp.df.stn1$Temp_c_LvlEc  <- rowMeans(temp.df.stn1[c("Temp_c_lvl1","Temp_c_EC1")], na.rm=TRUE)
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] < 0.1 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] > 0.1 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] > 0.1 ){ 
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlEc"]
+  }} 
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] > 0.15 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.15 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] > 0.15 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlEc"]
+  }} 
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] < 0.15 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.15 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] < 0.15 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_LvlEcDo"]
+  }} 
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] < 0.10 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.10 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_lvl1"]
+  }} 
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.10 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] < 0.10 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_DO1"]
+  }} 
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] < 0.10 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] < 0.10 ){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_DO1"]
+  }} 
+
+for( i in 1:nrow(temp.df.stn1)){
+  if(temp.df.stn1[i,"Temp_c_Stn1Mean"] == 0 & temp.df.stn1[i,"P_ERROR_Lvl1Do1"] > 0.10 & temp.df.stn1[i,"P_ERROR_Do1Ec1"] > 0.10 & temp.df.stn1[i,"P_ERROR_Lvl1Ec1"] > 0.15){  
+    temp.df.stn1[i,"Temp_c_Stn1Mean"]  <-   temp.df.stn1[i,"Temp_c_lvl1"]
+  }} 
+
+
+temp.df.stn1 <- temp.df.stn1[,c("DateTime","Temp_c_Stn1Mean")]
+
+stn1_check <- subset(temp.df.stn1,
+                     Temp_c_Stn1Mean == 0 )
+
+
+
+stn1 <- merge(x=a1,y=b1,by="DateTime",all=TRUE)
+stn1 <- merge(x=stn1,y=c1,by="DateTime",all=TRUE)
+stn1 <- merge(x=stn1,y=d1,by="DateTime",all=TRUE)
+
+
+
+```
+
+#station 1 dataframe
+```{r stn1 df, echo=FALSE}
+
+
+stn1 <- merge(x=a1,y=b1,by="DateTime",all=TRUE)
+stn1 <- merge(x=stn1,y=temp.df.stn1,by="DateTime",all=TRUE)
+
+
+stn1 <- subset(stn1, DateTime > as.POSIXct('2019-07-09 12:15:00', tz='Etc/GMT+5') )
+
+
+#stn1 <- subset(stn1, V1 != "NA" & Stn1_Pressure_hPa != "NA" & Temp_c_Stn1Mean != "NA")
+stn1 <- stn1[rowSums(is.na(stn1[ , 2:4])) == 0, ]
+stn1 <- stn1[complete.cases(stn1[ , 2:4]),]
+
+```
+
+
+
+```{r DO, echo=FALSE}
+
+
+
+```
