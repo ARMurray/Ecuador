@@ -126,9 +126,10 @@ DO_stn4$DateTime <- as.POSIXct(DO_stn4$DateTime, format="%m/%d/%y %I:%M:%S %p", 
 
 ```
 
-#Create Station Dataframes
+##Create Station Dataframes
 
-Station 1: viasala 1
+#Station 1: 
+viasala 1
 
 ```{r viasala stn1, echo=FALSE}
 
@@ -145,6 +146,7 @@ b1 <- Lvl_stn1[,c("DateTime", "Stn1_Pressure_hPa")]
 ```
 
 Station 1 lots of work needed here to get best temperature
+use percent error to choose wich loggers are averaged to find best estimate of true temperature
 
 ```{r DO, echo=FALSE}
 #Station 1: viasala, temp, and pressure
@@ -243,40 +245,100 @@ for( i in 1:nrow(temp.df.stn1)){
 
 temp.df.stn1 <- temp.df.stn1[,c("DateTime","Temp_c_Stn1Mean")]
 
-stn1_check <- subset(temp.df.stn1,
-                     Temp_c_Stn1Mean == 0 )
-
-
-
-stn1 <- merge(x=a1,y=b1,by="DateTime",all=TRUE)
-stn1 <- merge(x=stn1,y=c1,by="DateTime",all=TRUE)
-stn1 <- merge(x=stn1,y=d1,by="DateTime",all=TRUE)
-
-
 
 ```
 
 #station 1 dataframe
 ```{r stn1 df, echo=FALSE}
 
-
+#merge pressure, viasala and temp dataframes
 stn1 <- merge(x=a1,y=b1,by="DateTime",all=TRUE)
 stn1 <- merge(x=stn1,y=temp.df.stn1,by="DateTime",all=TRUE)
 
+#remove rows in which V1, pressure and temp are all NA
+stn1 <- stn1[which(rowMeans(!is.na(stn1)) > .6), ]
 
-stn1 <- subset(stn1, DateTime > as.POSIXct('2019-07-09 12:15:00', tz='Etc/GMT+5') )
+#clean up
+rm(a1)
+rm(b1)
+rm(c1)
+rm(d1)
+rm(e1)
+rm(EC_stn1)
+rm(DO_stn1)
+rm(temp.df.stn1)
+
+```
 
 
-#stn1 <- subset(stn1, V1 != "NA" & Stn1_Pressure_hPa != "NA" & Temp_c_Stn1Mean != "NA")
-stn1 <- stn1[rowSums(is.na(stn1[ , 2:4])) == 0, ]
-stn1 <- stn1[complete.cases(stn1[ , 2:4]),]
+#Station 2: 
+viasala 2
+
+```{r viasala stn2, echo=FALSE}
+
+a2 <- viasala[,c("DateTime","V2")]
+
+```
+Station 2 pressure 
+use average of pressure from lvl 1 and lvl 3
+
+```{r pressure stn2, echo=FALSE}
+
+b2.1 <- Lvl_stn1[,c("DateTime", "Stn1_Pressure_hPa")]
+b2.2 <- Lvl_stn3[,c("DateTime", "Stn3_Pressure_hPa")]
+b2 <- merge(x=b2.1,y=b2.2,by="DateTime",all=TRUE)
+b2$Stn2_Pressure_hPa <- rowMeans(b2[c('Stn1_Pressure_hPa', 'Stn1_Pressure_hPa')], na.rm=TRUE)
+b2 <- b2[,c("DateTime","Stn2_Pressure_hPa")]
+
+rm(b2.1)
+rm(b2.2)
+```
+
+station 2 temp
+
+
+```{r temp stn2, echo=FALSE}
+#Station 1: viasala, temp, and pressure
+d2 <- EC_stn2[,c("DateTime","Temp_c_EC2")]
+e2 <- DO_stn2[,c("DateTime","Temp_c_DO2")]
+
+temp.df.stn2 <- merge(x=d2,y=e2,by="DateTime",all=TRUE)
+temp.df.stn2 <- merge(x=temp.df.stn2,y=stn1_temp,by="DateTime",all=TRUE)
+temp.df.stn2$Temp_c_Stn2Mean <-  rowMeans(temp.df.stn2[c('Temp_c_EC2', 'Temp_c_DO2')], na.rm=TRUE)
+
+temp.df.stn2 <- temp.df.stn2[,c("DateTime","Temp_c_Stn2Mean")]
+
+#use temperature data from stn1 to fill times before EC and DO installed
+stn1_temp <- subset(stn1, DateTime < as.POSIXct('2019-07-15 13:30:00', tz='Etc/GMT+5'))
+stn1_temp <- stn1_temp[,c("DateTime","Temp_c_Stn1Mean")]
+names(stn1_temp) <- c("DateTime","Temp_c_Stn2Mean")
+
+temp.df.stn2 <- rbind(stn1_temp,temp.df.stn2)
+
+```
+
+#station 2 dataframe
+```{r stn2 df, echo=FALSE}
+
+#merge pressure, viasala and temp dataframes
+stn2 <- merge(x=a2,y=b2,by="DateTime",all=TRUE)
+stn2 <- stn2[which(rowMeans(!is.na(stn2)) > 1/3), ]
+stn2 <- merge(x=stn2,y=temp.df.stn2,by="DateTime",all=TRUE)
+
+#remove rows in which V1, pressure and temp are all NA
+stn2 <- stn2[which(rowMeans(!is.na(stn2)) > .6), ]
+
+#clean up
+rm(a2)
+rm(b2)
+rm(d2)
+rm(e1)
+rm(EC_stn2)
+rm(DO_stn2)
+rm(stn1_temp)
+rm(temp.df.stn2)
 
 ```
 
 
 
-```{r DO, echo=FALSE}
-
-
-
-```
