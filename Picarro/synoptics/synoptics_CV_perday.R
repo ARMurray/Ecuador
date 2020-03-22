@@ -140,7 +140,9 @@ plot <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage)) +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 18th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12))+
+  theme_bw() + 
+  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -173,7 +175,9 @@ plot3 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage)) +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 31th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12))+
+  theme_bw() + 
+  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -205,7 +209,9 @@ plot5 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage)) +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 6th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12))+
+  theme_bw() + 
+  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)+
@@ -238,7 +244,10 @@ plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 12th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12))+
+  theme_bw() + 
+  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
+        axis.title.y = element_text(face = "bold"),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -277,4 +286,17 @@ legend <- get_legend(plot8)
 
 grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4), ncol = 2, 
              widths = c(2.8, .4))
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot3),
+                ggplotGrob(plot5), ggplotGrob(plot7)))
+
+
+
+
+
+plot
+plot3
+plot5
+plot7
 

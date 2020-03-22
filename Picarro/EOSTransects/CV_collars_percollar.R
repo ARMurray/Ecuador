@@ -349,7 +349,10 @@ plot8
 grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4, nrow=2),
              legend, ncol=2, widths = c(2.8, .4))
 
+grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
 
+grid.newpage()
+grid.draw(rbind(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
  
 # need to do dry --> wet color scheme col 5 most blue. col 1 and 8 most dry 
 
