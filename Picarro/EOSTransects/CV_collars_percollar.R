@@ -337,6 +337,7 @@ plot8 <- ggplot(col8, aes(x= day, y= CorrectedAverage, color=day)) +
   ylim(-18.2,-9)
 plot8
 
+
 #orange - #de7f00, #e69200
 #red #ef0000
 #darker blue #2d88a4
@@ -347,7 +348,7 @@ plot8
 #initial try of them going together 
 
 grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4, nrow=2),
-             legend, ncol=2, widths = c(2.8, .4))
+             ncol=2, widths = c(2.8, .4))
 
 grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
 
@@ -355,4 +356,48 @@ grid.newpage()
 grid.draw(rbind(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
  
 # need to do dry --> wet color scheme col 5 most blue. col 1 and 8 most dry 
+
+
+#ok, here's what we want now, we want collars 8,7,1,2 on the same plot 
+#let's start by trying to get 8 and 7 together
+
+
+plot7.2 <- ggplot(col7, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col7, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color="green")
+
+plot7.2 <- plot7.2 + geom_point(col8, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col8, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color="red")
+
+plotdry <- plot7.2 + geom_point(col1, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col1, mapping =aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color = "purple") 
+
+
+plotdry  
+
+plotdry <- plotdry + geom_point(col2, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col2, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color ="orange") 
+  
+  
+  
+plotdry <- plotdry + ggtitle("Unsaturated")+
+  labs(x="day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(legend.position = "none",
+        axis.title.y=element_blank(),
+        axis.text.x =element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+        plot.title = element_text(margin = margin(t= 10, b = -20))+
+  ylim(-18.2,-9)
+        
+plotdry
+
+
+
+
 
