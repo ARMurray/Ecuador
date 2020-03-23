@@ -359,45 +359,89 @@ grid.draw(rbind(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
 
 
 #ok, here's what we want now, we want collars 8,7,1,2 on the same plot 
-#let's start by trying to get 8 and 7 together
+#this is unsaturated 
 
 
 plot7.2 <- ggplot(col7, mapping=aes(x= day, y= CorrectedAverage)) + 
-  geom_pointrange(col7, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color="green")
+  geom_pointrange(col7, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#6e8b3d", shape=1)
+
 
 plot7.2 <- plot7.2 + geom_point(col8, mapping=aes(x= day, y= CorrectedAverage)) + 
-  geom_pointrange(col8, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color="red")
+  geom_pointrange(col8, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#6e8b3d", shape=4)
 
 plotdry <- plot7.2 + geom_point(col1, mapping=aes(x= day, y= CorrectedAverage)) + 
-  geom_pointrange(col1, mapping =aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color = "purple") 
+  geom_pointrange(col1, mapping =aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color = "#6e8b3d", shape=6) 
 
 
 plotdry  
 
 plotdry <- plotdry + geom_point(col2, mapping=aes(x= day, y= CorrectedAverage)) + 
-  geom_pointrange(col2, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color ="orange") 
+  geom_pointrange(col2, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color ="#6e8b3d", shape=9) 
   
   
   
 plotdry <- plotdry + ggtitle("Unsaturated")+
-  labs(x="day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme_bw()+
-  theme(legend.position = "none",
-        axis.title.y=element_blank(),
-        axis.text.x =element_blank(),
-        axis.title.x=element_blank(),
-        axis.text.y=element_blank(),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-        plot.title = element_text(margin = margin(t= 10, b = -20))+
-  ylim(-18.2,-9)
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers, axis.title.x=largernumbers,
+        axis.text.y=largernumbers, axis.title.y=largernumbers)
+plot.title = element_text(margin = margin(t= 10, b = -20))
+
+        
+plotdry <- plotdry +  ylim(-18.2,-9)
         
 plotdry
 
+#saturated 
+#we need plots 3,4,5,6
+
+largernumbers <- element_text(face = "bold", size = 10)
 
 
+plotwet <- ggplot(col3, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col3, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=16)
+
+
+plotwet <- plotwet + geom_point(col4, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col4, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=15)
+
+
+
+
+
+plotwet <- plotwet + geom_point(col5, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col5, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=17)
+  
+plotwet <- plotwet + geom_point(col6, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col6, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=18)
+  
+
+plotwet
+
+plotwet <- plotwet + ggtitle("Saturated")+
+  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers, axis.title.x=largernumbers,
+        axis.text.y=largernumbers, axis.title.y=largernumbers)
+plot.title = element_text(margin = margin(t= 10, b = -20))
+
+plotwet
+
+
+plotwet <- plotwet +  ylim(-18.2,-9)
+
+grid.arrange(arrangeGrob(plotdry, plotwet, nrow=2), ncol = 1)
+             
+             
+             , 
+             widths = c(, .2))
 
 
