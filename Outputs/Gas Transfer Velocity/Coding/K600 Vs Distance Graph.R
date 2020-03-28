@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyverse)
 library(plotly)
 library(scales)
+library(here)
 
 ##Uploading K600 Total
 K600Total<-read.csv("C:/Users/nehemiah/Documents/CarbonShed Lab/Gas Transfer Velocity/Outputs/Outputs/Gas Transfer Velocity/Raymond Method/Raymond Method Total.csv")
