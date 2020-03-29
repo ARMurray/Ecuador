@@ -167,7 +167,8 @@ get_legend<-function(myggplot){
 
 largernumbers <- element_text(face = "bold", size = 12)
 largernumbers2 <- element_text(face = "bold", size = 10)
-legend <- get_legend(plot1)
+legend <- get_legend(plotdry)
+legend
 
 
 #collar 1 
@@ -381,7 +382,7 @@ plotdry <- plotdry + geom_point(col2, mapping=aes(x= day, y= CorrectedAverage)) 
   
   
 plotdry <- plotdry + ggtitle("Unsaturated")+
-  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
@@ -420,7 +421,7 @@ plotwet <- plotwet + geom_point(col6, mapping=aes(x= day, y= CorrectedAverage)) 
 plotwet
 
 plotwet <- plotwet + ggtitle("Saturated")+
-  labs(x="Day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
@@ -430,14 +431,25 @@ plotwet <- plotwet + ggtitle("Saturated")+
         axis.text.y=largernumbers, axis.title.y=largernumbers)
 plot.title = element_text(margin = margin(t= 10, b = -20))
 
-plotwet
+
 
 
 plotwet <- plotwet +  ylim(-18.2,-9)
 
-grid.arrange(arrangeGrob(plotdry, plotwet, nrow=2), ncol = 1)
+grid.arrange(arrangeGrob(plotdry, plotwet, legend, nrow=2), ncol = 1)
              
-             
+
+
+
+
+
+
+
+
+
+
+
+
 #getting .csv for diego to run tests 
 
 allcollar <- rbind(col1,col2,col3,col4,col6,col7,col8)
