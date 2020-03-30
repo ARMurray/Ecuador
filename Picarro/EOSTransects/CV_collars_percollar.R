@@ -167,8 +167,7 @@ get_legend<-function(myggplot){
 
 largernumbers <- element_text(face = "bold", size = 12)
 largernumbers2 <- element_text(face = "bold", size = 10)
-legend <- get_legend(plotdry)
-legend
+
 
 
 #collar 1 
@@ -431,13 +430,16 @@ plotwet <- plotwet + ggtitle("Saturated")+
         axis.text.y=largernumbers, axis.title.y=largernumbers)
 plot.title = element_text(margin = margin(t= 10, b = -20))
 
-
-
-
 plotwet <- plotwet +  ylim(-18.2,-9)
+plotwet
 
-grid.arrange(arrangeGrob(plotdry, plotwet, legend, nrow=2), ncol = 1)
+legend <- get_legend(plotdry)
+legend
+
+grid.arrange(arrangeGrob(plotdry, plotwet, nrow=2), ncol = 1)
              
+
+
 
 
 
