@@ -165,8 +165,8 @@ get_legend<-function(myggplot){
   return(legend)
 }
 
-largernumbers <- element_text(face = "bold", size = 12)
-largernumbers2 <- element_text(face = "bold", size = 10)
+largernumbers <- element_text(face = "bold", size = 14)
+largernumbers2 <- element_text(face = "bold", size = 12)
 
 
 
@@ -387,9 +387,9 @@ plotdry <- plotdry + ggtitle("Unsaturated")+
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers, axis.title.x=largernumbers,
-        axis.text.y=largernumbers, axis.title.y=largernumbers)
-plot.title = element_text(margin = margin(t= 10, b = -20))
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(), plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
+
 
         
 plotdry <- plotdry +  ylim(-18.2,-9)
@@ -426,25 +426,42 @@ plotwet <- plotwet + ggtitle("Saturated")+
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers, axis.title.x=largernumbers,
-        axis.text.y=largernumbers, axis.title.y=largernumbers)
-plot.title = element_text(margin = margin(t= 10, b = -20))
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
+
 
 plotwet <- plotwet +  ylim(-18.2,-9)
 plotwet
 
-legend <- get_legend(plotdry)
-legend
+
+
 
 grid.arrange(arrangeGrob(plotdry, plotwet, nrow=2), ncol = 1)
              
 
 
+unsat <- unsat[order(unsat$Sample),]
+
+plotwet2 <- ggplot(unsat, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(unsat, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), group=unsat$Sample, size=.7, color="#a1ce5a", 
+                  shape=unsat$Sample)+scale_shape_manual(values=c(16,15,18))
+plotwet2
 
 
+plotwet2 <- plotwet2 + ggtitle("Saturated")+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))+
+ 
 
 
-
+plotwet2 <- plotwet2 +  ylim(-18.2,-9)
+plotwet2
 
 
 
