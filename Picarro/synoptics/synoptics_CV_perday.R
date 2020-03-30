@@ -295,8 +295,10 @@ legend <- get_legend(plot8)
 #grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), ncol = 2, 
              widths = c(2.8, .4))
 
-grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4), ncol = 2, 
-             widths = c(2.8, .4))
+label <- as.expression(expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
+
+grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4),bottom=(bold("Distance from Wetland [m]")),
+             left=bquote(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
 
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot3),
