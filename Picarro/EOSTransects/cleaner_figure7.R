@@ -42,10 +42,10 @@ largernumbers2 <- element_text(face = "bold", size = 12)
 allcollar <- rbind(col1,col2,col3,col4,col6,col7,col8)
 allcollar <- allcollar[order(allcollar$Sample),]
 
-unsat <- rbind(col1,col2,col3,col4)
+unsat <- rbind(col1,col2,col7,col8)
 unsat <- unsat[order(unsat$Sample),]
 
-sat <- rbind(col6,col7,col8)
+sat <- rbind(col3,col4,col6)
 sat <- sat[order(sat$Sample),]
 
 #unsaturated plot 
@@ -80,7 +80,7 @@ plotwet2 <- ggplot(sat) +
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=largernumbers,
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2,axis.title.x = element_blank(),
         axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))+
   ylim(-18.2,-9)
 plotwet2

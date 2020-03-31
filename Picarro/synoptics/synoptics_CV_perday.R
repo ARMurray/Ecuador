@@ -33,11 +33,11 @@ dis23 <- 75.9
 
 dis20 <- 94.1 
 
-waterfalldis <- 126 
+waterfalldis <- 124.2 
 
 dis14 <- 143.7 
 
-dis11 <- 169.9 
+dis11 <- 170.0 
 
 dis8 <- 194.9 
 
@@ -87,6 +87,8 @@ july18all$RelativeStdDev <- 100*(july18all$StdDev_iCO2/abs(july18all$CorrectedAv
 
 #write.csv(july18all, here("Picarro/synoptics/071819", "july18CV_statistics.csv"))
 
+test <- read.csv(here("Picarro/synoptics/sumsynoptics_corrected.csv"))
+
 july31 <- july31 %>%
   select(Sample, Day, CorrectedAverage, StdDev_iCO2)
 july31total <- data.frame("Sample"= "Total", "Day" = "total", "CorrectedAverage" = mean(july31$CorrectedAverage), "StdDev_iCO2" = sd(july31$CorrectedAverage))
@@ -113,7 +115,7 @@ aug12all <- rbind(aug12, aug12total)
 aug12all$CV <- aug12all$StdDev_iCO2/aug12all$CorrectedAverage
 aug12all$RelativeStdDev <- 100*(aug12all$StdDev_iCO2/abs(aug12all$CorrectedAverage))
 
-#write.csv(aug12all, here("Picarro/synoptics/071819", "aug12CV_statistics.csv"))
+#write.csv(aug12all, here("Picarro/synoptics/081219", "aug12CV_statistics.csv"))
 
 #alright now let's combine these all together 
 

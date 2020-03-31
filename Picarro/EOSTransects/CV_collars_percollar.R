@@ -481,10 +481,10 @@ write.csv(allcollar, here("Picarro/EOSTransects/" , "allcollarfordiego.csv"))
 
 #table of unsaturated 
 
-unsat <- rbind(col1,col2,col3,col4)
+unsat <- rbind(col1,col2,col7,col8)
 unsat <- unsat[order(unsat$day),]
 
-sat <- rbind(col6,col7,col8)
+sat <- rbind(col3,col4,col6)
 sat <- sat[order(sat$day),]
 
 Aug02 <- data.frame("Sample"= "unsaturated", "day"="Aug02", "Average"= 
