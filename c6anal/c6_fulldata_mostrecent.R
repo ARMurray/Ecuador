@@ -15,12 +15,13 @@ allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
 
 c6time <- allstream[c(3841:6705),]
 
-c6time$DateTime <- as.POSIXct(c6time$DateTime)
+c6time$DateTime <- as.POSIXct(c6time$DateTime, tryFormats=c("%m/%d/%Y %H:%M"))
 #savethis 
 
 write.csv(c6time, here("c6anal/", "alldatac6times.csv"))
 
 c6time <- read.csv(here("c6anal/alldatac6times.csv"))
+c6time$DateTime <- as.POSIXct(c6time$DateTime, tryFormats=c("%Y-%m-%d %H:%M:%OS"))
 
 #make a table that excludes the co2 injection entirely 
 
@@ -40,7 +41,7 @@ largernumbers3 <- element_text(face = "bold", size = 12)
 largernumbers2 <- element_text(size = 8)
 largertitle <- element_text(size = 12)
 
-testtitle <- element_text("expression("Flux"~"["~"umol/"~m^2~s^-1~"]""),face = "bold", size = 10) 
+testtitle <- element_text(expression("Flux"~"["~"umol/"~m^2~s^-1~"]"),face ="bold",size=10)
 testtitle
 
 #let's make the boxplots for the 2 injections that happened during the c6 time 
@@ -228,25 +229,24 @@ testplot <- c6time %>% ggplot()+
   labs(y="Precip (mm)", x="")+
   ylim(.0001, .8)
 testplot <- testplot +  
-  geom_point(aes(x= DateTime, y = stn1_Q * .8/320), color = "#76a08a")
+  geom_point(aes(x= DateTime, y = stn1_Q * .8/.06), color = "#76a08a")
 testplot 
-
-
-
-testplot3 <- testplot + scale_y_continuous(
-  name = expression("Precip [mm]"), 
-  sec.axis = sec_axis(~ . * 2000 / .8,name = expression("Discharge"~"["~L~s^-1~"]")),
-  limits = c(0, .8))+
-  theme(axis.title.y=largernumbers)
-
-
-testplot3 <- testplot3 + theme_bw() + 
-  theme(axis.title.x=element_blank(),axis.text.x = largernumbers, axis.title.y = largernumbers,
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-testplot3
 
 min(c6time$stn1_Q)
 
+testplot3 <- testplot + scale_y_continuous(
+  name = expression(bold("Precip [mm]")), 
+  sec.axis = sec_axis(~ . *.06/.8,name = expression(bold("Discharge"~"["~m^3~s^-1~"]"))),
+  limits = c(0, .8))+
+  theme(axis.title.y=element_text(face="bold"))
+
+
+testplot3 <- testplot3 + theme_bw() + 
+  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,axis.text.y= largernumbers,
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+testplot3
+
+ 
 
 grid.newpage()
 grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(plot7), ggplotGrob(plot9),
@@ -262,13 +262,13 @@ combo <- combo +
 combo 
 
 combo2 <- combo + scale_y_continuous(
-  name = expression("Flux"~"["~"umol/"~m^2~s^-1~"]"), 
-  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression("pCO"["2"]~"[ppm]")), 
+  name = expression(bold("Flux"~"["~"umol/"~m^2~s^-1~"]")), 
+  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression(bold("pCO"["2"]~"[ppm]"))), 
   limits = c(0, 4.1))
  
 
 combo2 <- combo2 + theme_bw() + 
-  theme(axis.title.x=element_blank(),axis.text.x = largernumbers, axis.title.y = largernumbers,
+  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,axis.text.y= largernumbers,
         panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 combo2
@@ -296,13 +296,13 @@ cute
 
 
 cute2 <- cute + scale_y_continuous(
-  name = "Turbidity [NTU]", 
-  sec.axis = sec_axis(~ . * 50 / 3000 , name = "CDOM [ppb]"), 
+  name = expression(bold("Turbidity [NTU]")), 
+  sec.axis = sec_axis(~ . * 50 / 3000 , name = expression(bold("CDOM [ppb]"))), 
   limits = c(0, 3000))
 
 cute2
 cute2 <- cute2 + theme_bw() + 
-  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,
+  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,axis.text.y= largernumbers,
         panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
@@ -328,14 +328,14 @@ bob <- bob +
 bob
 
 bob2 <- bob + scale_y_continuous(
-  name = "DO [mg/L]", 
-  sec.axis = sec_axis(~ . * 4.5 / 7.5 , name = "Chlorophyll A [ug/l]"), 
+  name = expression(bold("DO [mg/L]")), 
+  sec.axis = sec_axis(~ . * 4.5 / 7.5 , name = expression(bold("Chlorophyll A [ug/l]"))), 
   limits = c(0, 7.5))
 
 bob2
 
 bob2 <- bob2 + theme_bw() + 
-  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,
+  theme(axis.title.x=element_blank(),axis.text.x = largernumbers,axis.text.y= largernumbers,
         panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 bob2

@@ -33,11 +33,11 @@ dis23 <- 75.9
 
 dis20 <- 94.1 
 
-waterfalldis <- 126 
+waterfalldis <- 124.2 
 
 dis14 <- 143.7 
 
-dis11 <- 169.9 
+dis11 <- 170.0 
 
 dis8 <- 194.9 
 
@@ -87,6 +87,8 @@ july18all$RelativeStdDev <- 100*(july18all$StdDev_iCO2/abs(july18all$CorrectedAv
 
 #write.csv(july18all, here("Picarro/synoptics/071819", "july18CV_statistics.csv"))
 
+test <- read.csv(here("Picarro/synoptics/sumsynoptics_corrected.csv"))
+
 july31 <- july31 %>%
   select(Sample, Day, CorrectedAverage, StdDev_iCO2)
 july31total <- data.frame("Sample"= "Total", "Day" = "total", "CorrectedAverage" = mean(july31$CorrectedAverage), "StdDev_iCO2" = sd(july31$CorrectedAverage))
@@ -113,7 +115,7 @@ aug12all <- rbind(aug12, aug12total)
 aug12all$CV <- aug12all$StdDev_iCO2/aug12all$CorrectedAverage
 aug12all$RelativeStdDev <- 100*(aug12all$StdDev_iCO2/abs(aug12all$CorrectedAverage))
 
-#write.csv(aug12all, here("Picarro/synoptics/071819", "aug12CV_statistics.csv"))
+#write.csv(aug12all, here("Picarro/synoptics/081219", "aug12CV_statistics.csv"))
 
 #alright now let's combine these all together 
 
@@ -139,10 +141,13 @@ plot <- ggplot(july18all, aes(x= Distance, y= CorrectedAverage)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5,  color="#CC7987") +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("July 18th")+
-  labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Distance from Wetland [m]", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
   theme_bw() + 
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(legend.position = "right", axis.text.y = element_text(size=12, face="bold"), axis.text.x= element_blank(), 
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)))+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -176,8 +181,11 @@ plot3 <- ggplot(july31all, aes(x= Distance, y= CorrectedAverage)) +
   ggtitle("July 31th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme_bw() + 
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(legend.position = "right", axis.text.y = element_text(size=12, face="bold"), axis.text.x= element_blank(), 
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)))+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -208,10 +216,13 @@ plot5 <- ggplot(aug06all, aes(x= Distance, y= CorrectedAverage)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color = '#D55E00') +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 6th")+
-  labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Distance from Wetland [m]", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
   theme_bw() + 
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(legend.position = "right", axis.text.y = element_text(size=12,face="bold"), axis.text.x= element_blank(), 
+        axis.title.x=element_blank(),
+        axis.title.y= element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)))+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)+
@@ -245,9 +256,11 @@ plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) +
   ggtitle("August 12th")+
   labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme_bw() + 
-  theme(legend.position = "right", axis.text.y = element_text(size=12), axis.text.x= element_text(size=12),
-        axis.title.y = element_text(face = "bold"),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(legend.position = "right", axis.text.y = element_text(size=12, face="bold"), axis.text.x= element_text(size=12, face = "bold"),
+        axis.title.x= (element_text(face="bold", size=14)),
+        axis.title.y = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(margin = margin(t= 10, b = -20)))+
   ylim(-17,-10.5)+
   xlim(0,250)
   #geom_polygon(data = waterfallpoly,aes(x=x,y=y),fill="#1dace8", alpha = .5)
@@ -284,13 +297,18 @@ legend <- get_legend(plot8)
 #grid.arrange(arrangeGrob(plot2, plot4, plot6, plot8, nrow=4), ncol = 2, 
              widths = c(2.8, .4))
 
-grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4), ncol = 2, 
-             widths = c(2.8, .4))
+label <- as.expression(expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
+
+grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4),bottom=(bold("Distance from Wetland [m]")),
+             left=bquote(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
 
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot3),
                 ggplotGrob(plot5), ggplotGrob(plot7)))
 
+
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot7)))
 
 
 
