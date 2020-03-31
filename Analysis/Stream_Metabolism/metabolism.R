@@ -11,7 +11,7 @@ dat <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj,DO1_mg.L,DO2_mg.L,DO4_mg.L,tempC_421,lvl_436_m,lvl_421_m,stn3_Q)%>%
   filter(Inj == "No")
 
-dat$DateTime <- as.POSIXct(dat$DateTime, tz = "Etc/GMT+5")
+dat$DateTime <- as.POSIXct(dat$DateTime,format = "%m/%d/%Y %H:%M", tz = "Etc/GMT+5")
 
 # Convert to solar time
 dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
@@ -70,7 +70,7 @@ df4 <- df4%>%
 bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
 bayes_specs <- specs(bayes_name)
 
-bayes_specs <- revise(bayes_specs, burnin_steps=100, saved_steps=300, n_cores=4, GPP_daily_mu=3, GPP_daily_sigma=2)
+bayes_specs <- revise(bayes_specs, burnin_steps=300, saved_steps=600, n_cores=16, GPP_daily_mu=3, GPP_daily_sigma=2)
 
 # Fit the models
 mm1 <- metab(bayes_specs, data=df1)
@@ -79,8 +79,8 @@ mm4 <- metab(bayes_specs, data=df4)
 
 
 # Set the output folder
-dir.create("Analysis/Stream_Metabolism/ModelOutputs/model_03272020_01/")
-folder <- here("Analysis/Stream_Metabolism/ModelOutputs/model_03272020_01/")
+dir.create("Analysis/Stream_Metabolism/ModelOutputs/model_03282020_03/")
+folder <- here("Analysis/Stream_Metabolism/ModelOutputs/model_03282020_03/")
 
 # Write model parameters
 writeLines(paste0(bayes_specs), paste0(folder,"specs.txt"))
@@ -100,10 +100,47 @@ write.csv(pred1,paste0(folder,"/DO_1_Predictions.csv"))
 write.csv(pred2,paste0(folder,"/DO_2_Predictions.csv"))
 write.csv(pred4,paste0(folder,"/DO_4_Predictions.csv"))
 
+
 mcmc <- get_mcmc(mm1)
+png(filename=paste0(folder,"mcmc_stn1.png"))
 rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+dev.off()
+
+
+mcmc2 <- get_mcmc(mm2)
+png(filename=paste0(folder,"mcmc_stn2.png"))
+rstan::traceplot(mcmc2, pars='K600_daily', nrow=6)
+dev.off()
+
+mcmc4 <- get_mcmc(mm4)
+png(filename=paste0(folder,"mcmc_stn4.png"))
+rstan::traceplot(mcmc4, pars='K600_daily', nrow=6)
+dev.off()
+
 
 # Plots
 plot_metab_preds(mm1)
 plot_metab_preds(mm2)
 plot_metab_preds(mm4)
+
+
+
+msg <- get_params(mm1)
+
+
+
+### KARIN's TIMESTEP FIX ###
+
+# checkTimeSteps()
+timestep1<- Data.raw$datetime[2] - Data.raw$datetime[1]
+
+##round datetime to nearest whole timestep
+Data.raw$datetime[1:length(Data.raw$datetime)]<-
+  round_date(Data.raw$datetime[1:length(Data.raw$datetime)], '10 minutes')
+
+ts <- seq.POSIXt(Data.raw$datetime[1], Data.raw$datetime[length(Data.raw$datetime)], by=timestep1)
+fulltime<- data.frame(datetime=ts)
+#Create Dataframe with rows for missing data
+RAW2 <- full_join(fulltime,Data.raw)
+
+Data.raw2 <- na_interpolation(RAW2, option = "linear", maxgap = Inf)
