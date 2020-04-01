@@ -1,5 +1,6 @@
 library(streamMetabolizer)
 library(dplyr)
+library(imputeTS)
 library(here)
 
 
@@ -11,7 +12,7 @@ dat <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj,DO1_mg.L,DO2_mg.L,DO4_mg.L,tempC_421,lvl_436_m,lvl_421_m,stn3_Q)%>%
   filter(Inj == "No")
 
-dat$DateTime <- as.POSIXct(dat$DateTime, tz = "Etc/GMT+5")
+dat$DateTime <- as.POSIXct(dat$DateTime,format = "%m/%d/%Y %H:%M", tz = "Etc/GMT+5")
 
 # Convert to solar time
 dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
@@ -46,7 +47,25 @@ df1 <- df1%>%
   distinct()%>%
   arrange(solar.time)
 
-# DO Sensor 2
+# Fix timestamps and interpolate missing data (Station 1)
+## Round timestamps to closest 15-minute
+df1a <- df1%>%
+  mutate("solar.time" = round_date(solar.time, '15 minutes'))
+
+## Create full datafram of timesteps
+timestep <- df1$solar.time[2]-df1$solar.time[1]
+fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[length(df1$solar.time)], by=timestep))%>%
+  mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
+  left_join(df1a)%>%
+  na_interpolation(option = 'linear', maxgap = Inf)
+
+# plot the comparrison
+#plot1 <- ggplot()+
+#  geom_point(data=fulltime, aes(x=solar.time,y=DO.obs),col='red',size=.9)+
+#  geom_point(data=df1, aes(x=solar.time,y=DO.obs))
+#plot1
+
+##### DO Sensor 2 ######
 df2 <- dat%>%
   select(solar.time,DO2_mg.L,DO.sat,lvl_421_m,tempC_421,light,stn3_Q)
 colnames(df2) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
@@ -56,7 +75,19 @@ df2 <- df2%>%
   distinct()%>%
   arrange(solar.time)
 
-# DO Sensor 4 
+# Fix timestamps and interpolate missing data (Station 2)
+## Round timestamps to closest 15-minute
+df2a <- df2%>%
+  mutate("solar.time" = round_date(solar.time, '15 minutes'))
+
+## Create full datafram of timesteps
+timestep <- df2$solar.time[2]-df2$solar.time[1]
+fulltime2 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[length(df2$solar.time)], by=timestep))%>%
+  mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
+  left_join(df2a)%>%
+  na_interpolation(option = 'linear', maxgap = Inf)
+
+##### DO Sensor 4 ##### 
 df4 <- dat%>%
   select(solar.time,DO4_mg.L,DO.sat,lvl_421_m,tempC_421,light,stn3_Q)
 colnames(df4) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
@@ -66,24 +97,44 @@ df4 <- df4%>%
   distinct()%>%
   arrange(solar.time)
 
-# Baysean model parameters
+# Fix timestamps and interpolate missing data (Station 4)
+## Round timestamps to closest 15-minute
+df4a <- df4%>%
+  mutate("solar.time" = round_date(solar.time, '15 minutes'))
+
+## Create full datafram of timesteps
+timestep <- df4$solar.time[2]-df4$solar.time[1]
+fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[length(df1$solar.time)], by=timestep))%>%
+  mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
+  left_join(df4a)%>%
+  na_interpolation(option = 'linear', maxgap = Inf)
+
+# ***************** Baysean model parameters ********************** #
+
 bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
 bayes_specs <- specs(bayes_name)
 
-bayes_specs <- revise(bayes_specs, burnin_steps=100, saved_steps=300, n_cores=4, GPP_daily_mu=3, GPP_daily_sigma=2)
+bayes_specs <- revise(bayes_specs, burnin_steps=100, saved_steps=200, n_cores=16, GPP_daily_mu=3, GPP_daily_sigma=2)
 
 # Fit the models
-mm1 <- metab(bayes_specs, data=df1)
-mm2 <- metab(bayes_specs, data=df2)
-mm4 <- metab(bayes_specs, data=df4)
+t1 <- Sys.time()
+mm1 <- metab(bayes_specs, data=fulltime1)
+t2 <- Sys.time()
+mm2 <- metab(bayes_specs, data=fulltime2)
+t3 <- Sys.time()
+mm4 <- metab(bayes_specs, data=fulltime4)
+t4 <- Sys.time()
 
 
 # Set the output folder
-dir.create("Analysis/Stream_Metabolism/ModelOutputs/model_03272020_01/")
-folder <- here("Analysis/Stream_Metabolism/ModelOutputs/model_03272020_01/")
+dir.create("Analysis/Stream_Metabolism/ModelOutputs/model_03312020_01/")
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_03312020_01/")
 
 # Write model parameters
-writeLines(paste0(bayes_specs), paste0(folder,"specs.txt"))
+writeLines(paste0("Station 1 started at: ",t1,"<br>",
+                  "Station 2 started at: ",t2,"<br>",
+                  "Station 4 started at: ",t3, " and finished at: ",t4,"<br><br>",
+                  bayes_specs), paste0(folder,"specs.txt"))
 
 # Write model outputs to text files
 capture.output(mm1,file=paste0(folder,"/DO_1_Output.txt"))
@@ -91,7 +142,7 @@ capture.output(mm2,file=paste0(folder,"/DO_2_Output.txt"))
 capture.output(mm4,file=paste0(folder,"/DO_4_Output.txt"))
 
 # Predictions
-pred1 <- predict_metab(mm1)
+pred1a <- predict_metab(mm1)
 pred2 <- predict_metab(mm2)
 pred4 <- predict_metab(mm4)
 
@@ -100,10 +151,42 @@ write.csv(pred1,paste0(folder,"/DO_1_Predictions.csv"))
 write.csv(pred2,paste0(folder,"/DO_2_Predictions.csv"))
 write.csv(pred4,paste0(folder,"/DO_4_Predictions.csv"))
 
-mcmc <- get_mcmc(mm1)
-rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
 
-# Plots
+## K600 Plots
+
+# Station 1
+mcmc <- get_mcmc(mm1)
+png(filename=paste0(folder,"mcmc_stn1.png"))
+rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+dev.off()
+
+# Station 2
+mcmc2 <- get_mcmc(mm2)
+png(filename=paste0(folder,"mcmc_stn2.png"))
+rstan::traceplot(mcmc2, pars='K600_daily', nrow=6)
+dev.off()
+
+# Station 4
+mcmc4 <- get_mcmc(mm4)
+png(filename=paste0(folder,"mcmc_stn4.png"))
+rstan::traceplot(mcmc4, pars='K600_daily', nrow=6)
+dev.off()
+
+
+# ER & GPP Plots
+png(filename=paste0(folder,"metabolism_stn1.png"))
 plot_metab_preds(mm1)
+dev.off()
+
+png(filename=paste0(folder,"metabolism_stn2.png"))
 plot_metab_preds(mm2)
+dev.off()
+
+png(filename=paste0(folder,"metabolism_stn4.png"))
 plot_metab_preds(mm4)
+dev.off()
+
+#msg <- get_params(mm1)
+
+
+
