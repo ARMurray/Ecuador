@@ -1,6 +1,7 @@
 library(streamMetabolizer)
 library(dplyr)
 library(imputeTS)
+library(lubridate)
 library(here)
 
 
@@ -8,7 +9,7 @@ library(here)
 # Instructions: `http://usgs-r.github.io/streamMetabolizer/`
 
 # Import non-injection data
-dat <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
+dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj,DO1_mg.L,DO2_mg.L,DO4_mg.L,tempC_421,lvl_436_m,lvl_421_m,stn3_Q)%>%
   filter(Inj == "No")
 
@@ -18,7 +19,7 @@ dat$DateTime <- as.POSIXct(dat$DateTime,format = "%m/%d/%Y %H:%M", tz = "Etc/GMT
 dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
 
 #Import barometric pressure
-baro <- read.csv(here("FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv"),skip = 10)
+baro <- read.csv(here::here("FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv"),skip = 10)
 colnames(baro) <- c("Date","Time","ms","kPa","Temp_C")
 baro$millibars <- baro$kPa*10
 baro$DateTime <- as.POSIXct(paste0(as.character(baro$Date)," ",as.character(baro$Time)),format = "%m/%d/%Y %H:%M",tz = "Etc/GMT+5")
@@ -114,7 +115,7 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
 bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
 bayes_specs <- specs(bayes_name)
 
-bayes_specs <- revise(bayes_specs, burnin_steps=100, saved_steps=200, n_cores=16, GPP_daily_mu=3, GPP_daily_sigma=2)
+bayes_specs <- revise(bayes_specs, burnin_steps=200, saved_steps=500, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2)
 
 # Fit the models
 t1 <- Sys.time()
@@ -127,14 +128,19 @@ t4 <- Sys.time()
 
 
 # Set the output folder
-dir.create("Analysis/Stream_Metabolism/ModelOutputs/model_03312020_01/")
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_03312020_01/")
+dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04012020_05/"))
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04012020_05/")
 
-# Write model parameters
-writeLines(paste0("Station 1 started at: ",t1,"<br>",
-                  "Station 2 started at: ",t2,"<br>",
-                  "Station 4 started at: ",t3, " and finished at: ",t4,"<br><br>",
-                  bayes_specs), paste0(folder,"specs.txt"))
+# Write some model specs to a csv
+params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs))
+
+# Add Completion Times
+times <- data.frame("Parameter"=c("Station 1 Time","Station 2 Time", "Station 4 Time"),
+                    "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1)),
+                                paste0(round(t3-t2,2)," ",units.difftime(t3-t2)),
+                                paste0(round(t4-t3,2)," ",units.difftime(t4-t3))))
+outParams <- rbind(params,times)
+write.csv(outParams,paste0(folder,"specs.csv"))
 
 # Write model outputs to text files
 capture.output(mm1,file=paste0(folder,"/DO_1_Output.txt"))
@@ -142,7 +148,7 @@ capture.output(mm2,file=paste0(folder,"/DO_2_Output.txt"))
 capture.output(mm4,file=paste0(folder,"/DO_4_Output.txt"))
 
 # Predictions
-pred1a <- predict_metab(mm1)
+pred1 <- predict_metab(mm1)
 pred2 <- predict_metab(mm2)
 pred4 <- predict_metab(mm4)
 
