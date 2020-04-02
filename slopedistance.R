@@ -36,4 +36,16 @@ slope2 <- ggplot(slope)+
 
 slope2
 
+max(slope$slope.unitless[which(slope$dist.m < 50)])
+
+max(slope$slope.unitless[which(slope$dist.m > 50
+                         & slope$dist.m <115)])
+
+min(slope$slope.unitless[which(slope$dist.m > 50
+                               & slope$dist.m <115)])
+
+mean(slope$slope.unitless[which(slope$dist.m > 115)])
+
+
+
 

@@ -90,4 +90,23 @@ allsynop <- rbind(july18,july31,aug06,aug12)
 
 write.csv(allsynop, here("Picarro/synoptics/allsynoptics_diego.csv"))
 
+test <- cbind(ppm, july18)
+
+ppmjul18 <- ppm %>%
+  select(Distance, Syn1_071819)
+
+july18small <- july18 %>%
+  select(Distance, Sample, Day, CorrectedAverage)
+    
+    
+testagain <- cbind(ppmjul18, july18small)    
+    
+    
+plot1 <- ggplot(testagain)+
+  geom_point(testagain, mapping=aes(x=Syn1_071819, y=CorrectedAverage))+
+  labs(x="PPM", y="delta13")+
+  ggtitle("July18")
+
+
+plot1
 
