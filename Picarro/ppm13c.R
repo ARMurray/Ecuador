@@ -6,6 +6,12 @@ library(wesanderson)
 library(viridis)
 library(grid)
 library(gridExtra)
+library(viridis)
+
+largernumbers <- element_text(face = "bold", size = 14)
+largernumbers2 <- element_text(face = "bold", size = 12)
+
+
 
 #we are trying to do a comparison for ppm vs. d13C for all sites where we have data
 
@@ -21,6 +27,29 @@ ppm <- ppm %>%
 ppm$Distance <- round(ppm$Distance, digits = 1)
 
 ppm <- ppm[c(1,5,8,11,14,18,21,24,30,36),]
+
+colnames(ppm)[1] <- "DistSyn"
+ppm0718 <- ppm %>%
+  select(DistSyn, Syn1_071819)
+
+colnames(ppm0718)[2] <- "Syn"
+
+ppm0731 <- ppm %>%
+  select(DistSyn, Syn4_073119)
+
+colnames(ppm0731)[2] <- "Syn"
+
+ppm0806 <- ppm %>%
+  select(DistSyn, Syn5_080619)
+
+colnames(ppm0806)[2] <- "Syn"
+
+ppm0806 <- ppm0806[1:9,]
+
+ppm0812 <- ppm %>%
+  select(DistSyn, Syn6_081219)
+
+colnames(ppm0812)[2] <- "Syn"
 
 
 #ok now let's pull in c13 synoptic data
@@ -92,21 +121,68 @@ write.csv(allsynop, here("Picarro/synoptics/allsynoptics_diego.csv"))
 
 test <- cbind(ppm, july18)
 
-ppmjul18 <- ppm %>%
-  select(Distance, Syn1_071819)
 
+#July 18
 july18small <- july18 %>%
-  select(Distance, Sample, Day, CorrectedAverage)
-    
-    
-testagain <- cbind(ppmjul18, july18small)    
-    
-    
-plot1 <- ggplot(testagain)+
-  geom_point(testagain, mapping=aes(x=Syn1_071819, y=CorrectedAverage))+
-  labs(x="PPM", y="delta13")+
-  ggtitle("July18")
+  select(Distance,CorrectedAverage)
+
+july18all <- cbind(ppm0718, july18small)
+
+july18all <- july18all %>%
+  select(DistSyn, Syn, CorrectedAverage)
+
+#july31
+
+july31small <- july31 %>%
+  select(Distance,CorrectedAverage)
+
+july31all <- cbind(ppm0731, july31small)
+
+july31all <- july31all %>%
+  select(DistSyn, Syn, CorrectedAverage)
+
+#aug 06 
+
+aug06small <- aug06 %>%
+  select(Distance,CorrectedAverage)
+
+aug06all <- cbind(ppm0806, aug06small)
+
+aug06all <- aug06all %>%
+  select(DistSyn, Syn, CorrectedAverage)
+
+#aug12 
+
+aug12small <- aug12 %>%
+  select(Distance,CorrectedAverage)
+
+aug12all <- cbind(ppm0812, aug12small)
+
+aug12all <- aug12all %>%
+  select(DistSyn, Syn, CorrectedAverage)
 
 
-plot1
+
+
+
+ppmdelta <- rbind(july18all, july31all, aug06all, aug12all)
+
+write.csv(ppmdelta, here("Picarro/ppmdelta.csv"))
+
+ppmC <- ggplot(ppmdelta)+
+  geom_point(ppmdelta, mapping=aes(x=Syn, y=CorrectedAverage, color=DistSyn), size=3)+
+  labs(x=expression(bold(paste("pCO"^{2}, "[ppm]"))), y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))), color="Outlet Dist. [m]")+
+  scale_color_viridis(option = "B", discrete = FALSE)+
+  ggtitle("PPM vs. Delta 13 C")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=largernumbers,
+        axis.text.y=largernumbers2, axis.title.y=largernumbers,plot.title = element_text(margin = margin(t= 10, b = -20), face="bold",
+                                                                                         ))
+
+ppmC
+
+
+
+    
+
 

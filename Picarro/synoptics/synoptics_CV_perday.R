@@ -121,6 +121,11 @@ aug12all$RelativeStdDev <- 100*(aug12all$StdDev_iCO2/abs(aug12all$CorrectedAvera
 
 allsynCV <- rbind(july18all, july31all, aug06all, aug12all)
 
+check <- read.csv(here("Picarro/synoptics/allsynCV_statscorrected.csv"))
+
+max(check$CorrectedAverage)
+min(check$CorrectedAverage)
+
 #save this 
 
 #write.csv(allsynCV, here("Picarro/synoptics", "allsynCV_statscorrected.csv"))

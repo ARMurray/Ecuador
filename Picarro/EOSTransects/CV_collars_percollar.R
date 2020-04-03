@@ -477,15 +477,27 @@ allcollar <- allcollar[order(allcollar$day),]
 
 write.csv(allcollar, here("Picarro/EOSTransects/" , "allcollarfordiego.csv"))
 
+play <- read.csv(here("Picarro/EOSTransects/allcollarfordiego.csv"))
+
+max(play$CorrectedAverage)
+min(play$CorrectedAverage)
+
 #now let's make a data from with just the unsaturated and saturated average for each day 
 
 #table of unsaturated 
 
 unsat <- rbind(col1,col2,col7,col8)
 unsat <- unsat[order(unsat$day),]
+max(unsat$CorrectedAverage)
+min(unsat$CorrectedAverage)
+
 
 sat <- rbind(col3,col4,col6)
 sat <- sat[order(sat$day),]
+
+
+max(sat$CorrectedAverage)
+min(sat$CorrectedAverage)
 
 Aug02 <- data.frame("Sample"= "unsaturated", "day"="Aug02", "Average"= 
                          mean(unsat$CorrectedAverage
