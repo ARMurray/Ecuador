@@ -115,7 +115,7 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
 bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
 bayes_specs <- specs(bayes_name)
 
-bayes_specs <- revise(bayes_specs, burnin_steps=200, saved_steps=500, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2)
+bayes_specs <- revise(bayes_specs, burnin_steps=300, saved_steps=950, n_cores=4, GPP_daily_mu=3, GPP_daily_sigma=2)
 
 # Fit the models
 t1 <- Sys.time()
@@ -128,8 +128,8 @@ t4 <- Sys.time()
 
 
 # Set the output folder
-dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04012020_05/"))
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04012020_05/")
+dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04032020_02"))
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04032020_02")
 
 # Write some model specs to a csv
 params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs))
@@ -140,7 +140,7 @@ times <- data.frame("Parameter"=c("Station 1 Time","Station 2 Time", "Station 4 
                                 paste0(round(t3-t2,2)," ",units.difftime(t3-t2)),
                                 paste0(round(t4-t3,2)," ",units.difftime(t4-t3))))
 outParams <- rbind(params,times)
-write.csv(outParams,paste0(folder,"specs.csv"))
+write.csv(outParams,paste0(folder,"/specs.csv"))
 
 # Write model outputs to text files
 capture.output(mm1,file=paste0(folder,"/DO_1_Output.txt"))
@@ -162,33 +162,33 @@ write.csv(pred4,paste0(folder,"/DO_4_Predictions.csv"))
 
 # Station 1
 mcmc <- get_mcmc(mm1)
-png(filename=paste0(folder,"mcmc_stn1.png"))
+png(filename=paste0(folder,"/mcmc_stn1.png"))
 rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
 dev.off()
 
 # Station 2
 mcmc2 <- get_mcmc(mm2)
-png(filename=paste0(folder,"mcmc_stn2.png"))
+png(filename=paste0(folder,"/mcmc_stn2.png"))
 rstan::traceplot(mcmc2, pars='K600_daily', nrow=6)
 dev.off()
 
 # Station 4
 mcmc4 <- get_mcmc(mm4)
-png(filename=paste0(folder,"mcmc_stn4.png"))
+png(filename=paste0(folder,"/mcmc_stn4.png"))
 rstan::traceplot(mcmc4, pars='K600_daily', nrow=6)
 dev.off()
 
 
 # ER & GPP Plots
-png(filename=paste0(folder,"metabolism_stn1.png"))
+png(filename=paste0(folder,"/metabolism_stn1.png"))
 plot_metab_preds(mm1)
 dev.off()
 
-png(filename=paste0(folder,"metabolism_stn2.png"))
+png(filename=paste0(folder,"/metabolism_stn2.png"))
 plot_metab_preds(mm2)
 dev.off()
 
-png(filename=paste0(folder,"metabolism_stn4.png"))
+png(filename=paste0(folder,"/metabolism_stn4.png"))
 plot_metab_preds(mm4)
 dev.off()
 
