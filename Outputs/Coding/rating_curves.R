@@ -3,6 +3,9 @@ library(tidyverse)
 library(here)
 library(plotly)
 
+# This is a new line that dopesn't do anything
+
+# this line imports the data frame, good job using the HEre package!
 discharge <- read.csv(here("data_4_analysis/recorded_discharge.csv"))
 
 level <- read.csv(here("FieldData/LevelLogger/WaterLevel_All.csv"))
