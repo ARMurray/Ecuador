@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyverse)
 library(plotly)
 library(scales)
+library(here)
 
 July18<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Raymond Method/Raymond Paper Method07_18.csv")
 July25<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Raymond Method/Raymond Paper Method7_25.csv")
@@ -29,19 +30,22 @@ Plot<-ggplot(K600Total,aes(x=Distance,y=July18K,colour="Red"))+
 ##Using GGPlot Legend By Date, change labels to Liters per second
 ##Update
 
-Syn<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Raymond Method/K600 vs Distance.csv")
-Date<-Syn$Date
-K600<-Syn$K600
-Distance<-Syn$Distance.From.Upstream
 
-ggplot(data = Syn, aes(x=Distance,y=K600,color= Date))+
-  geom_point(data = Syn,color=c("red","orange","yellow","green","blue"),shape=19,size=20)+
-  scale_fill_manual(values = c("red","orange","yellow","green","blue"),
-                    name="Discharge (m^3/s)",
-                    breaks = c("18-Jul","25-Jul","31-Jul","6-Aug","12-Aug"),
-                    labels=c(".00851",".02283",".00702",".00418",".00251"))
-  ylab("K600 (m/Day)")+
-  xlab("Distance From Upstream (m)")+
+Syn<-read.csv(here("Outputs/Gas Transfer Velocity/Raymond Method/K600 vs Distance.csv"))
+#Date<-Syn$Date
+#K600<-Syn$K600
+#Distance<-Syn$Distance.From.Upstream
+
+colnames(Syn) <- c("Date","Distance","K600")
+
+ggplot(Syn)+
+  geom_point(aes(x=Distance,y=K600,color= Date),shape=19,size=2)+
+  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
+                             "6-Aug"="green","12-Aug"="blue"),
+                     name = bquote('Discharge'~m^3~s^-1),
+                     labels=c(".00851",".02283",".00702",".00418",".00251"))+
+  labs(x ="Distance From Upstream (m)" ,
+       y = bquote('K600'~m~d^-1))+
   theme(axis.title.x = element_text(face = "bold",size = 15),
         axis.title.y = element_text(face = "bold",size = 15),
         axis.line = element_line(colour = "black"),
