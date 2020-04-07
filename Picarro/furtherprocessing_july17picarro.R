@@ -27,6 +27,17 @@ write.csv(alljuly17, here("Picarro/EOSTransects/071619/alldeltajuly17.csv"))
 #subset the data
 subsjuly17 <- alljuly17[ which(alljuly17$PosixCT > "2019-07-17 18:00:00"
                  & alljuly17$PosixCT < "2019-07-17 19:30:00"), ]
+
+testplot <- ggplot(alljuly17)+
+  geom_point(alljuly17, mapping=aes(x=PosixCT, y=Delta_30s_iCO2))
+
+testplot
+
+testplot <- plotly(testplot)
+
+geom_point(slope, mapping=aes(x=dist.m, y=slope.unitless, color="purple"))
+
+
 #savethis
 write.csv(subsjuly17, here("Picarro/EOSTransects/071619/subsjuly17.csv"))
 

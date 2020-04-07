@@ -17,16 +17,17 @@
 |Maribel|pending|Figure showing pCO2 from five synoptic days and an extra synoptic day done on July 12th. An estimated discharge is added for each day.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/finalfigure_synoptic%20copy.png)|
 |Maribel|pending|Figure showing the average and standard deviation pCO2 of all six synoptic days.|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINAL_FIGURE.png)|
 |Maribel|pending|Figure for diego|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/FINALfigure_diegoo.png) |
-|Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png) |
-|Maribel|pending|Injection 1 July 12 13:00-16:00|
-|Maribel|pending|Injection 3 July 22 16:25-19:35|
+|Maribel|pending|Figure showing one to one graphs|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot01.png)|
+|Maribel|pending|Injection 1 July 12 13:00-16:00|![] (https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/Rplot18.png) |
+|Maribel|pending|Injection 3 July 22 16:25-19:35|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/Maribel/injection3.png)|
 |Anayancy| Anayancy\Final Figure_Ecuador Carbon Paper Outline | Outline that details upcoming paper | https://docs.google.com/document/d/1KH06LT5Tjb8Ekgrrth_P3EMkGs5hfPYJ5sDDhUIIIu0/edit?usp=sharing |
-| Chloe| | final  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/compare_fix.png) |
+| Chloe| | final  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/comparison.png) |
 | Chloe| | final agu  |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/flux.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/histogram.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/panels.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainco2.png) |
 | Chloe| | final agu |![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/rainvariation.png) |
+| Chloe| | final agu with corrected y axis|![](https://github.com/ARMurray/Ecuador/blob/testing/Final_Figures/chloe/pannel_flux.png) |
 |Nehemiah|Nehemiah/Histogram of K600 Total 11_28 Update.png|Final|Figure showing the density of Kinematic K600 magnitudes. This figure demonstrates that in spite of a few abnormal cases, our K600 values lie in average around what most others calculate.|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/Histogram%20of%20K600%20Total%2011_28%20Update.png|
 |Nehemiah|Nehemiah/K600 With All Regression Lines.png|Final figure showing the comparison between effective K and Kinematic K with all regression lines.|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/K600%20With%20All%20Regression%20Lines.png|
 |Nehemiah|Nehemiah/K600 Comparison July 18 Regression.png|Final figure showing the regression of just July 18th data and a one to one line|https://github.com/ARMurray/Ecuador/blob/testing/Outputs/Gas%20Transfer%20Velocity/Graphs/K600%20Comparison%20July%2018%20Regression.png|
