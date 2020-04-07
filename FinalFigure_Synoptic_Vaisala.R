@@ -8,14 +8,15 @@ library(plotly)
 
 Synoptics <- read.csv(here("FieldData/Vaisala/Synoptics2.csv"))
 plot <- ggplot(Synoptics) +
-  geom_point(aes(x= Distance, y= Syn1_071819, color= "29.7"), size = 3) +
-  geom_point(aes(x= Distance, y= Syn2_072519, color= "57.7"), size = 3) +
-  geom_point(aes(x= Distance, y= Syn3_072919, color= "24.7"), size = 3) +
-  geom_point(aes(x= Distance, y= Syn4_073119, color= "24.3"), size = 3) +
-  geom_point(aes(x= Distance, y= Syn5_080619, color= "19.1"), size = 3) +
-  geom_point(aes(x= Distance, y= Syn6_081219, color= "14.5"), size = 3) +
-    scale_color_manual(values=c("#009e73","#d55e00","blue","#FDE725FF","#cc79a7","#56B4E9")) +
-  labs(x = "Distance from Wetland [m]", y= expression(bold(pCO["2"]~"[ppm]")), color= "Discharge [L/s]") +
+  geom_point(aes(x= Distance, y= Syn1_071819, color= "0.0085"), size = 3) +
+  geom_point(aes(x= Distance, y= Syn2_072519, color= "0.0228"), size = 3) +
+  geom_point(aes(x= Distance, y= Syn3_072919, color= "0.0071"), size = 3) +
+  geom_point(aes(x= Distance, y= Syn4_073119, color= "0.0076"), size = 3) +
+  geom_point(aes(x= Distance, y= Syn5_080619, color= "0.0042"), size = 3) +
+  geom_point(aes(x= Distance, y= Syn6_081219, color= "0.0025"), size = 3) +
+    scale_color_manual(values=c("#009e73","#d55e00","#FDE725FF","blue","#cc79a7","#56B4E9")) +
+  labs(x = "Distance from Wetland [m]", y= expression(bold(pCO["2"]~"[ppm]")), 
+  color= expression(bold(Discharge~'['~m^3/s~']'))) +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.text=element_text(size=12),
