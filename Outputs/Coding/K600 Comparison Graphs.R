@@ -5,22 +5,28 @@ library(pracma)
 library(plotly)
 library(scales)
 library(plotly)
+library(here)
 
 ##Opening K600 Comparison Document
-K600Compare<-read.csv("C:/Users/nehemiah/Desktop/Ecuador - Copy/Outputs/Gas Transfer Velocity/Effective K and Raymond K Comparison.csv")
-OnetoOne<-data.frame('x'=c(100,1000),'y'=c(100,1000))
-July18<-K600Compare[c(3:12),]
-July25<-K600Compare[c(13:20),]
-July31<-K600Compare[c(21:30),]
-Aug6<-K600Compare[c(31:40),]
-Aug12<-K600Compare[c(41:50),]
+K600Compare<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
 
-July18K<-data.frame(x=July18$Raymond.K,y=July18$Effective.K)
-July25K<-data.frame(x=July25$Raymond.K,y=July25$Effective.K)
-July31K<-data.frame(x=July31$Raymond.K,y=July31$Effective.K)
-Aug6K<-data.frame(x=Aug6$Raymond.K,y=Aug6$Effective.K)
-Aug12K<-data.frame(x=Aug12$Raymond.K,y=Aug12$Effective.K)
-OnetoOneK<-data.frame(x=OnetoOne$Raymond.K,y=OnetoOne$Effective.K)
+##Creating One to One Point
+OnetoOne<-data.frame('x'=c(1,100),'y'=c(1,100))
+
+##Separating K600 Comparison Document By Days
+July18<-K600Compare[c(1:10),]
+July25<-K600Compare[c(11:18),]
+July31<-K600Compare[c(19:28),]
+Aug6<-K600Compare[c(29:38),]
+Aug12<-K600Compare[c(39:48),]
+
+##Creating Data Frames for Each Individual Day
+July18K<-data.frame(x=July18$Kkin,y=July18$Keff)
+July25K<-data.frame(x=July25$Kkin,y=July25$Keff)
+July31K<-data.frame(x=July31$Kkin,y=July31$Keff)
+Aug6K<-data.frame(x=Aug6$Kkin,y=Aug6$Keff)
+Aug12K<-data.frame(x=Aug12$Kkin,y=Aug12$Keff)
+
 
 Plot<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
@@ -35,6 +41,10 @@ Plot<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
                 labels = trans_format("log10", math_format(10^.x)))+
   scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x)))+
+  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
+                              "6-Aug"="green","12-Aug"="blue"),
+                     name = bquote('Discharge'~m^3~s^-1),
+                     labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
   ylab("Effective K600 (m/day)")+
   xlab("Kinematic K600 (m/day)")+
   theme(axis.title.x = element_text(face = "bold",size = 15),
@@ -55,4 +65,29 @@ geom_smooth(data = July25K,method = "lm",colour="Orange")+
   geom_smooth(method = "lm", fill = NA,colour="red")+
 
 
+##Line 31 Log Notation in Graph
+  log="y",log="x",
+  
+##Trial Run Plot For Legend
 
+SynEff<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
+
+colnames(SynEff)<-c("Date","Synoptic","Distance (m)","KKin","KEff")
+
+ggplot(SynEff)+
+  geom_point(aes(x=KKin,y=KEff,color=Date),shape=19,size=2)+
+  geom_smooth(data = SynEff,aes(x=KKin,y=KEff,color=Date),method = "lm")+
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
+                              "6-Aug"="green","12-Aug"="blue"),
+                     name = bquote('Discharge'~m^3~s^-1),
+                     labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
+  labs(x= bquote('K600 Kinematic'~m~d^-1),
+       y= bquote('K600 Effective'~m~d^-1))+
+  theme(axis.title.x = element_text(face = "bold",size = 15),
+        axis.title.y = element_text(face = "bold",size = 15),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black",fill = NA,size = 3))
