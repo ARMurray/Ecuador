@@ -12,5 +12,8 @@ atmospheric <- df%>%
   filter(PPM>200)%>%
   filter(VID == "V2")
 
-ggplot(atmospheric)+
+plot <- ggplot(atmospheric)+
   geom_line(aes(x=DateTime,  y=PPM))
+
+library(plotly)
+ggplotly(plot)
