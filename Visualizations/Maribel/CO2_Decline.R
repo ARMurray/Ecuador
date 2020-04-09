@@ -6,7 +6,7 @@ library(scales)
 library(tidyr)
 library(plotly)
 
-df <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))%>%
+df <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj,V1,V2,V3,V4,DO1_mg.L,DO2_mg.L,DO4_mg.L,Flux_1,Flux_2,tempC_436,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
   filter(Inj == "Yes")%>%
   na.omit()
