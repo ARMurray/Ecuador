@@ -262,7 +262,7 @@ combo <- combo +
 combo 
 
 combo2 <- combo + scale_y_continuous(
-  name = expression(bold("Flux"~"["~"umol/"~m^2~s^-1~"]")), 
+  name = expression(bold("Evasion"~"[""umol/"~m^2"s"~])), 
   sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression(bold("pCO"["2"]~"[ppm]"))), 
   limits = c(0, 4.1))
  

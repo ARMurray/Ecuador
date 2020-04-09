@@ -175,13 +175,12 @@ plot1 <- ggplot(col1, aes(x= day, y= CorrectedAverage, color=day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_manual(values = wes_palette("Zissou1", 6, type = "continuous"))+
   ggtitle("Collar 1")+
-  labs(x="day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="day", y=expression(bold(paste(delta^{13}, "C"[AQ], "[‰]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme(legend.position = "none",
-        axis.title.y=element_blank(),
         axis.text.x =element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
