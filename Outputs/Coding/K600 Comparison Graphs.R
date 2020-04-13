@@ -6,6 +6,7 @@ library(plotly)
 library(scales)
 library(plotly)
 library(here)
+library(ggpubr)
 
 ##Opening K600 Comparison Document
 K600Compare<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
@@ -54,7 +55,7 @@ Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
 
-Plot
+Jul18
 
 Jul31<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
@@ -135,6 +136,15 @@ Total<-ggplot(SynEff)+
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black",fill = NA,size = 3))
 Total
+
+##Combining Graphs
+tiff("Plot2.tiff", res = 300)
+ggarrange(Total,Jul18,Jul31,August12,
+                   labels=c("Total","July 18","July 31","Aug 12"),
+          common.legend=TRUE,legend="bottom",
+                   ncol=2,nrow=2)
+dev.off()
+
 
 ##Regression Lines
 geom_smooth(data = July25K,method = "lm",colour="Orange")+
