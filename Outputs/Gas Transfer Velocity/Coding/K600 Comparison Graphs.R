@@ -5,9 +5,10 @@ library(pracma)
 library(plotly)
 library(scales)
 library(plotly)
+library(here)
 
 ##Opening K600 Comparison Document
-K600Compare<-read.csv("C:/Users/nehemiah/Desktop/Ecuador - Copy/Outputs/Gas Transfer Velocity/Effective K and Raymond K Comparison.csv")
+K600Compare<-read.csv(here("C:/Users/nehemiah/Desktop/Ecuador - Copy/Outputs/Gas Transfer Velocity/Effective K and Raymond K Comparison.csv"))
 OnetoOne<-data.frame('x'=c(100,1000),'y'=c(100,1000))
 July18<-K600Compare[c(3:12),]
 July25<-K600Compare[c(13:20),]

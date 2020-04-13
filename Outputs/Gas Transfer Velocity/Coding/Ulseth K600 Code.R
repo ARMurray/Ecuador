@@ -5,13 +5,14 @@ library(pracma)
 library(plotly)
 library(scales)
 library(plotly)
+library(here)
 
 #Opening Ulseth Supplementary
-Ulseth<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Ulseth Supplementary Info.csv")
+Ulseth<-read.csv(here("Outputs/Gas Transfer Velocity/Ulseth Supplementary Info.csv"))
 K600<-Ulseth$k600
 Velocity<-Ulseth$Vms
 
-Ulseth$k600<-factor(Ulseth$k600,levels = c("Hall & Madinger 2018","Maurice et al. 2017","Raymond et al. 2012","Scheler et al. 2016","Ulseth et al. 2019","This Study"))
+#Ulseth$k600<-factor(Ulseth$k600,levels = c("Hall & Madinger 2018","Maurice et al. 2017","Raymond et al. 2012","Scheler et al. 2016","Ulseth et al. 2019","This Study"))
 
 K600vsVPlot<-ggplot(Ulseth)+
   geom_point(aes(x = Vms,y = k600, colour = data),show.legend = FALSE)+

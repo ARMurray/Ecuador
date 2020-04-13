@@ -130,9 +130,10 @@ Total<-ggplot(SynEff)+
         panel.border = element_rect(colour = "black",fill = NA,size = 3))
 
 ##Combining Graphs
-tiff("Plot3.tiff", width = 4, height = 4, units = 'in', res = 300)
+tiff(here("Final_Figures/Nehemiah/K600_Comparisons.tiff"), width = 7, height = 6, units = 'in', res = 600)
 ggarrange(Total,Jul18,Jul31,August6,
                    labels=c("Total","July 18","July 31","Aug 6"),
+          label.x = .15,label.y = .95,
           common.legend=TRUE,legend="bottom",
                    ncol=2,nrow=2)
 dev.off()
@@ -144,4 +145,4 @@ geom_smooth(data = July25K,method = "lm",colour="Orange")+
   geom_smooth(data = Aug6K,method = "lm",colour="Green")+
   geom_smooth(data = Aug12K,method = "lm",colour="Blue")+
   geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
-  geom_smooth(method = "lm", fill = NA,colour="red")+
+  geom_smooth(method = "lm", fill = NA,colour="red")
