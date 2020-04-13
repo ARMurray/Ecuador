@@ -28,7 +28,63 @@ Aug6K<-data.frame(x=Aug6$Kkin,y=Aug6$Keff)
 Aug12K<-data.frame(x=Aug12$Kkin,y=Aug12$Keff)
 
 
-Plot<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
+Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
+  geom_point(colour="Red",shape=19,size=2)+
+  geom_smooth(data = July18K,method = "lm",colour="Red")+
+  geom_point(data = July25K,colour="Orange",shape=19,size=2)+
+  geom_point(data = July31K,colour="Yellow",shape=19,size=2)+
+  geom_point(data = Aug6K,colour="Green",shape=19,size=2)+
+  geom_point(data = Aug12K,colour="Blue",shape=19,size=2)+
+  geom_point(data = OnetoOne,colour="Purple",shape=19,size=2)+
+  geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
+                              "6-Aug"="green","12-Aug"="blue"),
+                     name = bquote('Discharge'~m^3~s^-1),
+                     labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
+  ylab("Effective K600 (m/day)")+
+  xlab("Kinematic K600 (m/day)")+
+  theme(axis.title.x = element_text(face = "bold",size = 15),
+        axis.title.y = element_text(face = "bold",size =15),
+        axis.text.x = element_text(face="bold",size = 10),
+        axis.text.y=element_text(face="bold",size = 10),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill=NA, size=3))
+
+Plot
+
+Jul31<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
+  geom_point(colour="Red",shape=19,size=2)+
+  geom_point(data = July25K,colour="Orange",shape=19,size=2)+
+  geom_point(data = July31K,colour="Yellow",shape=19,size=2)+
+  geom_smooth(data = July31K,method = "lm",colour="Yellow")+
+  geom_point(data = Aug6K,colour="Green",shape=19,size=2)+
+  geom_point(data = Aug12K,colour="Blue",shape=19,size=2)+
+  geom_point(data = OnetoOne,colour="Purple",shape=19,size=2)+
+  geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
+                              "6-Aug"="green","12-Aug"="blue"),
+                     name = bquote('Discharge'~m^3~s^-1),
+                     labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
+  ylab("Effective K600 (m/day)")+
+  xlab("Kinematic K600 (m/day)")+
+  theme(axis.title.x = element_text(face = "bold",size = 15),
+        axis.title.y = element_text(face = "bold",size =15),
+        axis.text.x = element_text(face="bold",size = 10),
+        axis.text.y=element_text(face="bold",size = 10),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill=NA, size=3))
+
+Jul31
+
+August12<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
   geom_point(data = July25K,colour="Orange",shape=19,size=2)+
   geom_point(data = July31K,colour="Yellow",shape=19,size=2)+
@@ -53,28 +109,15 @@ Plot<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.text.y=element_text(face="bold",size = 10),
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
+August12
 
-Plot
-
-##Regression Lines
-geom_smooth(data = July25K,method = "lm",colour="Orange")+
-  geom_smooth(data = July31K,method = "lm",colour="Yellow")+
-  geom_smooth(data = Aug6K,method = "lm",colour="Green")+
-  geom_smooth(data = Aug12K,method = "lm",colour="Blue")+
-  geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
-  geom_smooth(method = "lm", fill = NA,colour="red")+
-
-
-##Line 31 Log Notation in Graph
-  log="y",log="x",
-  
 ##Trial Run Plot For Legend
 
 SynEff<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
 
 colnames(SynEff)<-c("Date","Synoptic","Distance (m)","KKin","KEff")
 
-ggplot(SynEff)+
+Total<-ggplot(SynEff)+
   geom_point(aes(x=KKin,y=KEff,color=Date),shape=19,size=2)+
   geom_smooth(data = SynEff,aes(x=KKin,y=KEff,color=Date),method = "lm")+
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
@@ -91,3 +134,12 @@ ggplot(SynEff)+
         axis.title.y = element_text(face = "bold",size = 15),
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black",fill = NA,size = 3))
+Total
+
+##Regression Lines
+geom_smooth(data = July25K,method = "lm",colour="Orange")+
+  geom_smooth(data = July31K,method = "lm",colour="Yellow")+
+  geom_smooth(data = Aug6K,method = "lm",colour="Green")+
+  geom_smooth(data = Aug12K,method = "lm",colour="Blue")+
+  geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
+  geom_smooth(method = "lm", fill = NA,colour="red")+
