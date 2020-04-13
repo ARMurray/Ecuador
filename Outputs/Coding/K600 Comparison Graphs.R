@@ -28,7 +28,6 @@ July31K<-data.frame(x=July31$Kkin,y=July31$Keff)
 Aug6K<-data.frame(x=Aug6$Kkin,y=Aug6$Keff)
 Aug12K<-data.frame(x=Aug12$Kkin,y=Aug12$Keff)
 
-
 Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
   geom_smooth(data = July18K,method = "lm",colour="Red")+
@@ -54,8 +53,6 @@ Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.text.y=element_text(face="bold",size = 10),
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
-
-Jul18
 
 Jul31<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
@@ -83,15 +80,13 @@ Jul31<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
 
-Jul31
-
-August12<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
+August6<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
   geom_point(data = July25K,colour="Orange",shape=19,size=2)+
   geom_point(data = July31K,colour="Yellow",shape=19,size=2)+
   geom_point(data = Aug6K,colour="Green",shape=19,size=2)+
+  geom_smooth(data = Aug6K,method = "lm",colour="Green")+
   geom_point(data = Aug12K,colour="Blue",shape=19,size=2)+
-  geom_smooth(data = Aug12K,method = "lm",colour="Blue")+
   geom_point(data = OnetoOne,colour="Purple",shape=19,size=2)+
   geom_smooth(data = OnetoOne,method = "lm",colour="Purple")+
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
@@ -110,9 +105,7 @@ August12<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.text.y=element_text(face="bold",size = 10),
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
-August12
 
-##Trial Run Plot For Legend
 
 SynEff<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
 
@@ -135,12 +128,11 @@ Total<-ggplot(SynEff)+
         axis.title.y = element_text(face = "bold",size = 15),
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black",fill = NA,size = 3))
-Total
 
 ##Combining Graphs
-tiff("Plot2.tiff", res = 300)
-ggarrange(Total,Jul18,Jul31,August12,
-                   labels=c("Total","July 18","July 31","Aug 12"),
+tiff("Plot3.tiff", width = 4, height = 4, units = 'in', res = 300)
+ggarrange(Total,Jul18,Jul31,August6,
+                   labels=c("Total","July 18","July 31","Aug 6"),
           common.legend=TRUE,legend="bottom",
                    ncol=2,nrow=2)
 dev.off()
