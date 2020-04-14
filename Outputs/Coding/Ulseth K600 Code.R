@@ -4,23 +4,20 @@ library(dplyr)
 library(pracma)
 library(plotly)
 library(scales)
-library(plotly)
+library(here)
 
 #Opening Ulseth Supplementary
-Ulseth<-read.csv("C:/Users/nehemiah/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Ulseth Supplementary Info.csv")
-K600<-Ulseth$k600
-Velocity<-Ulseth$Vms
 
-Ulseth$k600<-factor(Ulseth$k600,levels = c("Hall & Madinger 2018","Maurice et al. 2017","Raymond et al. 2012","Scheler et al. 2016","Ulseth et al. 2019","This Study"))
+Ulseth<-read.csv(here("Outputs/Gas Transfer Velocity/Ulseth Supplementary Info.csv"))
 
 K600vsVPlot<-ggplot(Ulseth)+
   geom_point(aes(x = Vms,y = k600, colour = data),show.legend = FALSE)+
   labs(y=expression(bold("Log K600 (m/day)")),x=expression(bold("Log Velocity (m/s)")),colour="Study")+
   scale_colour_manual(values = c("#59c76a","#6b9aae","#39c7e3","#c238c7","#c72e78","#dedb37"))+
-  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x)))+
-  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x)))+
+  scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                labels = scales::trans_format("log10", scales::math_format(10^.x)))+
+  scale_x_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                labels = scales::trans_format("log10", scales::math_format(10^.x)))+
   theme(axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
 K600vsVPlot
