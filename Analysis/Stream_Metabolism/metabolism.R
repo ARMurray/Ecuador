@@ -2,6 +2,7 @@ library(streamMetabolizer)
 library(dplyr)
 library(imputeTS)
 library(lubridate)
+library(tidyr)
 library(here)
 
 
@@ -53,7 +54,7 @@ df1 <- df1%>%
 df1a <- df1%>%
   mutate("solar.time" = round_date(solar.time, '15 minutes'))
 
-## Create full datafram of timesteps
+## Create full dataframE of timesteps
 timestep <- df1$solar.time[2]-df1$solar.time[1]
 fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[length(df1$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
@@ -110,12 +111,23 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
   left_join(df4a)%>%
   na_interpolation(option = 'linear', maxgap = Inf)
 
+## Check calculated K600 Values
+k600 <- read.csv(here("Analysis/Stream_Metabolism/data_for_StreamMetabolizer/K600vals.csv"))%>%
+  pivot_longer(c("K600.eq1","K600.eq3","K600.eq4","K600.effective"), names_to = "Equation",values_to = "K600")
+
+ggplot(k600)+
+  geom_point(aes(x = dist.m.AVE, y = K600, color = Equation, shape = Date))+
+  labs(x = "Downstream Distance from Wetland (m)", y = "K600 [m/day]", title = "K600 by Date and Equation")
+
+
 # ***************** Baysean model parameters ********************** #
+# Set random K600 between 0.5 and 31
+rk600 <- round(runif(1,0.5,31),2)
 
 bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
 bayes_specs <- specs(bayes_name)
 
-bayes_specs <- revise(bayes_specs, burnin_steps=300, saved_steps=950, n_cores=4, GPP_daily_mu=3, GPP_daily_sigma=2)
+bayes_specs <- revise(bayes_specs, burnin_steps=300, saved_steps=600, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
 
 # Fit the models
 t1 <- Sys.time()
@@ -128,8 +140,8 @@ t4 <- Sys.time()
 
 
 # Set the output folder
-dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04032020_02"))
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04032020_02")
+dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04142020_01"))
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/model_04142020_01")
 
 # Write some model specs to a csv
 params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs))
@@ -192,7 +204,7 @@ png(filename=paste0(folder,"/metabolism_stn4.png"))
 plot_metab_preds(mm4)
 dev.off()
 
-#msg <- get_params(mm1)
+
 
 
 
