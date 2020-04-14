@@ -14,7 +14,7 @@ dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj,DO1_mg.L,DO2_mg.L,DO4_mg.L,tempC_421,lvl_436_m,lvl_421_m,stn3_Q)%>%
   filter(Inj == "No")
 
-dat$DateTime <- as.POSIXct(dat$DateTime,format = "%m/%d/%Y %H:%M", tz = "Etc/GMT+5")
+dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/GMT+5")
 
 # Convert to solar time
 dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
@@ -54,7 +54,7 @@ df1 <- df1%>%
 df1a <- df1%>%
   mutate("solar.time" = round_date(solar.time, '15 minutes'))
 
-## Create full dataframE of timesteps
+## Create full dataframe of timesteps
 timestep <- df1$solar.time[2]-df1$solar.time[1]
 fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[length(df1$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
