@@ -20,7 +20,7 @@ largernumbers2 <- element_text(face = "bold", size = 12)
 
 #load in the data
 
-slope <- read.csv(here("K600_calculate_newslope_newV_2020-03-12.csv"))
+slope <- read.csv(here::here("K600_calculate_newslope_newV_2020-03-12.csv"))
 
 #make a grapg of dist.m vs. slope.unitless
 

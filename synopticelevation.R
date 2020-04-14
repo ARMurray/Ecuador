@@ -6,12 +6,12 @@ library(crayon)
 library(cowplot)
 
 
-ele <- read.csv(here::here("syn1.csv"))
+ele <- read.csv(here::here("FieldData/SlopeCalc_Synoptic_Slopes_04082020.csv"))
 
 
 
 dve <- ggplot(data=ele, aes(x=Distance, y=Elevation)) +
-  geom_line(linetype = "dashed")+
+  geom_line( linetype = "dashed")+
   geom_point(aes(x= Distance, y= Elevation), color= "#56B4E9", size = 2) +
   geom_point(aes(x= Distance.for.Eos, y= Elevation), color= "black", size = 2) +
   labs(x = "Distance from Wetland [m]", y= "Elevation [m]")  +
@@ -33,5 +33,8 @@ dve <- ggplot(data=ele, aes(x=Distance, y=Elevation)) +
 
 dve
 
-dev.copy(png,'Rplot19.png')
-dev.off()
+
+
+
+
+
