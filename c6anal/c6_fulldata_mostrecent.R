@@ -258,14 +258,15 @@ combo <- c6time %>% ggplot()+
   geom_point(aes(x= DateTime, y = Flux_1), color = "#1C366B")+
   ylim(0, 4.1)
 combo <- combo + 
-  geom_point(aes(x= DateTime, y = V1 * 4.1/4200), color = "#cecd7b")
+  geom_point(aes(x= DateTime, y = V1_adjusted * 4.1/5700), color = "#cecd7b") ###HERE FOR PPM
 combo 
 
 combo2 <- combo + scale_y_continuous(
-  name = expression(bold("Evasion"~"[""umol/"~m^2"s"~])), 
-  sec.axis = sec_axis(~ . * 4200 / 4.1 , name = expression(bold("pCO"["2"]~"[ppm]"))), 
+  name = expression(bold("Evasion"~"["~"umol/"~m^2~s^-1~"]")), 
+  sec.axis = sec_axis(~ . * 5700 / 4.1 , name = expression(bold("pCO"["2"]~"[ppm]"))), 
   limits = c(0, 4.1))
  
+
 
 combo2 <- combo2 + theme_bw() + 
   theme(axis.title.x=element_blank(),axis.text.x = largernumbers,axis.text.y= largernumbers,
@@ -344,6 +345,14 @@ grid.newpage()
 grid.draw(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
                 ggplotGrob(cute2), ggplotGrob(bob2)))
 
+
+#merge all three plots within one grid (and visualize this)
+grid.arrange(testplot3, combo2, cute2, bob2, nrow=4) #arranges plots within grid
+
+#save
+g <- arrangeGrob(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
+                 ggplotGrob(cute2), ggplotGrob(bob2))) #generates g
+ggsave(here(file="c6figure.eps"), g, width=30, height=20, units="cm", dpi=300) #saves g
 
 
 
