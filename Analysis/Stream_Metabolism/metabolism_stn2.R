@@ -39,34 +39,34 @@ dat$light <- calc_light(dat$solar.time,-.3,-78.2)
 
 # Set up data frame for model run at each station
 
-# DO Sensor 1
-df1 <- dat%>%
-  select(solar.time,DO1_mg.L,DO.sat,lvl_421_m,tempC_421,light,stn3_Q)
-colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
+# DO Sensor 2
+df2 <- dat%>%
+  select(solar.time,DO2_mg.L,DO.sat,lvl_421_m,tempC_421,light,stn3_Q)
+colnames(df2) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
 
-df1 <- df1[complete.cases(df1),]
-df1 <- df1%>%
+df2 <- df2[complete.cases(df2),]
+df2 <- df2%>%
   distinct()%>%
   arrange(solar.time)
 
-# Fix timestamps and interpolate missing data (Station 1)
+# Fix timestamps and interpolate missing data (Station 2)
 ## Round timestamps to closest 15-minute
-df1a <- df1%>%
+df2a <- df2%>%
   mutate("solar.time" = round_date(solar.time, '15 minutes'))
 
 ## Create full dataframe of timesteps
-timestep <- df1$solar.time[2]-df1$solar.time[1]
-fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[length(df1$solar.time)], by=timestep))%>%
+timestep <- df2$solar.time[2]-df2$solar.time[1]
+fulltime2 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[length(df2$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
-  left_join(df1a)%>%
+  left_join(df2a)%>%
   na_interpolation(option = 'linear', maxgap = Inf)
 
 
 # ***************** Baysean model parameters ********************** #
 
 # Set the output folder
-dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_model_04142020_02"))       ### MAKE    TO      THESE!!!!
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_model_04142020_02")         ###     SURE  CHANGE     !!!!
+dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_model_04142020_02"))       ### MAKE    TO      THESE!!!!
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_model_04142020_02")         ###     SURE  CHANGE     !!!!
 
 
 outdf <- data.frame()   # Create empty data frame to write model parameters to
@@ -77,42 +77,42 @@ for(n in 1:100){
   rBurnIn <- round(runif(1,100,400),0)  # Set random burn in steps
   
   rSteps <- round(runif(1,200,600),0)  # set random saved steps
-
-
+  
+  
   bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
   bayes_specs <- specs(bayes_name)
-
+  
   bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
-
+  
   t1 <- Sys.time() # Record start time
-  mm1 <- metab(bayes_specs, data=fulltime1) # Fit the model
+  mm2 <- metab(bayes_specs, data=fulltime2) # Fit the model
   t2 <- Sys.time() # Record end time
-
+  
   params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs)) # Write some model specs to a csv
-
-  times <- data.frame("Parameter"=c("Station 1 Time"),
-                    "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1))))      # Add Completion Times
+  
+  times <- data.frame("Parameter"=c("Station 2 Time"),
+                      "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1))))      # Add Completion Times
   
   outParams <- rbind(params,times)  # Combine output parameters
   outParams$run <- n   # Add a column to note which run this was in the loop
-
+  
   outdf <- rbind(outdf,outParams)   # Add each iteration to an output data frame that will be written to a file after the loop completes
-
-  capture.output(mm1,file=paste0(folder,"/DO_1_Output_",n,".txt")) # Write model outputs to text files
   
-  pred1 <- predict_metab(mm1) # Predictions
+  capture.output(mm2,file=paste0(folder,"/DO_2_Output_",n,".txt")) # Write model outputs to text files
   
-  write.csv(pred1,paste0(folder,"/DO_1_Predictions_",n,".csv")) # Write Predictions to file
+  pred2 <- predict_metab(mm2) # Predictions
+  
+  write.csv(pred2,paste0(folder,"/DO_2_Predictions_",n,".csv")) # Write Predictions to file
   
   ## K600 Plots
-  mcmc <- get_mcmc(mm1)
-  png(filename=paste0(folder,"/mcmc_stn1_",n,".png"))
+  mcmc <- get_mcmc(mm2)
+  png(filename=paste0(folder,"/mcmc_stn2_",n,".png"))
   rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
   dev.off()
   
   # ER & GPP Plots
-  png(filename=paste0(folder,"/metabolism_stn1_",n,".png"))
-  plot_metab_preds(mm1)
+  png(filename=paste0(folder,"/metabolism_stn2_",n,".png"))
+  plot_metab_preds(mm2)
   dev.off()
 }
 
