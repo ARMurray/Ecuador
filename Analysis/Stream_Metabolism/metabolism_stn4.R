@@ -65,8 +65,8 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
 # ***************** Baysean model parameters ********************** #
 
 # Set the output folder
-dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04152020_01"))       ### MAKE    TO      THESE!!!!
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04152020_01")         ###     SURE  CHANGE     !!!!
+dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04172020_01"))       ### MAKE    TO      THESE!!!!
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04172020_01")         ###     SURE  CHANGE     !!!!
 
 
 outdf <- data.frame()   # Create empty data frame to write model parameters to
