@@ -65,19 +65,22 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
 # ***************** Baysean model parameters ********************** #
 
 # Set the output folder
-dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04172020_01"))       ### MAKE    TO      THESE!!!!
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_model_04172020_01")         ###     SURE  CHANGE     !!!!
+#dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs"))       ### MAKE    TO      THESE!!!!
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs")         ###     SURE  CHANGE     !!!!
 
 
 outdf <- data.frame()   # Create empty data frame to write model parameters to
 
+date <- 202004170000    # UPDATE THIS TOO!!!!
+
 for(n in 1:100){
-  rk600 <- round(runif(1,0.5,200),2)  # Set random K600 between 0.5 and 31
+  rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 31
   
   rBurnIn <- round(runif(1,100,400),0)  # Set random burn in steps
   
   rSteps <- round(runif(1,200,600),0)  # set random saved steps
   
+  id <- date+n
   
   bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
   bayes_specs <- specs(bayes_name)
@@ -95,24 +98,24 @@ for(n in 1:100){
   
   outParams <- rbind(params,times)  # Combine output parameters
   outParams$run <- n   # Add a column to note which run this was in the loop
-  write.csv(outParams,paste0(folder,"/specs_",n,".csv")) # Write table of parameters
+  write.csv(outParams,paste0(folder,"/DO_4_Specs_",id,".csv")) # Write table of parameters
   
-  capture.output(mm4,file=paste0(folder,"/DO_4_Output_",n,".txt")) # Write model outputs to text files
+  capture.output(mm4,file=paste0(folder,"/DO_4_Output_",id,".txt")) # Write model outputs to text files
   
   pred4 <- predict_metab(mm4) # Predictions
   
-  write.csv(pred4,paste0(folder,"/DO_4_Predictions_",n,".csv")) # Write Predictions to file
+  write.csv(pred4,paste0(folder,"/DO_4_Predictions_",id,".csv")) # Write Predictions to file
   
   ## K600 Plots
-  mcmc <- get_mcmc(mm4)
-  png(filename=paste0(folder,"/mcmc_stn4_",n,".png"))
-  rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
-  dev.off()
+#  mcmc <- get_mcmc(mm4)
+#  png(filename=paste0(folder,"/mcmc_stn4_",n,".png"))
+#  rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+#  dev.off()
   
   # ER & GPP Plots
-  png(filename=paste0(folder,"/metabolism_stn4_",n,".png"))
-  plot_metab_preds(mm4)
-  dev.off()
+#  png(filename=paste0(folder,"/metabolism_stn4_",n,".png"))
+#  plot_metab_preds(mm4)
+#  dev.off()
 }
 
 
