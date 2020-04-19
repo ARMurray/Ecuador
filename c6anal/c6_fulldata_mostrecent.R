@@ -352,7 +352,7 @@ grid.arrange(testplot3, combo2, cute2, bob2, nrow=4) #arranges plots within grid
 #save
 g <- arrangeGrob(rbind(ggplotGrob(testplot3), ggplotGrob(combo2),
                  ggplotGrob(cute2), ggplotGrob(bob2))) #generates g
-ggsave(here(file="c6figure.eps"), g, width=30, height=20, units="cm", dpi=300) #saves g
+ggsave(here(file="c6figure2.pdf"), g, width=30, height=20, units="cm", dpi=200) #saves g
 
 
 

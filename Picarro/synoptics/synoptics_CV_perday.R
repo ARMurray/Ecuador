@@ -304,16 +304,25 @@ legend <- get_legend(plot8)
 
 label <- as.expression(expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
 
-grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4),bottom=(bold("Distance from Wetland [m]")),
-             left=bquote(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))
+grid.arrange(arrangeGrob(plot, plot3, plot5, plot7, nrow=4),
+             left=bquote(paste(delta^{13}, "C", "F"[AQ], "[%]")))
 
 grid.newpage()
-grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot3),
-                ggplotGrob(plot5), ggplotGrob(plot7)))
+grid.arrange(rbind(ggplotGrob(plot), ggplotGrob(plot3),
+                ggplotGrob(plot5), ggplotGrob(plot7)), left="test")
 
 
-grid.newpage()
-grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot7)))
+grid.arrange(arrangeGrob(rbind(ggplotGrob(plot), ggplotGrob(plot3),
+                   ggplotGrob(plot5), ggplotGrob(plot7))), ncol=2, widths= c(3,.1))
+
+
+
+
+
+#save
+g <- arrangeGrob(rbind(ggplotGrob(plot), ggplotGrob(plot3),
+                       ggplotGrob(plot5), ggplotGrob(plot7)), ncol=2, widths= c(3,.1)) #generates g
+ggsave(here(file="figure6.pdf"), g, width=30, height=20, units="cm", dpi=200) #saves g
 
 
 

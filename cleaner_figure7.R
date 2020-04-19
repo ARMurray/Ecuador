@@ -56,7 +56,7 @@ plotdry2 <- ggplot(unsat, mapping=aes(x= day, y= CorrectedAverage)) +
                   shape=unsat$Sample)+scale_shape_manual(values=c(1,4,6,9)) 
 
 plotdry2 <- plotdry2 + ggtitle("Unsaturated")+
-  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  labs(x="Day",  y=expression(bold(paste(delta^{13}, "C"[s], "[‰]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
@@ -64,7 +64,7 @@ plotdry2 <- plotdry2 + ggtitle("Unsaturated")+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
         axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
-  
+
 plotdry2 <- plotdry2 +  ylim(-18.2,-9)
 plotdry2
 
@@ -76,17 +76,30 @@ plotwet2 <- ggplot(sat, mapping=aes(x= day, y= CorrectedAverage)) +
                   shape=sat$Sample)+scale_shape_manual(values=c(16,15,18)) 
 
 plotwet2 <- plotwet2 + ggtitle("Saturated")+
-  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C"[s], "[‰]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=largernumbers,
-        axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
+        axis.text.y=largernumbers2, axis.title.y=element_blank(), plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
 
 plotwet2 <- plotwet2 +  ylim(-18.2,-9)
 plotwet2
 
+grid.arrange(arrangeGrob(rbind(ggplotGrob(plot), ggplotGrob(plot3),
+                               ggplotGrob(plot5), ggplotGrob(plot7))), ncol=2, widths= c(3,.1))
 
-grid.arrange(arrangeGrob(plotdry2, plotwet2, nrow=2), ncol = 1)
+g <- grid.arrange(arrangeGrob(ggplotGrob(plotdry2), ggplotGrob(plotwet2)), nrow=1, ncol = 2, widths=c(3,.1))
+
+
+#titley <- expression(bold(paste(delta^{13}, "C"[s], "[‰]")))
+
+
+
+#save
+g <- grid.arrange(arrangeGrob(ggplotGrob(plotdry2), ggplotGrob(plotwet2)), nrow=1, ncol = 2, widths=c(3,.1)) #generates g
+ggsave(here(file="figure7.pdf"), g, width=30, height=20, units="cm", dpi=200) #saves g
+
+g

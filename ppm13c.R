@@ -171,7 +171,7 @@ write.csv(ppmdelta, here("Picarro/ppmdelta.csv"))
 
 ppmC <- ggplot(ppmdelta)+
   geom_point(ppmdelta, mapping=aes(x=Syn, y=CorrectedAverage, color=DistSyn), size=3)+
-  labs(x=expression(bold(paste("pCO"[2], "[ppm]"))), y=expression(bold(paste(delta^{13}, "C"[AQ], "[‰]"))), color="")+
+  labs(x=expression(bold(paste("pCO"[2], "[ppm]"))), y=expression(bold(paste(delta^{13}, "C"[AQ], "[%]"))), color="")+
   scale_color_viridis(option = "B", discrete = FALSE)+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=largernumbers,
@@ -184,7 +184,10 @@ ppmC <- ppmC + scale_y_continuous(limits=c(-18, -10))
 ppmC
 
 
+g <- grid.arrange(arrangeGrob(ggplotGrob(ppmC))) #generates g
+ggsave(here(file="figure8.pdf"), g, width=20, height=20, units="cm", dpi=200) #saves g
 
+g
     
 
 
