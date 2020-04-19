@@ -40,8 +40,7 @@ colnames(Syn) <- c("Date","Distance","K600")
 
 ggplot(Syn)+
   geom_point(aes(x=Distance,y=K600,color= Date),shape=19,size=2)+
-  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
-                             "6-Aug"="green","12-Aug"="blue"),
+  scale_color_manual(values=c("red","orange","yellow","green","blue"),
                      name = bquote('Discharge'~m^3~s^-1),
                      labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
   labs(x ="Distance From Upstream (m)" ,
