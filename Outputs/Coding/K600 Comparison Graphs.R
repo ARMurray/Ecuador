@@ -54,6 +54,8 @@ Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
         axis.line = element_line(colour = "black"),
         panel.border = element_rect(colour = "black", fill=NA, size=3))
 
+Jul18
+
 Jul31<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
   geom_point(data = July25K,colour="Orange",shape=19,size=2)+
