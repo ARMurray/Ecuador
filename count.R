@@ -9,7 +9,7 @@ list.files(path = here(), recursive = T, full.names = T, pattern = ".Rmd$") %>%
 
 
 files <- list.files(path = here(), recursive = T, full.names = T, pattern = '.R$')
-count(files)
+length(files)
 
 
 # Stats

@@ -165,9 +165,9 @@ get_legend<-function(myggplot){
   return(legend)
 }
 
-largernumbers <- element_text(face = "bold", size = 12)
-largernumbers2 <- element_text(face = "bold", size = 10)
-legend <- get_legend(plot1)
+largernumbers <- element_text(face = "bold", size = 14)
+largernumbers2 <- element_text(face = "bold", size = 12)
+
 
 
 #collar 1 
@@ -175,13 +175,12 @@ plot1 <- ggplot(col1, aes(x= day, y= CorrectedAverage, color=day)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=2) +
   scale_color_manual(values = wes_palette("Zissou1", 6, type = "continuous"))+
   ggtitle("Collar 1")+
-  labs(x="day", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="day", y=expression(bold(paste(delta^{13}, "C"[AQ], "[‰]"))))+
   scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"),
                    labels = c("July17", "July23", "July30", "Aug02", 
                               "Aug09", "Aug13"))+
   theme(legend.position = "none",
-        axis.title.y=element_blank(),
         axis.text.x =element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
@@ -337,6 +336,7 @@ plot8 <- ggplot(col8, aes(x= day, y= CorrectedAverage, color=day)) +
   ylim(-18.2,-9)
 plot8
 
+
 #orange - #de7f00, #e69200
 #red #ef0000
 #darker blue #2d88a4
@@ -347,9 +347,222 @@ plot8
 #initial try of them going together 
 
 grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4, nrow=2),
-             legend, ncol=2, widths = c(2.8, .4))
+             ncol=2, widths = c(2.8, .4))
 
+grid.arrange(arrangeGrob(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
 
+grid.newpage()
+grid.draw(rbind(plot8,plot7,plot6,plot5,plot1,plot2,plot3,plot4))
  
 # need to do dry --> wet color scheme col 5 most blue. col 1 and 8 most dry 
+
+
+#ok, here's what we want now, we want collars 8,7,1,2 on the same plot 
+#this is unsaturated 
+
+
+plot7.2 <- ggplot(col7, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col7, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#6e8b3d", shape=1)
+
+
+plot7.2 <- plot7.2 + geom_point(col8, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col8, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#6e8b3d", shape=4)
+
+plotdry <- plot7.2 + geom_point(col1, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col1, mapping =aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color = "#6e8b3d", shape=6) 
+
+
+plotdry  
+
+plotdry <- plotdry + geom_point(col2, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col2, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color ="#6e8b3d", shape=9) 
+  
+  
+  
+plotdry <- plotdry + ggtitle("Unsaturated")+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(), plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
+
+
+        
+plotdry <- plotdry +  ylim(-18.2,-9)
+        
+plotdry
+
+#saturated 
+#we need plots 3,4,5,6
+
+largernumbers <- element_text(face = "bold", size = 10)
+
+
+plotwet <- ggplot(col3, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col3, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=16)
+
+
+plotwet <- plotwet + geom_point(col4, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col4, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=15)
+
+
+#plotwet <- plotwet + geom_point(col5, mapping=aes(x= day, y= CorrectedAverage)) + 
+ # geom_pointrange(col5, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=17)
+  
+plotwet <- plotwet + geom_point(col6, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(col6, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.7, color="#a1ce5a", shape=18)
+  
+
+plotwet
+
+plotwet <- plotwet + ggtitle("Saturated")+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))
+
+
+plotwet <- plotwet +  ylim(-18.2,-9)
+plotwet
+
+
+
+
+grid.arrange(arrangeGrob(plotdry, plotwet, nrow=2), ncol = 1)
+             
+
+
+unsat <- unsat[order(unsat$Sample),]
+
+plotwet2 <- ggplot(unsat, mapping=aes(x= day, y= CorrectedAverage)) + 
+  geom_pointrange(unsat, mapping=aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), group=unsat$Sample, size=.7, color="#a1ce5a", 
+                  shape=unsat$Sample)+scale_shape_manual(values=c(16,15,18))
+plotwet2
+
+
+plotwet2 <- plotwet2 + ggtitle("Saturated")+
+  labs(x="Day", y=expression(bold(paste(delta^{13}, "C", "F"[AQ], "[%]"))))+
+  scale_x_discrete(limits = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"),
+                   labels = c("July17", "July23", "July30", "Aug02", 
+                              "Aug09", "Aug13"))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = largernumbers2, axis.title.x=element_blank(),
+        axis.text.y=largernumbers2, axis.title.y=element_blank(),plot.title = element_text(margin = margin(t= 10, b = -20), face="bold"))+
+ 
+
+
+plotwet2 <- plotwet2 +  ylim(-18.2,-9)
+plotwet2
+
+
+
+
+
+
+
+#getting .csv for diego to run tests 
+
+allcollar <- rbind(col1,col2,col3,col4,col6,col7,col8)
+
+allcollar <- allcollar[order(allcollar$day),]
+
+write.csv(allcollar, here("Picarro/EOSTransects/" , "allcollarfordiego.csv"))
+
+play <- read.csv(here("Picarro/EOSTransects/allcollarfordiego.csv"))
+
+max(play$CorrectedAverage)
+min(play$CorrectedAverage)
+
+#now let's make a data from with just the unsaturated and saturated average for each day 
+
+#table of unsaturated 
+
+unsat <- rbind(col1,col2,col7,col8)
+unsat <- unsat[order(unsat$day),]
+max(unsat$CorrectedAverage)
+min(unsat$CorrectedAverage)
+
+
+sat <- rbind(col3,col4,col6)
+sat <- sat[order(sat$day),]
+
+
+max(sat$CorrectedAverage)
+min(sat$CorrectedAverage)
+
+Aug02 <- data.frame("Sample"= "unsaturated", "day"="Aug02", "Average"= 
+                         mean(unsat$CorrectedAverage
+                              [which(unsat$day == "Aug02")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                              [which(unsat$day == "Aug02")]))
+Aug02$Sample <- as.character(Aug02$Sample)
+Aug02 <- rbind(Aug02,list("saturated","Aug02",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "Aug02")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "Aug02")])))
+
+
+Aug09 <- data.frame("Sample"= "unsaturated", "day"="Aug09", "Average"= 
+                      mean(unsat$CorrectedAverage
+                           [which(unsat$day == "Aug09")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                           [which(unsat$day == "Aug09")]))
+Aug09$Sample <- as.character(Aug09$Sample)
+Aug09 <- rbind(Aug09,list("saturated","Aug09",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "Aug09")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "Aug09")])))
+Aug13 <- data.frame("Sample"= "unsaturated", "day"="Aug13", "Average"= 
+                      mean(unsat$CorrectedAverage
+                           [which(unsat$day == "Aug13")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                           [which(unsat$day == "Aug13")]))
+Aug13$Sample <- as.character(Aug13$Sample)
+Aug13 <- rbind(Aug13,list("saturated","Aug13",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "Aug13")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "Aug13")])))
+
+July17 <- data.frame("Sample"= "unsaturated", "day"="July17", "Average"= 
+                      mean(unsat$CorrectedAverage
+                           [which(unsat$day == "July17")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                           [which(unsat$day == "July17")]))
+July17$Sample <- as.character(July17$Sample)
+July17 <- rbind(July17,list("saturated","July17",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "July17")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "July17")])))
+
+
+
+July23 <- data.frame("Sample"= "unsaturated", "day"="July23", "Average"= 
+                      mean(unsat$CorrectedAverage
+                           [which(unsat$day == "July23")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                           [which(unsat$day == "July23")]))
+July23$Sample <- as.character(July23$Sample)
+July23 <- rbind(July23,list("saturated","July23",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "July23")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "July23")])))
+
+July30 <- data.frame("Sample"= "unsaturated", "day"="July30", "Average"= 
+                      mean(unsat$CorrectedAverage
+                           [which(unsat$day == "July30")]), "Std_Dev" =  sd(unsat$CorrectedAverage
+                                                                           [which(unsat$day == "July30")]))
+July30$Sample <- as.character(July30$Sample)
+July30 <- rbind(July30,list("saturated","July30",mean(sat$CorrectedAverage
+                                                   [which(sat$day == "July30")]), sd(sat$CorrectedAverage
+                                                                                    [which(sat$day == "July30")])))
+
+satunsatsummary <- rbind(July17, July23, July30,Aug02,Aug09,Aug13)
+
+write.csv(satunsatsummary, here("Picarro/EOSTransects/" , "satunsatsummary_perday.csv"))
+
+
+
+
+
+
+
+
 

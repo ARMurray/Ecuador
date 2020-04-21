@@ -1,0 +1,104 @@
+metab_model of type metab_bayes 
+streamMetabolizer version 0.10.9 
+Specifications:
+  model_name               b_Kb_oipi_tr_plrckm.stan                     
+  engine                   stan                                         
+  split_dates              FALSE                                        
+  keep_mcmcs               TRUE                                         
+  keep_mcmc_data           TRUE                                         
+  day_start                4                                            
+  day_end                  28                                           
+  day_tests                full_day, even_timesteps, complete_data, p...
+  required_timestep        NA                                           
+  K600_lnQ_nodes_centers   -3, -2, -1, 0, 1, 2, 3                       
+  GPP_daily_mu             3                                            
+  GPP_daily_lower          -Inf                                         
+  GPP_daily_sigma          2                                            
+  ER_daily_mu              -7.1                                         
+  ER_daily_upper           Inf                                          
+  ER_daily_sigma           7.1                                          
+  K600_lnQ_nodediffs_sdlog 0.5                                          
+  K600_lnQ_nodes_meanlog   2.484906649788, 2.484906649788, 2.48490664...
+  K600_lnQ_nodes_sdlog     1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32     
+  K600_daily_sigma_sigma   0.24                                         
+  err_obs_iid_sigma_scale  0.03                                         
+  err_proc_iid_sigma_scale 5                                            
+  params_in                GPP_daily_mu, GPP_daily_lower, GPP_daily_s...
+  params_out               GPP, ER, GPP_daily, ER_daily, K600_daily, ...
+  n_chains                 4                                            
+  n_cores                  24                                           
+  burnin_steps             194                                          
+  saved_steps              483                                          
+  thin_steps               1                                            
+  verbose                  FALSE                                        
+  init.K600.daily          56.7                                         
+  model_path               /nas/longleaf/home/armurray/R/x86_64-redha...
+Fitting time: 349.869 secs elapsed
+Parameters (34 dates):
+         date  GPP.daily GPP.daily.lower GPP.daily.upper   ER.daily
+1  2019-07-12        NA               NA              NA        NA 
+2  2019-07-13 1.3805666        1.2276274       1.5260411 -4.290219 
+3  2019-07-14 1.7686184        1.6329203       1.9153935 -5.467357 
+4  2019-07-15 1.4058693        1.2714357       1.5446370 -4.010034 
+5  2019-07-16 1.4190943        1.2199695       1.6256786 -4.925419 
+6  2019-07-17 1.1423211        1.0030755       1.2765513 -3.586044 
+7  2019-07-18 1.2839033        1.1353664       1.4347157 -4.032135 
+8  2019-07-19 0.9534484        0.8253711       1.0937699 -3.320163 
+9  2019-07-20 1.2650269        1.1239509       1.4049306 -3.682502 
+10 2019-07-21 1.4197825        1.2677734       1.5831079 -4.036486 
+   ER.daily.lower ER.daily.upper K600.daily K600.daily.lower
+1              NA             NA        NA                NA
+2       -4.782909      -3.788171  8.830263          7.680002
+3       -5.997721      -4.951822 11.979702         10.762747
+4       -4.441316      -3.580913  8.497456          7.466390
+5       -5.632123      -4.276939 10.973506          9.424824
+6       -4.051670      -3.131779  7.826720          6.691973
+7       -4.517139      -3.524060  8.364213          7.203312
+8       -3.839001      -2.871308  7.870893          6.706706
+9       -4.107527      -3.211952  8.427642          7.278348
+10      -4.525458      -3.578305  8.265257          7.201151
+   K600.daily.upper msgs.fit
+1                NA  w     E
+2          9.907213  w      
+3         13.212836  w      
+4          9.457551  w      
+5         12.617805  w      
+6          8.906833  w      
+7          9.492429  w      
+8          9.101319  w      
+9          9.499195  w      
+10         9.364678  w      
+  ...
+Fitting warnings:
+  There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+http://mc-stan.org/misc/warnings.html#bfmi-low
+  Examine the pairs() plot to diagnose sampling problems
+  The largest R-hat is 1.06, indicating chains have not mixed.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#r-hat
+  Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#bulk-ess
+  Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#tail-ess
+  34 dates: overall warnings
+Fitting errors:
+  1 date: data don't end when expected
+  1 date: data don't start when expected
+Predictions (34 dates):
+# A tibble: 10 x 9
+   date          GPP GPP.lower GPP.upper    ER ER.lower ER.upper
+   <date>      <dbl>     <dbl>     <dbl> <dbl>    <dbl>    <dbl>
+ 1 2019-07-12 NA        NA         NA    NA       NA       NA   
+ 2 2019-07-13  1.38      1.23       1.53 -4.29    -4.78    -3.79
+ 3 2019-07-14  1.77      1.63       1.92 -5.47    -6.00    -4.95
+ 4 2019-07-15  1.41      1.27       1.54 -4.01    -4.44    -3.58
+ 5 2019-07-16  1.42      1.22       1.63 -4.93    -5.63    -4.28
+ 6 2019-07-17  1.14      1.00       1.28 -3.59    -4.05    -3.13
+ 7 2019-07-18  1.28      1.14       1.43 -4.03    -4.52    -3.52
+ 8 2019-07-19  0.953     0.825      1.09 -3.32    -3.84    -2.87
+ 9 2019-07-20  1.27      1.12       1.40 -3.68    -4.11    -3.21
+10 2019-07-21  1.42      1.27       1.58 -4.04    -4.53    -3.58
+# … with 2 more variables: msgs.fit <chr>, msgs.pred <chr>
+  ...

@@ -6,6 +6,8 @@ library(plotly)
 library(grid)
 library(gridExtra)
 
+
+
 ### load the giant stream file 
 
 allstream <- read.csv(here("data_4_analysis/All_Stream_Data.csv"))
@@ -21,6 +23,8 @@ c6time$DateTime <- as.POSIXct(c6time$DateTime)
 #savethis 
 
 write.csv(c6time, here("c6anal/", "alldatac6times.csv"))
+
+c6time <- read.csv(here("c6anal/alldatac6times.csv"))
 
 #make a table that excludes the co2 injection entirely 
 
@@ -77,7 +81,7 @@ disinjpoly2 <- data.frame(x = c(as.POSIXct("2019-07-16 14:15:00"),
                                  as.POSIXct("2019-07-16 20:00:00"),
                                  as.POSIXct("2019-07-16 14:15:00")),y=c(0,0,325,325))
 #do basic plot of each 
-plot <- ggplot(c6time)+
+plot1 <- ggplot(c6time)+
   geom_point(aes(x= DateTime, y= CDOM_ppb), color= "#27223c")+
   ggtitle("Colored Dissolved Organic Matter")+
   labs(y="CDOM (ppb)", x="")
@@ -86,8 +90,9 @@ plot <- plot+ theme(axis.text.y= largernumbers,
                      plot.title = element_text(margin = margin(t= 10, b = -20)),
                      axis.text.x=element_blank(),
                     plot.margin=unit(c(-.25,1,-.25,1), "cm"))
-plot
-#ggplotly(plot)
+
+plot1
+
 
 plot2 <- ggplot(c6time)+
   geom_point(aes(x= DateTime, y= Turbidity_NTU), color="#d1362f")+

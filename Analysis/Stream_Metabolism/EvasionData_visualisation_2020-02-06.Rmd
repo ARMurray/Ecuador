@@ -1,0 +1,368 @@
+---
+title: "Visualizing Evasion Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This R markdown is to succincly show the data exploration I have been preforming 
+
+
+First we clean the data
+
+```{r data_clean, include=FALSE}
+evasion <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))
+evasion.df <- evasion[,c("DateTime", "Inj","V1","V2","V3","Flux_1","ppt_mm", "DO2_mg.L", "stn1_Q")]
+evasion.df$DateTime <- as.POSIXct(strptime(evasion.df$DateTime, "%Y-%m-%d %H:%M:%S"))
+
+##Viasala started logging 2019-07-09 at 12:00. Lets remove the first 2 hours of data to allow the sensors time to adjust to thier new environment
+## also remove the last day of data collection
+evasion.df <- evasion.df[which(evasion.df$DateTime > "2019-07-09 14:00:00" &
+                                 evasion.df$DateTime < "2019-08-14 09:00:00"),]
+
+#V3 has a couple wierd data point, they look like errors
+
+evasion.df$V3[evasion.df$DateTime == "2019-07-11 13:30:00" |
+                      evasion.df$DateTime == "2019-08-01 14:30:00"|
+                      evasion.df$DateTime == "2019-08-05 15:50:00" |
+                      evasion.df$DateTime == "2019-08-05 15:51:00" |
+                      evasion.df$DateTime == "2019-08-05 15:51:00"|
+                      evasion.df$DateTime == "2019-08-05 15:52:00"|
+                      evasion.df$DateTime == "2019-08-13 11:00:00"|
+                      evasion.df$DateTime == "2019-08-13 11:15:00"|
+                      evasion.df$DateTime == "2019-08-13 11:30:00"|
+                      evasion.df$DateTime == "2019-08-13 11:45:00"|
+                      evasion.df$DateTime == "2019-08-13 12:00:00"
+                             ] <- NA
+
+#Flux is a little messier. There are short periods on select days that are super messy. I believe this is when the EOS was being moved/fiddled with/ etc. This should be cross referenced in field notes, but for now, lets delete time periods that look off
+evasion.df$Flux_1[evasion.df$Flux_1 <= 0] <- NA
+evasion.df$Flux_1[evasion.df$DateTime > "2019-07-25 11:30:00" &
+                      evasion.df$DateTime < "2019-07-25 17:20:00"] <- NA
+evasion.df$Flux_1[evasion.df$DateTime > "2019-07-29 10:35:00" &
+                      evasion.df$DateTime < "2019-07-29 15:20:00"] <- NA
+evasion.df$Flux_1[evasion.df$DateTime > "2019-07-31 10:35:00" &
+                      evasion.df$DateTime < "2019-07-31 16:05:00"] <- NA
+evasion.df$Flux_1[evasion.df$DateTime > "2019-08-11 04:45:00" &
+                      evasion.df$DateTime < "2019-11-12 16:45:00"] <- NA
+evasion.df$Flux_1[evasion.df$DateTime > "2019-08-06 11:10:00" &
+                      evasion.df$DateTime < "2019-08-06 15:30:00"] <- NA
+
+
+
+```
+
+
+
+```{r data}
+library(lubridate)
+# Distances are 17,30,80
+
+#find the change in co2 concentration between station 1 and station 3
+evasion.df$change_v1V3 <- evasion.df$V1 - evasion.df$V3
+#find the change in co2 concentration between station 1 and station 2
+evasion.df$change_v1V2 <- evasion.df$V1 - evasion.df$V2
+#units on EOS = micromoles/m2/s2
+#convert measurment of CO2 change between V1 and V3 ppm to micromoles
+#eq 1  
+  # [CO2]*discharge*distance btw viasala = flux
+#1 mole of CO2 is 44.01g
+#length of stream btw V1 and V3: 13m
+#width of stream:  .5m
+#stream surface area:
+filt13$uMols_13 <- ((filt13$V1-filt13$V3)/ 37.6) *.0018*(1000000/44.01)*filt13$stn1_Q/1000 
+
+filt34$uMols_34 <- ((filt34$V3-filt34$V4)/ 64) *.0018*(1000000/44.01)*filt34$stn3_Q/1000
+
+
+
+
+
+evasion.df.inj  <- evasion.df[ which(evasion.df$Inj=="Yes" ),]
+
+evasion.df  <- evasion.df[ which(evasion.df$Inj=="No" ),]
+
+
+#evasion.df <- evasion.df[which(evasion.df$DateTime > "2019-07-13 00:00:00" &
+#                                 evasion.df$DateTime <"2019-07-14 12:00:00"),]
+evasion.df <- evasion.df[!with(evasion.df,is.na(Flux_1)& is.na(change_v1V3)),]
+
+evasion.df.night <-  with( evasion.df , evasion.df[ hour( DateTime ) <= 6 | hour( DateTime ) > 18 , ] )
+#Only daytime
+evasion.df.day <-  with( evasion.df , evasion.df[ hour( DateTime ) >= 7 & hour( DateTime ) < 18 , ] )
+
+##### only the weekends#####
+evasion.df_1 <- evasion.df[which(evasion.df$DateTime > "2019-07-13 00:00:00" &
+                                 evasion.df$DateTime <"2019-07-15 00:00:00"),]
+evasion.df_2 <- evasion.df[which(evasion.df$DateTime > "2019-07-20 00:00:00" &
+                                   evasion.df$DateTime <"2019-07-22 00:00:00"),]
+evasion.df_3 <- evasion.df[which(evasion.df$DateTime > "2019-07-27 00:00:00" &
+                                   evasion.df$DateTime <"2019-07-29 00:00:00"),]
+evasion.df_4 <- evasion.df[which(evasion.df$DateTime > "2019-08-03 00:00:00" &
+                                   evasion.df$DateTime <"2019-08-05 00:00:00"),]
+evasion.df_5 <- evasion.df[which(evasion.df$DateTime > "2019-08-10 00:00:00" &
+                                   evasion.df$DateTime <"2019-08-12 00:00:00"),]
+evasion.df.weekend <- rbind(evasion.df_1,evasion.df_2,evasion.df_3,
+                            evasion.df_4,evasion.df_5)
+rm(evasion.df_1,evasion.df_2,evasion.df_3,evasion.df_4,evasion.df_5)
+#######
+```
+
+## Plot all data during non injection time periods
+
+```{r all, echo=FALSE}
+library(plotly)
+library(ggplot2)
+
+df <- evasion.df
+
+plot(df$Flux_1, df$V1)
+abline(fit <- lm(df$V1 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V2)
+abline(fit <- lm(df$V2 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V3)
+abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
+p1 <- plot_ly() %>%
+  add_markers(x = df$Flux_1, y = df$change_v1V3, color = as.numeric(as.POSIXct(strptime(df$DateTime, "%Y-%m-%d %H:%M:%S")))) %>%
+  
+  layout(
+    title = "EOS (flux) vs change in CO2 V3-V1, date", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p1
+
+p2 <- plot_ly() %>%
+  add_markers(x = df$Flux_1, y = df$change_v1V3, color = df$stn1_Q) %>%
+  
+  layout(
+    title = "EOS (flux) vs change in CO2 V3-V1, discharge", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p2
+
+
+library(plotly)
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
+p3 <- plot_ly() %>%
+  add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  layout(
+    title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p3
+```
+
+##plot all data just during injections
+
+```{r injection, echo=FALSE}
+library(plotly)
+
+df <- evasion.df.inj
+
+plot(df$Flux_1, df$V1)
+abline(fit <- lm(df$V1 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V2)
+abline(fit <- lm(df$V2 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V3)
+abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+
+library(plotly)
+#ay <- list(
+#  tickfont = list(color = "red"),
+#  overlaying = "y",
+#  side = "right",
+#  title = "second y axis"
+#)
+#p <- plot_ly() %>%
+#  add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
+ # add_lines(x = df$DateTime, y = df$change, name = "change in CO2 (V1-V3)", yaxis = "y2") #%>%
+ # layout(
+  #  title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
+   # xaxis = list(title="x")
+#  )
+
+#p
+```
+
+## Plot all data during day
+
+```{r day, echo=FALSE}
+library(plotly)
+
+df <- evasion.df.day
+
+plot(df$Flux_1, df$V1)
+abline(fit <- lm(df$V1 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V2)
+abline(fit <- lm(df$V2 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V3)
+abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+
+library(plotly)
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
+p <- plot_ly() %>%
+  add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  layout(
+    title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p
+```
+##plot all data during night
+
+```{r night, echo=FALSE}
+
+df <- evasion.df.night
+
+plot(df$Flux_1, df$V1)
+abline(fit <- lm(df$V1 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V2)
+abline(fit <- lm(df$V2 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V3)
+abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+
+library(plotly)
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
+p <- plot_ly() %>%
+  add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  layout(
+    title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p
+```
+
+##plot all data during weekends
+
+```{r weekends, echo=FALSE}
+library(plotly)
+
+df <- evasion.df.weekend
+
+plot(df$Flux_1, df$V1)
+abline(fit <- lm(df$V1 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V2)
+abline(fit <- lm(df$V2 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$V3)
+abline(fit <- lm(df$V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+plot(df$Flux_1, df$change_v1V3)
+abline(fit <- lm(df$change_v1V3 ~ df$Flux_1), col="red")
+legend("topright", bty="n", legend=paste("R2 is", 
+         format(summary(fit)$adj.r.squared, digits=4)))
+
+
+library(plotly)
+ay <- list(
+  tickfont = list(color = "red"),
+  overlaying = "y",
+  side = "right",
+  title = "second y axis"
+)
+p <- plot_ly() %>%
+  add_lines(x = df$DateTime, y = df$Flux_1, name = "EOS") %>%
+  add_lines(x = df$DateTime, y = df$change_v1V3, name = "change in CO2 (V1-V3)", yaxis = "y2") %>%
+  layout(
+    title = "EOS (flux) and chang in CO2 over time", yaxis2 = ay,
+    xaxis = list(title="x")
+  )
+
+p
+```
