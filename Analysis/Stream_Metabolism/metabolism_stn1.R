@@ -68,7 +68,7 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))       ### MAKE    TO      THESE!!!!
 folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs")         ###     SURE  CHANGE     !!!!
 
-date <- 202004170000
+date <- 202004210000
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 31
@@ -83,7 +83,7 @@ for(n in 1:100){
   bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
   bayes_specs <- specs(bayes_name)
 
-  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=24, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
+  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
 
   t1 <- Sys.time() # Record start time
   mm1 <- metab(bayes_specs, data=fulltime1) # Fit the model

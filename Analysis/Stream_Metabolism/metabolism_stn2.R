@@ -71,7 +71,7 @@ folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs")    
 
 outdf <- data.frame()   # Create empty data frame to write model parameters to
 
-date <- 202004170000    # UPDATE THIS TOO!!!!
+date <- 202004210000    # UPDATE THIS TOO!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 31
