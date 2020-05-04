@@ -65,13 +65,13 @@ fulltime4 <- data.frame(solar.time=seq.POSIXt(df4$solar.time[1], df4$solar.time[
 # ***************** Baysean model parameters ********************** #
 
 # Set the output folder
-#dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs"))       ### MAKE    TO      THESE!!!!
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs")         ###     SURE  CHANGE     !!!!
+#dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs"))      
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn4_outputs")        
 
 
 outdf <- data.frame()   # Create empty data frame to write model parameters to
 
-date <- 202004210000    # UPDATE THIS TOO!!!!
+date <- 202005030000    # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 31
