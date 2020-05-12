@@ -259,7 +259,7 @@ plot7 <- ggplot(aug12all, aes(x= Distance, y= CorrectedAverage)) +
   geom_pointrange(aes(ymin= (CorrectedAverage-StdDev_iCO2), ymax=CorrectedAverage+StdDev_iCO2), size=.5, color= '#009E73') +
   #scale_color_viridis(option = "B", discrete = TRUE)+
   ggtitle("August 12th")+
-  labs(x="Distance from Wetland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
+  labs(x="Distance from Peatland [m]", y=expression(paste(delta^{13}, "C", "F"[AQ], "[%]")))+
   theme_bw() + 
   theme(legend.position = "right", axis.text.y = element_text(size=12, face="bold"), axis.text.x= element_text(size=12, face = "bold"),
         axis.title.x= (element_text(face="bold", size=14)),
@@ -322,7 +322,7 @@ grid.arrange(arrangeGrob(rbind(ggplotGrob(plot), ggplotGrob(plot3),
 #save
 g <- arrangeGrob(rbind(ggplotGrob(plot), ggplotGrob(plot3),
                        ggplotGrob(plot5), ggplotGrob(plot7)), ncol=2, widths= c(3,.1)) #generates g
-ggsave(here(file="figure6.pdf"), g, width=30, height=20, units="cm", dpi=200) #saves g
+ggsave(here(file="figure6_final.pdf"), g, width=30, height=20, units="cm", dpi=200) #saves g
 
 
 
