@@ -1,8 +1,7 @@
 library(streamMetabolizer)
-library(dplyr)
+library(tidyverse)
 library(imputeTS)
 library(lubridate)
-library(tidyr)
 library(here)
 
 
