@@ -40,10 +40,11 @@ colnames(Syn) <- c("Date","Distance","K600")
 
 ggplot(Syn)+
   geom_point(aes(x=Distance,y=K600,color= Date),shape=19,size=2)+
-  scale_color_manual(values=c("18-Jul"="red","25-Jul"="orange","31-Jul"="yellow",
-                             "6-Aug"="green","12-Aug"="blue"),
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))+
+  scale_color_manual(values=c("Blue","Red","Orange","Yellow","Green"),
                      name = bquote('Discharge'~m^3~s^-1),
-                     labels=c(".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6",".00851-Aug 12"))+
+                     labels=c(".00851-Aug 12",".02283-Jul 18",".00702-Jul 25",".00418-Jul 31",".00251-Aug 6"))+
   labs(x ="Distance From Upstream (m)" ,
        y = bquote('K600'~m~d^-1))+
   theme(axis.title.x = element_text(face = "bold",size = 15),
