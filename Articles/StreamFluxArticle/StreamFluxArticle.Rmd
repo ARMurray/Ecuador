@@ -46,9 +46,9 @@ corresponding_author:
 keypoints:  
   - "Streams in the Páramo region are carbon sources."
   - "Variability in carbon evasion is driven by discharge and slope."
-  - "CO<sub>2</sub> evasion can be quantified with a minimal appraoch."
-abstract: "Long thought to be a carbon sink, the Páramo region of the Andes may be a significant carbon source. We evaluated the spatiotemporal dynamics of CO<sub>2</sub> concentration and flux in a high-elevation stream. We measured 15-min dissolved CO<sub>2</sub>, O2, and discharge, across a wetland-stream transition, characteristic of tropical, alpine environments. "
-plain_language_summary: "Streams emit carbon dioxide to the atmosphere, but how much? Recent research suggests that steaper streams emit more carbon dioxide since they are more turbulent, but the amount of carbon dioxide a stream emits is also dependent on the carbon content of the local ecosystem. The paramo, which is a region in the high Andes mountains in Peru, Ecuador and Columbia, above the treeline (~10,000 ft) and below the snow line (~16,000 ft), is made up of extensive peatlands which hold enormous amounts of carbon. In the past, it was believed that the paramo took in carbon from the atmosphere and stored it however, recent research suggests that the region has reversed course and is now emitting more carbon into the atmosphere than it is taking in. A principal way that carbon is moved from the soils into the atmosphere is through the water cycle. We set up a sensor network in a stream in the Ecuadorian paramo to measure changes in carbon dioxide and dissolved oxygen, while also recording stream discharge. We then took this data and created a method for determining how much carbon dioxide is being emitted from the stream to the atmosphere and how that relates to discharge, steepness of the stream, and precipitation."
+  - "CO~2~ evasion can be quantified with a minimal appraoch."
+abstract: "Long thought to be a carbon sink, the Páramo region of the Andes may be a significant carbon source. We evaluated the spatiotemporal dynamics of CO~2~ concentration and flux in a high-elevation stream. We measured 15-min dissolved CO~2~, O~2~, and discharge, across a wetland-stream transition, characteristic of tropical, alpine environments. "
+plain_language_summary: "Streams emit carbon dioxide to the atmosphere, but how much? Recent research suggests that steaper streams emit more carbon dioxide since they are more turbulent, but the amount of carbon dioxide a stream emits is also dependent on the carbon content of the local ecosystem. The paramo, which is a region in the high Andes mountains in Peru, Ecuador and Columbia, above the treeline (~ 10,000 ft) and below the snow line (~ 16,000 ft), is made up of extensive peatlands which hold enormous amounts of carbon. In the past, it was believed that the paramo took in carbon from the atmosphere and stored it however, recent research suggests that the region has reversed course and is now emitting more carbon into the atmosphere than it is taking in. A principal way that carbon is moved from the soils into the atmosphere is through the water cycle. We set up a sensor network in a stream in the Ecuadorian paramo to measure changes in carbon dioxide and dissolved oxygen, while also recording stream discharge. We then took this data and created a method for determining how much carbon dioxide is being emitted from the stream to the atmosphere and how that relates to discharge, steepness of the stream, and precipitation."
 output: 
     rticles::agu_article
 bibliography: references.bib
@@ -89,8 +89,8 @@ if (any(nchar(rmarkdown::metadata$keypoints) > 100)) {
 
 ```{r dataPrep, echo=FALSE, warning=FALSE, message=FALSE}
 df <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj,V1,V2,V3,V4,DO1_mg.L,DO2_mg.L,DO4_mg.L,Flux_1,Flux_2,tempC_436,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
-  filter(Inj == "No")
+  select(DateTime,Inj.x,V1,V2,V3,V4,DO1_mg.L,DO2_mg.L,DO4_mg.L,Flux_1,Flux_2,tempC_436,airTemp_c,ppt24Tot,ppt48Tot,ppt72Tot,stn1_Q,stn2_Q,stn3_Q,stn4_Q)%>%
+  filter(Inj.x == "No")
 df$DateTime <- ymd_hms(df$DateTime)
 df <- df[1:nrow(df)-1,]
 
@@ -150,7 +150,7 @@ filt34 <- df%>%
 ```
 
 # Introduction
-It is well known that CO<sub>2</sub> flux from freshwater streams impacts the global carbon cycle, however our ability to quantify these affects at a variety of spatial and temporal scales remains limited. The Páramo has historically been thought to be a carbon sink however, recent research suggests that it is now a source of carbon to the atmosphere \citep{carrillo2019breathing}. We tested two methods of quantifying CO<sub>2</sub> evasion in headwater streams in the Páramo region of Ecuador and discuss the results and implications of our findings. We utilized eosense EosFD flux chamber sensors to measure CO<sub>2</sub> flux directly from streams using in-stream flotation devices. Additionally, we used multiple Vaisala CO<sub>2</sub> concentration sensors, fitted with waterproof PTFE sleeves to monitor change in in-stream concentration and calculated flux by converting concentration to mass per area time using the formula:
+It is well known that CO~2~ flux from freshwater streams impacts the global carbon cycle, however our ability to quantify these affects at a variety of spatial and temporal scales remains limited. The Páramo has historically been thought to be a carbon sink however, recent research suggests that it is now a source of carbon to the atmosphere \citep{carrillO2019breathing}. We tested two methods of quantifying CO~2~ evasion in headwater streams in the Páramo region of Ecuador and discuss the results and implications of our findings. We utilized eosense EosFD flux chamber sensors to measure CO~2~ flux directly from streams using in-stream flotation devices. Additionally, we used multiple Vaisala CO~2~ concentration sensors, fitted with waterproof PTFE sleeves to monitor change in in-stream concentration and calculated flux by converting concentration to mass per area time using the formula:
 
 \begin{linenomath*}
 \begin{equation}
@@ -158,15 +158,15 @@ f=\frac{\Delta ppm}{A}*.0018*\frac{10^6}{44.01}*Q+(R-P)
 \end{equation}
 \end{linenomath*}
 
-Where $f$ equals flux in $µmol\:m^{-2}s^{-1}$, $\Delta ppm$ is the change in CO<sub>2</sub> ppm between sensors, $R$ is stream respiration in ppm, $P$ is gross primary production in ppm, A is the stream surface area between sensors in $m^2$, .0018 is the conversion coefficient for $CO_2$ from ppm to $g\:m^{-3}$ and 44.01 is the molar mass of $CO_2$.
+Where $f$ equals flux in $µmol\:m^{-2}s^{-1}$, $\Delta ppm$ is the change in CO~2~ ppm between sensors, $R$ is stream respiration in ppm, $P$ is gross primary production in ppm, A is the stream surface area between sensors in $m^2$, .0018 is the conversion coefficient for $CO_2$ from ppm to $g\:m^{-3}$ and 44.01 is the molar mass of $CO_2$.
 
 ## Background
 The Páramo region is characterized by high elevation, mountainous wetlands that are connected by turbulent streams. Connectivity can be seasonal and dependent upon precipitation intensity. Our specific site lies on the western edge of the Andean continental divide. The site receives mean monthly precipitation of 121 mm (Standard deviation = 61mm). Precipitation is moderately seasonal with maximum precipitation typically occurring in July and minimum precipitation in February. The site experiences some level of precipitation on 83.5% of days. Mean daily temperature is 50 C. We instrumented a reach approximately 140 meters in length which serves as a direct outlet to a wetland with an area of 2.3 Ha as well as multiple additional wetlands further upstream. Four sensor clusters were installed at various intervals representing various stream gradients (figure 1). A waterfall measuring ~4m exists between station 3 and 4.
 
 # Methods
-Four Vaisala GM-220 CO<sub>2</sub> sensors were used to measure dissolved in-stream CO<sub>2</sub> concentrations. We used waterproof PTFE sleeves, following the method presented in Johnson., et al.(2010). The Vaisala sensors, which have a range of 0-10,000 ppm, have a margin of error of 150 ppm (1.5%). To minimize error, all four sensors were initially collocated to establish offset values.
+Four Vaisala GM-220 CO~2~ sensors were used to measure dissolved in-stream CO~2~ concentrations. We used waterproof PTFE sleeves, following the method presented in Johnson., et al.(2010). The Vaisala sensors, which have a range of 0-10,000 ppm, have a margin of error of 150 ppm (1.5%). To minimize error, all four sensors were initially collocated to establish offset values.
   Two eosFD (EoSense) chamber sensors were positioned in the stream using custom made floating platforms. One sensor was located between Station 1 and 2, and the other was collocated with station 4.
-To estimate evasion from the reach, we quantified CO<sub>2</sub> change between station 1 and 4.
+To estimate evasion from the reach, we quantified CO~2~ change between station 1 and 4.
 
 ```{r filt14PpmPlot, echo=FALSE, message=FALSE, warning=FALSE,fig.height=5,fig.width=6, fig.cap = "This is that real nice caption!"}
 
@@ -186,13 +186,13 @@ plotly13Ppm <- filt13%>%
     showticklabels = TRUE,
   tickangle = 325,
   tickfont = xaxisFont, tickformat = "%H:%M"),
-    title = "&#916; CO<sub>2</sub> (Station 3-1 / Station 4-3)",
+    title = "&#916; CO2 (Station 3-1 / Station 4-3)",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
                     x0 = ymd_hm("2019-07-01 06:15"), x1 = ymd_hm("2019-07-01 18:21"), xref = "x",
                     y0 = -2500, y1 = 100, yref = "y",layer='below')),
-  yaxis = list(title = "&#916;CO<sub>2</sub> [ppm]",titlefont = labelFont,
+  yaxis = list(title = "&#916;CO2 [ppm]",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
   tickfont = yaxisFont),
@@ -213,13 +213,13 @@ plotly34Ppm <- filt34%>%
   showticklabels = TRUE,
   tickangle = 325,
   tickfont = xaxisFont, tickformat = "%H:%M"),
-    title = "&#916; CO<sub>2</sub> (Station 3-1 / Station 4-3)",
+    title = "&#916; CO2 (Station 3-1 / Station 4-3)",
          shapes = list(
                list(type = "rect",
                     fillcolor = "yellow", line = list(color = "yellow"), opacity = .2,
                     x0 = ymd_hm("2019-07-01 06:15"), x1 = ymd_hm("2019-07-01 18:21"), xref = "x",
                     y0 = -2500, y1 = 100, yref = "y",layer='below')),
-  yaxis = list(title = "&Delta;CO<sub>2</sub> [ppm]",titlefont = labelFont,
+  yaxis = list(title = "&Delta;CO2 [ppm]",titlefont = labelFont,
   showticklabels = TRUE,
   tickangle = 0,
   tickfont = yaxisFont),
@@ -232,130 +232,12 @@ plotly34Ppm <- filt34%>%
 subplot(plotly13Ppm,plotly34Ppm,nrows=2, shareX = T, margin = c(-.2,0,0,0))
 ```
 
-
-Do not use bulleted lists; enumerated lists are okay. Use #. for list for a cleaner LaTeX output.
-
-#. First element
-
-#. Second element
-
-## A descriptive heading about methods
-
-
-
 # Data
-
-Or section title might be a descriptive heading about data
-
-As of 2018 we recommend use of the TrackChanges package to mark revisions. The trackchanges package adds five new LaTeX commands:
-
-\\note[editor]{The note}
-
-\\annote[editor]{Text to annotate}{The note}
-
-\\add[editor]{Text to add}
-
-\\remove[editor]{Text to remove}
-
-\\change[editor]{Text to remove}{Text to add}
-
-complete documentation is here: http://trackchanges.sourceforge.net/
 
 # Results
 
-Or section title might be a descriptive heading about the results
-
-Enter Figures and Tables near as possible to where they are first mentioned:
-DO NOT USE \\psfrag or \\subfigure commands.
-DO NOT USE \\newcommand, \\renewcommand, or \\def, etc.
-
-```{r}
-plot(pressure)
-```
-
-Example table
-
-\begin{table}
- \caption{Time of the Transition Between Phase 1 and Phase 2$^{a}$}
- \centering
- \begin{tabular}{l c}
- \hline
-  Run  & Time (min)  \\
- \hline
-   $l1$  & 260   \\
-   $l2$  & 300   \\
-   $l3$  & 340   \\
-   $h1$  & 270   \\
-   $h2$  & 250   \\
-   $h3$  & 380   \\
-   $r1$  & 370   \\
-   $r2$  & 390   \\
- \hline
- \multicolumn{2}{l}{$^{a}$Footnote text here.}
- \end{tabular}
- \end{table}
-
-AGU prefers the use of {sidewaystable} over {landscapetable} as it causes fewer problems.
-
-```{r, fig.env = "sidewaysfigure"}
-plot(pressure)
-```
-
-\begin{sidewaystable}
-\caption{Caption here}
-\label{tab:signif_gap_clos}
-\begin{tabular}{ccc}
-one&two&three\\
-four&five&six
-\end{tabular}
-\end{sidewaystable}
-
-If using numbered lines, please surround equations with \\begin{linenomath\*}... \\end{linenomath\*}
-
-\begin{linenomath*}
-\begin{equation}
-y|{f} \sim g(m, \sigma)
-\end{equation}
-\end{linenomath*}
-
 # Conclusions
 
-\appendix
-\section{Here is a sample appendix}
-
-Optional Appendix goes here
-
-Optional Glossary, Notation or Acronym section goes here:
-
-Glossary is only allowed in Reviews of Geophysics
-
-\begin{glossary}
-\term{Term}
- Term Definition here
-\term{Term}
- Term Definition here
-\term{Term}
- Term Definition here
-\end{glossary}
-
-
-\begin{acronyms}
-\acro{Acronym}
- Definition here
-\acro{EMOS}
- Ensemble model output statistics
-\acro{ECMWF}
- Centre for Medium-Range Weather Forecasts
-\end{acronyms}
-
-\begin{notation}
-\notation{$a+b$} Notation Definition here
-\notation{$e=mc^2$}
-Equation in German-born physicist Albert Einstein's theory of special
-relativity that showed that the increased relativistic mass ($m$) of a
-body comes from the energy of motion of the body—that is, its kinetic
-energy ($E$)—divided by the speed of light squared ($c^2$).
-\end{notation}
 
 
 \acknowledgments
@@ -369,13 +251,3 @@ The authors would like to thank:
 La Universidad de San Francisco de Quito for their material and institutional support throughout this research.
 
 
-# Reminders
-
-## How to cite
-
-Please use ONLY \\citet and \\citep for reference citations.
-DO NOT use other cite commands (e.g., \\cite, \\citeyear, \\nocite, \\citealp, etc.).
-Example \\citet and \\citep:
-  ...as shown by \citet{Levitus2012}, \citet{Nuncio2011} and \citet{Raphael2004}
-  ...as shown by \citep{Levitus2012}, \citep{Nuncio2011}, \citep{Raphael2004}.
-  ...has been shown \citep[e.g.,][]{Levitus2012, Nuncio2011, Raphael2004}.

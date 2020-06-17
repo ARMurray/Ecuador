@@ -1,5 +1,5 @@
 ---
-title: "isualizing Evasion Data"
+title: "Visualizing Evasion Data"
 output: html_document
 ---
 
@@ -16,7 +16,7 @@ First we clean the data
 
 ```{r data_clean, include=FALSE}
 evasion <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))
-evasion.df <- evasion[,c("DateTime", "Inj","V1","V2","V3","Flux_1","ppt_mm", "DO2_mg.L")]
+evasion.df <- evasion[,c("DateTime", "Inj.x","V1","V2","V3","Flux_1","ppt_mm", "DO2_mg.L")]
 evasion.df$DateTime <- as.POSIXct(strptime(evasion.df$DateTime, "%Y-%m-%d %H:%M:%S"))
 
 ##Viasala started logging 2019-07-09 at 12:00. Lets remove the first 2 hours of data to allow the sensors time to adjust to thier new environment
