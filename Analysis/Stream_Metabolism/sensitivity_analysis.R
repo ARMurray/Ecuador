@@ -136,3 +136,7 @@ afig <- annotate_figure(fig, bottom = text_grob("Outputs from Strem Metabolizer,
 afig # Make plot
 dev.off()
 
+# Write files
+write.csv(df, here("Analysis/Stream_Metabolism/ModelOutputs/stn1_summary.csv"))
+write.csv(df2, here("Analysis/Stream_Metabolism/ModelOutputs/stn2_summary.csv"))
+write.csv(df4, here("Analysis/Stream_Metabolism/ModelOutputs/stn4_summary.csv"))
