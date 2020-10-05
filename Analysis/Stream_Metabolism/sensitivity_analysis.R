@@ -132,7 +132,7 @@ afig <- annotate_figure(fig, bottom = text_grob("Outputs from Strem Metabolizer,
                                                 hjust = 0, x = .1, face = "italic", size = 12))
 
 
-tiff(here("Analysis/Stream_Metabolism/ModelAnalysis/allStations_GPP_ER.tiff"), width = 14, height = 6, units = 'in', res = 300)
+#tiff(here("Analysis/Stream_Metabolism/ModelAnalysis/allStations_GPP_ER.tiff"), width = 14, height = 6, units = 'in', res = 300)
 afig # Make plot
 dev.off()
 
