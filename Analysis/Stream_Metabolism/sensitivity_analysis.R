@@ -137,6 +137,74 @@ afig # Make plot
 dev.off()
 
 # Write files
-write.csv(df, here("Analysis/Stream_Metabolism/ModelOutputs/stn1_summary.csv"))
-write.csv(df2, here("Analysis/Stream_Metabolism/ModelOutputs/stn2_summary.csv"))
-write.csv(df4, here("Analysis/Stream_Metabolism/ModelOutputs/stn4_summary.csv"))
+#write.csv(df, here("Analysis/Stream_Metabolism/ModelOutputs/stn1_summary.csv"))
+#write.csv(df2, here("Analysis/Stream_Metabolism/ModelOutputs/stn2_summary.csv"))
+#write.csv(df4, here("Analysis/Stream_Metabolism/ModelOutputs/stn4_summary.csv"))
+
+
+### Add in precipitation to the figures
+ppt <- read.csv(here("data_4_analysis/ppt.csv"))%>%
+  mutate(DateTime = lubridate::ymd(DateTime))
+
+temp <- read.csv(here("data_4_analysis/airTemp_5min.csv"))%>%
+  mutate(DateTime = lubridate::mdy_hm(DateTime),
+         Day = lubridate::date(DateTime))%>%
+  group_by(Day)%>%
+  mutate(Daily_High = max(airTemp_c))%>%
+  ungroup()%>%
+  select(Day, Daily_High)%>%
+  distinct()
+
+## STATION 1
+# GPP with ppt
+g1 <- ggplot(df)+
+  geom_line(data = temp, aes(x=Day,y=Daily_High/5), col = "#eb4034", linetype = "dashed")+
+  geom_segment(data = ppt, aes(x=DateTime,xend = DateTime, y = 3-(ppt_mm/20), yend = 3, group = DateTime), col = "#007FAE", size = 4)+
+  geom_line(aes(x= dateTime, y=GPP, group = ID),alpha = 0.1,size = 2)+
+  labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 GPP")+
+  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 12)+
+  geom_hline(yintercept = 0)+
+  xlim(xmin = lubridate::ymd("2019-07-12"), xmax = lubridate::ymd("2019-08-15"))
+
+# ER
+e1 <- ggplot(df)+
+  geom_line(data = temp, aes(x=Day,y=(Daily_High/5)-5), col = "#eb4034", linetype = "dashed")+
+  geom_segment(data = ppt, aes(x=DateTime,xend = DateTime, y = 0-(ppt_mm/20), yend = 0, group = DateTime), col = "#007FAE", size = 4)+
+  geom_line(aes(x= dateTime, y=ER, group = ID),alpha = 0.1,size = 2)+
+  labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 ER")+
+  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 12)+
+  geom_hline(yintercept = 0)+
+  xlim(xmin = lubridate::ymd("2019-07-12"), xmax = lubridate::ymd("2019-08-15"))+
+  ylim(ymin = -7, ymax=2)
+
+e1
+er1 <- ggplot(df)+
+  geom_line(aes(x=dateTime,y=ER, group = ID),alpha = 0.1)+
+  labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 ER")+
+  geom_text(aes(x=ymd("20190810"), y = -5.5, label = paste0("N = ",length(stn1Files))), size = 8)+
+  ylim(ymin = -7, ymax = 2)+
+  geom_hline(yintercept = 0)
+
+## STATION 2
+# GPP with ppt
+g2 <- ggplot(df2)+
+  geom_line(data = temp, aes(x=Day,y=Daily_High/5), col = "#eb4034", linetype = "dashed")+
+  geom_segment(data = ppt, aes(x=DateTime,xend = DateTime, y = 3-(ppt_mm/20), yend = 3, group = DateTime), col = "#007FAE", size = 4)+
+  geom_line(aes(x= dateTime, y=GPP, group = ID),alpha = 0.1,size = 2)+
+  labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 GPP")+
+  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 12)+
+  geom_hline(yintercept = 0)+
+  xlim(xmin = lubridate::ymd("2019-07-12"), xmax = lubridate::ymd("2019-08-15"))
+
+
+## STATION 4
+# GPP with ppt
+g3 <- ggplot(df4)+
+  geom_line(data = temp, aes(x=Day,y=Daily_High/5), col = "#eb4034", linetype = "dashed")+
+  geom_segment(data = ppt, aes(x=DateTime,xend = DateTime, y = 3-(ppt_mm/20), yend = 3, group = DateTime), col = "#007FAE", size = 4)+
+  geom_line(aes(x= dateTime, y=GPP, group = ID),alpha = 0.1,size = 2)+
+  labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 GPP")+
+  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 12)+
+  geom_hline(yintercept = 0)+
+  xlim(xmin = lubridate::ymd("2019-07-12"), xmax = lubridate::ymd("2019-08-15"))
+
