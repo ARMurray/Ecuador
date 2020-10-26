@@ -9,19 +9,19 @@ library(here)
 
 ##Opening K600 Comparison Document
 K600Compare<-read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
-OnetoOne<-data.frame('x'=c(100,1000),'y'=c(100,1000))
-July18<-K600Compare[c(3:12),]
-July25<-K600Compare[c(13:20),]
-July31<-K600Compare[c(21:30),]
-Aug6<-K600Compare[c(31:40),]
-Aug12<-K600Compare[c(41:50),]
+OnetoOne<-data.frame('x'=c(1,400),'y'=c(1,400))
+July18<-K600Compare[c(1:10),]
+July25<-K600Compare[c(11:18),]
+July31<-K600Compare[c(19:28),]
+Aug6<-K600Compare[c(29:38),]
+Aug12<-K600Compare[c(39:48),]
 
-July18K<-data.frame(x=July18$Raymond.K,y=July18$Effective.K)
-July25K<-data.frame(x=July25$Raymond.K,y=July25$Effective.K)
-July31K<-data.frame(x=July31$Raymond.K,y=July31$Effective.K)
-Aug6K<-data.frame(x=Aug6$Raymond.K,y=Aug6$Effective.K)
-Aug12K<-data.frame(x=Aug12$Raymond.K,y=Aug12$Effective.K)
-OnetoOneK<-data.frame(x=OnetoOne$Raymond.K,y=OnetoOne$Effective.K)
+July18K<-data.frame(x=July18$Kkin,y=July18$Keff)
+July25K<-data.frame(x=July25$Kkin,y=July25$Keff)
+July31K<-data.frame(x=July31$Kkin,y=July31$Keff)
+Aug6K<-data.frame(x=Aug6$Kkin,y=Aug6$Keff)
+Aug12K<-data.frame(x=Aug12$Kkin,y=Aug12$Keff)
+
 
 Jul18<-ggplot(July18K,aes(x,y),log="y",log="x",colour="red")+
   geom_point(colour="Red",shape=19,size=2)+
@@ -195,4 +195,6 @@ ggarrange(Total,Jul18,Jul31,August12,
           dev.off()
 
 
-
+##Data Analysis
+cor(July18$Kkin,July18$Keff)
+cor(K600Compare$Kkin,K600Compare$Keff)          

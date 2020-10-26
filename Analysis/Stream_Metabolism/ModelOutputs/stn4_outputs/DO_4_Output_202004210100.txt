@@ -1,0 +1,94 @@
+metab_model of type metab_bayes 
+streamMetabolizer version 0.10.9 
+Specifications:
+  model_name               b_Kb_oipi_tr_plrckm.stan                                                                                     
+  engine                   stan                                                                                                         
+  split_dates              FALSE                                                                                                        
+  keep_mcmcs               TRUE                                                                                                         
+  keep_mcmc_data           TRUE                                                                                                         
+  day_start                4                                                                                                            
+  day_end                  28                                                                                                           
+  day_tests                full_day, even_timesteps, complete_data, pos_discharge                                                       
+  required_timestep        NA                                                                                                           
+  K600_lnQ_nodes_centers   -3, -2, -1, 0, 1, 2, 3                                                                                       
+  GPP_daily_mu             3                                                                                                            
+  GPP_daily_lower          -Inf                                                                                                         
+  GPP_daily_sigma          2                                                                                                            
+  ER_daily_mu              -7.1                                                                                                         
+  ER_daily_upper           Inf                                                                                                          
+  ER_daily_sigma           7.1                                                                                                          
+  K600_lnQ_nodediffs_sdlog 0.5                                                                                                          
+  K600_lnQ_nodes_meanlog   2.484906649788, 2.484906649788, 2.484906649788, 2.484906649788, 2.484906649788, 2.484906649788, 2.48490664...
+  K600_lnQ_nodes_sdlog     1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32                                                                     
+  K600_daily_sigma_sigma   0.24                                                                                                         
+  err_obs_iid_sigma_scale  0.03                                                                                                         
+  err_proc_iid_sigma_scale 5                                                                                                            
+  params_in                GPP_daily_mu, GPP_daily_lower, GPP_daily_sigma, ER_daily_mu, ER_daily_upper, ER_daily_sigma, K600_lnQ_node...
+  params_out               GPP, ER, GPP_daily, ER_daily, K600_daily, K600_daily_predlog, lnK600_lnQ_nodes, K600_daily_sigma, err_obs_...
+  n_chains                 4                                                                                                            
+  n_cores                  12                                                                                                           
+  burnin_steps             205                                                                                                          
+  saved_steps              327                                                                                                          
+  thin_steps               1                                                                                                            
+  verbose                  FALSE                                                                                                        
+  init.K600.daily          349.33                                                                                                       
+  model_path               /nas/longleaf/home/armurray/R/x86_64-redhat-linux-gnu-library/3.6/streamMetabolizer/models/b_Kb_oipi_tr_pl...
+Fitting time: 316.357 secs elapsed
+Parameters (34 dates):
+         date      GPP.daily GPP.daily.lower GPP.daily.upper     ER.daily ER.daily.lower ER.daily.upper K600.daily K600.daily.lower
+1  2019-07-12            NA               NA              NA          NA              NA             NA        NA                NA
+2  2019-07-13 -0.0413313538      -0.27699219      0.20867771  0.02632406     -0.36702347     0.41024612 40.831684         33.290971
+3  2019-07-14  0.2332256348      -0.01567105      0.48849060 -0.13750526     -0.53460886     0.25184480 39.368631         31.010723
+4  2019-07-15 -0.2169567599      -0.44072090      0.01168420 -0.73980001     -1.17335011    -0.30388656 30.554691         23.635566
+5  2019-07-16 -0.4096416124      -0.69554030     -0.13181681 -0.68371026     -1.11200015    -0.24198730 36.155235         28.973079
+6  2019-07-17  0.2893976735       0.01195936      0.57488461 -1.21768762     -1.75939894    -0.69142831  3.483544          1.045169
+7  2019-07-18  0.5605158032       0.33028353      0.79692298 -0.33200858     -0.74110396     0.06370929  1.361265          0.118559
+8  2019-07-19 -0.4958727328      -0.74769457     -0.24267272 -0.22997391     -0.64310020     0.21426755 34.276491         27.022932
+9  2019-07-20 -0.0695965863      -0.31372738      0.18999033  0.24766601     -0.16769254     0.61317769 40.151194         31.881462
+10 2019-07-21 -0.1566989046      -0.39587760      0.09094053  0.12717396     -0.26875183     0.51583761 40.603953         32.015637
+   K600.daily.upper msgs.fit
+1                NA  w     E
+2         49.505723  w      
+3         48.628948  w      
+4         37.355616  w      
+5         43.919888  w      
+6          5.720554  w      
+7          3.107856  w      
+8         42.268452  w      
+9         49.714561  w      
+10        50.330553  w      
+  ...
+Fitting warnings:
+  There were 65 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+  There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+http://mc-stan.org/misc/warnings.html#bfmi-low
+  Examine the pairs() plot to diagnose sampling problems
+  The largest R-hat is 1.37, indicating chains have not mixed.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#r-hat
+  Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#bulk-ess
+  Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#tail-ess
+  34 dates: overall warnings
+Fitting errors:
+  1 date: data don't end when expected
+  1 date: data don't start when expected
+Predictions (34 dates):
+# A tibble: 10 x 9
+   date           GPP GPP.lower GPP.upper      ER ER.lower ER.upper msgs.fit  msgs.pred
+   <date>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>    <dbl> <chr>     <chr>    
+ 1 2019-07-12 NA        NA        NA      NA        NA      NA      "w     E" "       "
+ 2 2019-07-13 -0.0413   -0.277     0.209   0.0263   -0.367   0.410  "w      " "       "
+ 3 2019-07-14  0.233    -0.0157    0.488  -0.138    -0.535   0.252  "w      " "       "
+ 4 2019-07-15 -0.217    -0.441     0.0117 -0.740    -1.17   -0.304  "w      " "       "
+ 5 2019-07-16 -0.410    -0.696    -0.132  -0.684    -1.11   -0.242  "w      " "       "
+ 6 2019-07-17  0.289     0.0120    0.575  -1.22     -1.76   -0.691  "w      " "       "
+ 7 2019-07-18  0.561     0.330     0.797  -0.332    -0.741   0.0637 "w      " "       "
+ 8 2019-07-19 -0.496    -0.748    -0.243  -0.230    -0.643   0.214  "w      " "       "
+ 9 2019-07-20 -0.0696   -0.314     0.190   0.248    -0.168   0.613  "w      " "       "
+10 2019-07-21 -0.157    -0.396     0.0909  0.127    -0.269   0.516  "w      " "       "
+  ...

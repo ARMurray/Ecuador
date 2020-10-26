@@ -1,0 +1,94 @@
+metab_model of type metab_bayes 
+streamMetabolizer version 0.10.9 
+Specifications:
+  model_name               b_Kb_oipi_tr_plrckm.stan                                                         
+  engine                   stan                                                                             
+  split_dates              FALSE                                                                            
+  keep_mcmcs               TRUE                                                                             
+  keep_mcmc_data           TRUE                                                                             
+  day_start                4                                                                                
+  day_end                  28                                                                               
+  day_tests                full_day, even_timesteps, complete_data, pos_discharge                           
+  required_timestep        NA                                                                               
+  K600_lnQ_nodes_centers   -3, -2, -1, 0, 1, 2, 3                                                           
+  GPP_daily_mu             3                                                                                
+  GPP_daily_lower          -Inf                                                                             
+  GPP_daily_sigma          2                                                                                
+  ER_daily_mu              -7.1                                                                             
+  ER_daily_upper           Inf                                                                              
+  ER_daily_sigma           7.1                                                                              
+  K600_lnQ_nodediffs_sdlog 0.5                                                                              
+  K600_lnQ_nodes_meanlog   2.484906649788, 2.484906649788, 2.484906649788, 2.484906649788, 2.484906649788...
+  K600_lnQ_nodes_sdlog     1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32                                         
+  K600_daily_sigma_sigma   0.24                                                                             
+  err_obs_iid_sigma_scale  0.03                                                                             
+  err_proc_iid_sigma_scale 5                                                                                
+  params_in                GPP_daily_mu, GPP_daily_lower, GPP_daily_sigma, ER_daily_mu, ER_daily_upper, E...
+  params_out               GPP, ER, GPP_daily, ER_daily, K600_daily, K600_daily_predlog, lnK600_lnQ_nodes...
+  n_chains                 4                                                                                
+  n_cores                  12                                                                               
+  burnin_steps             251                                                                              
+  saved_steps              576                                                                              
+  thin_steps               1                                                                                
+  verbose                  FALSE                                                                            
+  init.K600.daily          149.66                                                                           
+  model_path               /nas/longleaf/home/armurray/R/x86_64-redhat-linux-gnu-library/3.6/streamMetabo...
+Fitting time: 699.643 secs elapsed
+Parameters (34 dates):
+         date     GPP.daily GPP.daily.lower GPP.daily.upper     ER.daily ER.daily.lower ER.daily.upper
+1  2019-07-12           NA               NA              NA          NA              NA             NA
+2  2019-07-13 -0.054001744      -0.31045878     0.205785524  0.04700489     -0.35473373     0.43777415
+3  2019-07-14  0.254487765       0.01172021     0.522711020 -0.16083366     -0.58713122     0.22350721
+4  2019-07-15 -0.210956480      -0.44057021     0.029773967 -0.78350709     -1.20464874    -0.36037932
+5  2019-07-16 -0.425730665      -0.69739964    -0.130181567 -0.69676605     -1.14298277    -0.25993043
+6  2019-07-17  0.293812766       0.01754729     0.570994329 -1.22721893     -1.73911260    -0.69881031
+7  2019-07-18  0.562087867       0.32095123     0.822291111 -0.31630909     -0.74873071     0.10789539
+8  2019-07-19 -0.498028625      -0.76199406    -0.253716547 -0.25314047     -0.65186167     0.16926396
+9  2019-07-20 -0.068080537      -0.31919639     0.192539303  0.24263956     -0.14049497     0.62254381
+10 2019-07-21 -0.130171728      -0.38245206     0.107006280  0.08656842     -0.26566176     0.47376018
+   K600.daily K600.daily.lower K600.daily.upper msgs.fit
+1         NA                NA               NA  w     E
+2  41.597919      3.298495e+01        50.528750  w      
+3  40.429521      3.203478e+01        49.581696  w      
+4  31.350644      2.450715e+01        38.283880  w      
+5  37.012469      2.984132e+01        45.804575  w      
+6   3.546832      1.424524e+00         5.841408  w      
+7   1.257541      4.062705e-04         2.946673  w      
+8  35.402967      2.804763e+01        42.962650  w      
+9  40.676410      3.224609e+01        50.591485  w      
+10 41.678093      3.245308e+01        51.456096  w      
+  ...
+Fitting warnings:
+  There were 92 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+  There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+http://mc-stan.org/misc/warnings.html#bfmi-low
+  Examine the pairs() plot to diagnose sampling problems
+  The largest R-hat is 1.73, indicating chains have not mixed.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#r-hat
+  Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#bulk-ess
+  Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+Running the chains for more iterations may help. See
+http://mc-stan.org/misc/warnings.html#tail-ess
+  34 dates: overall warnings
+Fitting errors:
+  1 date: data don't end when expected
+  1 date: data don't start when expected
+Predictions (34 dates):
+# A tibble: 10 x 9
+   date           GPP GPP.lower GPP.upper      ER ER.lower ER.upper msgs.fit  msgs.pred
+   <date>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>    <dbl> <chr>     <chr>    
+ 1 2019-07-12 NA        NA        NA      NA        NA       NA     "w     E" "       "
+ 2 2019-07-13 -0.0540   -0.310     0.206   0.0470   -0.355    0.438 "w      " "       "
+ 3 2019-07-14  0.254     0.0117    0.523  -0.161    -0.587    0.224 "w      " "       "
+ 4 2019-07-15 -0.211    -0.441     0.0298 -0.784    -1.20    -0.360 "w      " "       "
+ 5 2019-07-16 -0.426    -0.697    -0.130  -0.697    -1.14    -0.260 "w      " "       "
+ 6 2019-07-17  0.294     0.0175    0.571  -1.23     -1.74    -0.699 "w      " "       "
+ 7 2019-07-18  0.562     0.321     0.822  -0.316    -0.749    0.108 "w      " "       "
+ 8 2019-07-19 -0.498    -0.762    -0.254  -0.253    -0.652    0.169 "w      " "       "
+ 9 2019-07-20 -0.0681   -0.319     0.193   0.243    -0.140    0.623 "w      " "       "
+10 2019-07-21 -0.130    -0.382     0.107   0.0866   -0.266    0.474 "w      " "       "
+  ...
