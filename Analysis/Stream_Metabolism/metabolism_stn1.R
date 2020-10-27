@@ -15,6 +15,12 @@ dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
 
 dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/GMT+5")
 
+
+# Add in DO and level data collected into January 2020
+# and obtained from Esteban
+doExt <- read.csv()
+
+
 # Convert to solar time
 dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
 
@@ -70,11 +76,11 @@ folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs")
 date <- 202005030000            # UPDATE THIS!!!!
 
 for(n in 1:100){
-  rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 31
+  rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
   
-  rBurnIn <- round(runif(1,100,400),0)  # Set random burn in steps
+  rBurnIn <- round(runif(1,100,400),0)  # Set random burn in steps 100-400
   
-  rSteps <- round(runif(1,200,600),0)  # set random saved steps
+  rSteps <- round(runif(1,200,600),0)  # set random saved steps 200-600
   
   id <- date+n
 
