@@ -10,15 +10,24 @@ library(here)
 
 # Import non-injection data
 dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj,DO1_mg.L,DO2_mg.L,DO4_mg.L,tempC_421,lvl_436_m,lvl_421_m,stn3_Q)%>%
-  filter(Inj == "No")
+  select(DateTime,Inj.x,DO1_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
+  filter(Inj.x == "No")
 
 dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/GMT+5")
 
 
 # Add in DO and level data collected into January 2020
-# and obtained from Esteban
-doExt <- read.csv()
+# and obtained from Esteban (cap expired at 3:15 PM 1/18/2020)
+doExt <- read.csv(here("FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv"), skip=1)%>%
+  select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645539..SEN.S.N..20645539.,Temp..Â.F..LGR.S.N..20645539..SEN.S.N..20645539.)
+colnames(doExt) <- c("DateTime","DO_mgL","Temp_F")
+doExt$DateTime <- lubridate::mdy_hms(doExt$DateTime)
+
+# Bring in Water Level and estimate discharge for new data
+lvl <- read.csv(here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv"),skip=11)%>%
+  mutate(DateTime = lubridate::mdy_hms(paste0(Date," ",Time)))%>%
+  select(DateTime,LEVEL,TEMPERATURE)
+
 
 
 # Convert to solar time
