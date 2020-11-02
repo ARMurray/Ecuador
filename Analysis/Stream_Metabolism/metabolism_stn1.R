@@ -19,34 +19,59 @@ dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/
 # Add in DO and level data collected into January 2020
 # and obtained from Esteban (cap expired at 3:15 PM 1/18/2020)
 doExt <- read.csv(here("FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv"), skip=1)%>%
-  select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645539..SEN.S.N..20645539.,Temp..Â.F..LGR.S.N..20645539..SEN.S.N..20645539.)
-colnames(doExt) <- c("DateTime","DO_mgL","Temp_F")
+  select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645539..SEN.S.N..20645539.)
+colnames(doExt) <- c("DateTime","DO_mgL")
 doExt$DateTime <- lubridate::mdy_hms(doExt$DateTime)
+doExt <- doExt%>%
+  filter(DateTime > lubridate::ymd_hms("2019-08-19 00:00:00"))
 
 # Bring in Water Level and estimate discharge for new data
 lvl <- read.csv(here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv"),skip=11)%>%
   mutate(DateTime = lubridate::mdy_hms(paste0(Date," ",Time)))%>%
   select(DateTime,LEVEL,TEMPERATURE)
 
+# Merge new data together
+doExtMerge <- doExt%>%
+  left_join(lvl)
 
+# Combine old and new data
+dat2 <- dat%>%
+  select(DateTime,DO1_mg.L,tempC_421,lvl_421_m)
+colnames(dat2) <- c("DateTime","DO_mgL","temp_C","level_m")
+
+doExt2 <- doExtMerge%>%
+  select(DateTime,DO_mgL,TEMPERATURE,LEVEL)%>%
+  mutate(LEVEL = LEVEL/10)
+
+colnames(doExt2) <- c("DateTime","DO_mgL","temp_C","level_m")
+
+allDat <- rbind(dat2,doExt2)
 
 # Convert to solar time
-dat$solar.time <- calc_solar_time(dat$DateTime, longitude=-78.2)
+allDat$solar.time <- calc_solar_time(allDat$DateTime, longitude=-78.2)
 
 #Import barometric pressure
 baro <- read.csv(here::here("FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv"),skip = 10)
 colnames(baro) <- c("Date","Time","ms","kPa","Temp_C")
-baro$millibars <- baro$kPa*10
-baro$DateTime <- as.POSIXct(paste0(as.character(baro$Date)," ",as.character(baro$Time)),format = "%m/%d/%Y %H:%M",tz = "Etc/GMT+5")
+baro$DateTime <- lubridate::mdy_hms(paste0(as.character(baro$Date)," ",as.character(baro$Time)))
 
-baro <- baro%>%
+# Import new baro through January and combine
+baro2 <- read.csv(here::here("FieldData/Esteban/Datos Logger de Gavilan Cayambe Coca_January 2020/solinst/2107266-enero-2020.csv"),skip = 11)
+colnames(baro2) <- c("Date","Time","ms","kPa","Temp_C")
+baro2$DateTime <- lubridate::mdy_hms(paste0(as.character(baro2$Date)," ",as.character(baro2$Time)))
+
+baroBind <- rbind(baro,baro2)
+
+baroBind$millibars <- baroBind$kPa*10
+
+baro <- baroBind%>%
   select(DateTime,millibars)
 
-dat <- merge(dat,baro,by="DateTime")
+dat <- merge(allDat,baro,by="DateTime")
 
 
 # Calculate DO Saturation
-dat$DO.sat <- calc_DO_sat(dat$tempC_421,dat$millibars)
+dat$DO.sat <- calc_DO_sat(dat$temp_C,dat$millibars)
 
 # Calculate light
 dat$light <- calc_light(dat$solar.time,-.3,-78.2)
@@ -55,8 +80,10 @@ dat$light <- calc_light(dat$solar.time,-.3,-78.2)
 
 # DO Sensor 1
 df1 <- dat%>%
-  select(solar.time,DO1_mg.L,DO.sat,lvl_421_m,tempC_421,light,stn3_Q)
-colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
+  select(solar.time,DO_mgL,DO.sat,level_m,temp_C,light)
+colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light")
+
+df1$discharge <- df1$depth
 
 df1 <- df1[complete.cases(df1),]
 df1 <- df1%>%
@@ -80,9 +107,9 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[
 
 # Set the output folder
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs")    
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN")    
 
-date <- 202005030000            # UPDATE THIS!!!!
+date <- 202011010001            # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
@@ -119,6 +146,7 @@ for(n in 1:100){
   
   write.csv(pred1,paste0(folder,"/DO_1_Predictions_",id,".csv")) # Write Predictions to file
   
+  print(paste0("Completed Iteration #",n))
   ## K600 Plots
 #  mcmc <- get_mcmc(mm1)
 #  png(filename=paste0(folder,"/mcmc_stn1_",n,".png"))

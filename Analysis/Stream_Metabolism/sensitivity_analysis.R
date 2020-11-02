@@ -11,10 +11,10 @@ library(cowplot)
 
 
 stn1Files <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"), pattern = "Predictions",recursive = TRUE,full.names = TRUE)
-stn1Stats <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"), pattern = "Specs",recursive = TRUE,full.names = TRUE)
+stn1Stats <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs"), pattern = "Specs",recursive = TRUE,full.names = TRUE)
 
 
-df <- data.frame()
+df1 <- data.frame()
 for(n in 1:length(stn1Files)){
   preds <- read.csv(stn1Files[n])
   specs <- read.csv(stn1Stats[n])
@@ -23,14 +23,14 @@ for(n in 1:length(stn1Files)){
                       "burnin"=as.numeric(as.character(specs[27,3])),
                       "Saved"=as.numeric(as.character(specs[28,3])),
                       "ID" = substr(stn1Files[n],109,120))
-  df <- rbind(df,newdf)
+  df1 <- rbind(df1,newdf)
 }
 
-df$dateTime <- ymd(df$dateTime)
+df1$dateTime <- ymd(df1$dateTime)
 
 
 # GPP
-gpp1 <- ggplot(df)+
+gpp1 <- ggplot(df1)+
   geom_line(aes(x=dateTime,y=GPP, group = ID),alpha = 0.1)+
   labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 GPP")+
   geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 8)+
@@ -38,11 +38,11 @@ gpp1 <- ggplot(df)+
   geom_hline(yintercept = 0)
 
 # ER
-er1 <- ggplot(df)+
+er1 <- ggplot(df1)+
   geom_line(aes(x=dateTime,y=ER, group = ID),alpha = 0.1)+
   labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 ER")+
   geom_text(aes(x=ymd("20190810"), y = -5.5, label = paste0("N = ",length(stn1Files))), size = 8)+
-  ylim(ymin = -7, ymax = 2)+
+  ylim(ymin = -15, ymax = 2)+
   geom_hline(yintercept = 0)
 
 
