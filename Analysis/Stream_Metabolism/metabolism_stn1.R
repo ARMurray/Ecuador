@@ -26,9 +26,9 @@ doExt <- doExt%>%
   filter(DateTime > lubridate::ymd_hms("2019-08-19 00:00:00"))
 
 # Bring in Water Level and estimate discharge for new data
-lvl <- read.csv(here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv"),skip=11)%>%
+lvl <- read.csv(here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/stn3_compensated_lvl.csv"))%>%
   mutate(DateTime = lubridate::mdy_hms(paste0(Date," ",Time)))%>%
-  select(DateTime,LEVEL,TEMPERATURE)
+  select(DateTime,LEVEL_m,TEMPERATURE,discharge_m3perS)
 
 # Merge new data together
 doExtMerge <- doExt%>%
@@ -36,14 +36,14 @@ doExtMerge <- doExt%>%
 
 # Combine old and new data
 dat2 <- dat%>%
-  select(DateTime,DO1_mg.L,tempC_421,lvl_421_m)
-colnames(dat2) <- c("DateTime","DO_mgL","temp_C","level_m")
+  select(DateTime,DO1_mg.L,tempC_421,lvl_421_m,stn3_Q)
+colnames(dat2) <- c("DateTime","DO_mgL","temp_C","level_m","discharge")
 
 doExt2 <- doExtMerge%>%
-  select(DateTime,DO_mgL,TEMPERATURE,LEVEL)%>%
-  mutate(LEVEL = LEVEL/10)
+  select(DateTime,DO_mgL,TEMPERATURE,LEVEL_m,discharge_m3perS)%>%
+  mutate(LEVEL_m = LEVEL_m)
 
-colnames(doExt2) <- c("DateTime","DO_mgL","temp_C","level_m")
+colnames(doExt2) <- c("DateTime","DO_mgL","temp_C","level_m","discharge")
 
 allDat <- rbind(dat2,doExt2)
 
@@ -80,10 +80,9 @@ dat$light <- calc_light(dat$solar.time,-.3,-78.2)
 
 # DO Sensor 1
 df1 <- dat%>%
-  select(solar.time,DO_mgL,DO.sat,level_m,temp_C,light)
-colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light")
+  select(solar.time,DO_mgL,DO.sat,level_m,temp_C,light, discharge)
+colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
 
-df1$discharge <- df1$depth
 
 df1 <- df1[complete.cases(df1),]
 df1 <- df1%>%
@@ -109,7 +108,7 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
 folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN")    
 
-date <- 202011010001            # UPDATE THIS!!!!
+date <- 202011050001            # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
@@ -147,6 +146,8 @@ for(n in 1:100){
   write.csv(pred1,paste0(folder,"/DO_1_Predictions_",id,".csv")) # Write Predictions to file
   
   print(paste0("Completed Iteration #",n))
+  write(paste0("Completed Iteration #",n," at: ", Sys.time()),file=paste0(folder,"_TimeStamps_",date,".txt"),append=TRUE)
+  
   ## K600 Plots
 #  mcmc <- get_mcmc(mm1)
 #  png(filename=paste0(folder,"/mcmc_stn1_",n,".png"))
