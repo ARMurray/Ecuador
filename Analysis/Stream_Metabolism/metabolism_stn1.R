@@ -108,7 +108,7 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
 folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN")    
 
-date <- 202011050001            # UPDATE THIS!!!!
+date <- 202011060001            # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
