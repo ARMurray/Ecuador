@@ -10,7 +10,7 @@ library(here)
 
 # Import non-injection data
 dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj.x,DO3_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
+  select(DateTime,Inj.x,DO2_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
   filter(Inj.x == "No")
 
 dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/GMT+5")
@@ -36,7 +36,7 @@ doExtMerge <- doExt%>%
 
 # Combine old and new data
 dat2 <- dat%>%
-  select(DateTime,DO3_mg.L,tempC_421,lvl_421_m,stn3_Q)
+  select(DateTime,DO2_mg.L,tempC_421,lvl_421_m,stn3_Q)
 colnames(dat2) <- c("DateTime","DO_mgL","temp_C","level_m","discharge")
 
 doExt2 <- doExtMerge%>%
@@ -79,26 +79,26 @@ dat$light <- calc_light(dat$solar.time,-.3,-78.2)
 # Set up data frame for model run at each station
 
 # DO Sensor 3
-df3 <- dat%>%
+df2 <- dat%>%
   select(solar.time,DO_mgL,DO.sat,level_m,temp_C,light, discharge)
-colnames(df3) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
+colnames(df2) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
 
 
-df3 <- df3[complete.cases(df3),]
-df3 <- df3%>%
+df2 <- df2[complete.cases(df2),]
+df2 <- df2%>%
   distinct()%>%
   arrange(solar.time)
 
 # Fix timestamps and interpolate missing data (Station 1)
 ## Round timestamps to closest 15-minute
-df3a <- df3%>%
+df2a <- df2%>%
   mutate("solar.time" = round_date(solar.time, '15 minutes'))
 
 ## Create full dataframe of timesteps
-timestep <- df3$solar.time[2]-df3$solar.time[1]
-fulltime1 <- data.frame(solar.time=seq.POSIXt(df3$solar.time[1], df3$solar.time[length(df3$solar.time)], by=timestep))%>%
+timestep <- df2$solar.time[2]-df2$solar.time[1]
+fulltime1 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[length(df2$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
-  left_join(df3a)%>%
+  left_join(df2a)%>%
   na_interpolation(option = 'linear', maxgap = Inf)
 
 
@@ -106,9 +106,9 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df3$solar.time[1], df3$solar.time[
 
 # Set the output folder
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn3_outputs_JAN")    
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs_JAN")    
 
-date <- 202011060001            # UPDATE THIS!!!!
+date <- 202011070001            # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
@@ -131,19 +131,19 @@ for(n in 1:100){
   
   params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs)) # Write some model specs to a csv
   
-  times <- data.frame("Parameter"=c("Station 3 Time"),
+  times <- data.frame("Parameter"=c("Station 2 Time"),
                       "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1))))      # Add Completion Times
   
   outParams <- rbind(params,times)  # Combine output parameters
   outParams$run <- n   # Add a column to note which run this was in the loop
   
-  write.csv(outParams,paste0(folder,"/DO_3_Specs_",id,".csv"))
+  write.csv(outParams,paste0(folder,"/DO_2_Specs_",id,".csv"))
   
-  capture.output(mm1,file=paste0(folder,"/DO_3_Output_",id,".txt")) # Write model outputs to text files
+  capture.output(mm1,file=paste0(folder,"/DO_2_Output_",id,".txt")) # Write model outputs to text files
   
   pred1 <- predict_metab(mm1) # Predictions
   
-  write.csv(pred1,paste0(folder,"/DO_3_Predictions_",id,".csv")) # Write Predictions to file
+  write.csv(pred1,paste0(folder,"/DO_2_Predictions_",id,".csv")) # Write Predictions to file
   
   print(paste0("Completed Iteration #",n))
   write(paste0("Completed Iteration #",n," at: ", Sys.time()),file=paste0(folder,"_TimeStamps_",date,".txt"),append=TRUE)
