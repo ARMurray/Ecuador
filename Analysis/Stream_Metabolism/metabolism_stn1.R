@@ -123,7 +123,7 @@ for(n in 1:100){
   bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
   bayes_specs <- specs(bayes_name)
 
-  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
+  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=32, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
 
   t1 <- Sys.time() # Record start time
   mm1 <- metab(bayes_specs, data=fulltime1) # Fit the model
