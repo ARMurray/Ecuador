@@ -10,7 +10,7 @@ library(here)
 
 # Import non-injection data
 dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
-  select(DateTime,Inj.x,DO1_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
+  select(DateTime,Inj.x,DO2_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
   filter(Inj.x == "No")%>%
   drop_na()
 
@@ -19,8 +19,8 @@ dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/
 
 # Add in DO and level data collected into January 2020
 # and obtained from Esteban (cap expired at 3:15 PM 1/18/2020)
-doExt <- read.csv(here("FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv"), skip=1)%>%
-  select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645539..SEN.S.N..20645539.)
+doExt <- read.csv(here("FieldData/Esteban/HOBO_CSVs/DO/20645538_January_2020.csv"), skip=1)%>%
+  select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645538..SEN.S.N..20645538.)
 colnames(doExt) <- c("DateTime","DO_mgL")
 doExt$DateTime <- lubridate::mdy_hms(doExt$DateTime)
 doExt$DO_mgL <-  ifelse(doExt$DO_mgL < 0 , 0 , doExt$DO_mgL)
@@ -38,7 +38,7 @@ doExtMerge <- doExt%>%
 
 # Combine old and new data
 dat2 <- dat%>%
-  select(DateTime,DO1_mg.L,tempC_421,lvl_421_m,stn3_Q)
+  select(DateTime,DO2_mg.L,tempC_421,lvl_421_m,stn3_Q)
 colnames(dat2) <- c("DateTime","DO_mgL","temp_C","level_m","discharge")
 
 doExt2 <- doExtMerge%>%
@@ -82,36 +82,37 @@ dat$light <- calc_light(dat$solar.time,-.3,-78.2)
 
 # Set up data frame for model run at each station
 
-# DO Sensor 1
-df1 <- dat%>%
+# DO Sensor 3
+df2 <- dat%>%
   select(solar.time,DO_mgL,DO.sat,level_m,temp_C,light, discharge)
-colnames(df1) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
+colnames(df2) <- c("solar.time","DO.obs","DO.sat","depth","temp.water","light","discharge")
 
 
-df1 <- df1[complete.cases(df1),]
-df1 <- df1%>%
+df2 <- df2[complete.cases(df2),]
+df2 <- df2%>%
   distinct()%>%
   arrange(solar.time)
 
 # Fix timestamps and interpolate missing data (Station 1)
 ## Round timestamps to closest 15-minute
-df1a <- df1%>%
+df2a <- df2%>%
   mutate("solar.time" = round_date(solar.time, '15 minutes'))
 
 ## Create full dataframe of timesteps
-timestep <- df1$solar.time[2]-df1$solar.time[1]
-fulltime1 <- data.frame(solar.time=seq.POSIXt(df1$solar.time[1], df1$solar.time[length(df1$solar.time)], by=timestep))%>%
+timestep <- df2$solar.time[2]-df2$solar.time[1]
+fulltime1 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[length(df2$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
-  left_join(df1a)%>%
+  left_join(df2a)%>%
   na_interpolation(option = 'linear', maxgap = Inf)%>%
   filter(solar.time < lubridate::ymd_hms("2020-01-18 02:45:00"))  # remove data collected after sensor was pulled
+
 
 
 # ***************** Baysean model parameters ********************** #
 
 # Set the output folder
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN")    
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs_JAN")    
 
 date <- 202011130001            # UPDATE THIS!!!!
 
@@ -123,44 +124,44 @@ for(n in 1:100){
   rSteps <- round(runif(1,200,600),0)  # set random saved steps 200-600
   
   id <- date+n
-
-
+  
+  
   bayes_name <- mm_name(type='bayes', pool_K600='binned', err_obs_iid=TRUE, err_proc_iid=TRUE)
   bayes_specs <- specs(bayes_name)
-
-  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=32, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
-
+  
+  bayes_specs <- revise(bayes_specs, burnin_steps=rBurnIn, saved_steps=rSteps, n_cores=12, GPP_daily_mu=3, GPP_daily_sigma=2, init.K600.daily = rk600 )
+  
   t1 <- Sys.time() # Record start time
   mm1 <- metab(bayes_specs, data=fulltime1) # Fit the model
   t2 <- Sys.time() # Record end time
-
+  
   params <- data.frame("Parameter" = names(bayes_specs), "Value" = as.character(bayes_specs)) # Write some model specs to a csv
-
-  times <- data.frame("Parameter"=c("Station 1 Time"),
-                    "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1))))      # Add Completion Times
+  
+  times <- data.frame("Parameter"=c("Station 2 Time"),
+                      "Value" = c(paste0(round(t2-t1,2)," ",units.difftime(t2-t1))))      # Add Completion Times
   
   outParams <- rbind(params,times)  # Combine output parameters
   outParams$run <- n   # Add a column to note which run this was in the loop
   
-  write.csv(outParams,paste0(folder,"/DO_1_Specs_",id,".csv"))
-
-  capture.output(mm1,file=paste0(folder,"/DO_1_Output_",id,".txt")) # Write model outputs to text files
+  write.csv(outParams,paste0(folder,"/DO_2_Specs_",id,".csv"))
+  
+  capture.output(mm1,file=paste0(folder,"/DO_2_Output_",id,".txt")) # Write model outputs to text files
   
   pred1 <- predict_metab(mm1) # Predictions
   
-  write.csv(pred1,paste0(folder,"/DO_1_Predictions_",id,".csv")) # Write Predictions to file
+  write.csv(pred1,paste0(folder,"/DO_2_Predictions_",id,".csv")) # Write Predictions to file
   
   print(paste0("Completed Iteration #",n))
   write(paste0("Completed Iteration #",n," at: ", Sys.time()),file=paste0(folder,"_TimeStamps_",date,".txt"),append=TRUE)
   
   ## K600 Plots
-#  mcmc <- get_mcmc(mm1)
-#  png(filename=paste0(folder,"/mcmc_stn1_",n,".png"))
-#  rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
-#  dev.off()
+  #  mcmc <- get_mcmc(mm1)
+  #  png(filename=paste0(folder,"/mcmc_stn1_",n,".png"))
+  #  rstan::traceplot(mcmc, pars='K600_daily', nrow=6)
+  #  dev.off()
   
   # ER & GPP Plots
-#  png(filename=paste0(folder,"/metabolism_stn1_",n,".png"))
-#  plot_metab_preds(mm1)
-#  dev.off()
+  #  png(filename=paste0(folder,"/metabolism_stn1_",n,".png"))
+  #  plot_metab_preds(mm1)
+  #  dev.off()
 }
