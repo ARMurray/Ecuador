@@ -11,7 +11,8 @@ library(here)
 # Import non-injection data
 dat <- read.csv(here::here("data_4_analysis/All_Stream_Data.csv"))%>%
   select(DateTime,Inj.x,DO2_mg.L,tempC_421,lvl_421_m,stn3_Q)%>%
-  filter(Inj.x == "No")
+  filter(Inj.x == "No")%>%
+  drop_na()
 
 dat$DateTime <- as.POSIXct(dat$DateTime,format = "%Y-%m-%d %H:%M:%S", tz = "Etc/GMT+5")
 
@@ -22,8 +23,9 @@ doExt <- read.csv(here("FieldData/Esteban/HOBO_CSVs/DO/20645538_January_2020.csv
   select(Date.Time..GMT.04.00,DO.conc..mg.L..LGR.S.N..20645538..SEN.S.N..20645538.)
 colnames(doExt) <- c("DateTime","DO_mgL")
 doExt$DateTime <- lubridate::mdy_hms(doExt$DateTime)
-doExt <- doExt%>%
-  filter(DateTime > lubridate::ymd_hms("2019-08-19 00:00:00"))
+doExt$DO_mgL <-  ifelse(doExt$DO_mgL < 0 , 0 , doExt$DO_mgL)
+#doExt <- doExt%>%
+#  filter(DateTime > lubridate::ymd_hms("2019-08-19 00:00:00"))
 
 # Bring in Water Level and estimate discharge for new data
 lvl <- read.csv(here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/stn3_compensated_lvl.csv"))%>%
@@ -44,6 +46,8 @@ doExt2 <- doExtMerge%>%
   mutate(LEVEL_m = LEVEL_m)
 
 colnames(doExt2) <- c("DateTime","DO_mgL","temp_C","level_m","discharge")
+
+lubridate::tz(doExt2) <- "Etc/GMT+5"
 
 allDat <- rbind(dat2,doExt2)
 
@@ -99,7 +103,9 @@ timestep <- df2$solar.time[2]-df2$solar.time[1]
 fulltime1 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[length(df2$solar.time)], by=timestep))%>%
   mutate(solar.time=round_date(solar.time,'15 minutes'))%>%
   left_join(df2a)%>%
-  na_interpolation(option = 'linear', maxgap = Inf)
+  na_interpolation(option = 'linear', maxgap = Inf)%>%
+  filter(solar.time < lubridate::ymd_hms("2020-01-18 02:45:00"))  # remove data collected after sensor was pulled
+
 
 
 # ***************** Baysean model parameters ********************** #
@@ -108,7 +114,7 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
 folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs_JAN")    
 
-date <- 202011070001            # UPDATE THIS!!!!
+date <- 202011130001            # UPDATE THIS!!!!
 
 for(n in 1:100){
   rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400

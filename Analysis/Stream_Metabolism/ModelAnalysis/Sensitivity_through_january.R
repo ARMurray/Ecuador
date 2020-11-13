@@ -10,8 +10,8 @@ library(cowplot)
 #############
 
 
-stn1Files <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN"), pattern = "Predictions",recursive = TRUE,full.names = TRUE)
-stn1Stats <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN"), pattern = "Specs",recursive = TRUE,full.names = TRUE)
+stn1Files <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN"), pattern = "Predictions_20201111",recursive = TRUE,full.names = TRUE)
+stn1Stats <- list.files(here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs_JAN"), pattern = "Specs_20201111",recursive = TRUE,full.names = TRUE)
 
 
 df <- data.frame()
