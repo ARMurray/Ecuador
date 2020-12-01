@@ -3,3 +3,4 @@ library(here)
 
 df <- read.csv(here::here("data_4_analysis/All_Stream_Data_2020-05-14.csv"))
 
+#night-time regression method (Hornberger & Kelly, 1975; Odum, 1956)
