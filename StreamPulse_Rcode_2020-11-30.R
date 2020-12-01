@@ -35,6 +35,8 @@ DO_stn1 <- DO_stn1[,1:4]
 colnames(DO_stn1)=c("row","Date_Time","DO_mgl","DO_Temp")
 DO_stn1$Date_Time <- as.POSIXct(DO_stn1$Date_Time, format="%m/%d/%y %H:%M:%S", tz="Etc/GMT-5")
 attr(DO_stn1$Date_Time,"tzone") <- "UTC"
+DO_stn1$temp_c <- (DO_stn1$DO_Temp - 32) * 5/9
+
 DO_stn1$row <- NULL
 
 #Specific Conductivity
@@ -52,7 +54,12 @@ EC_stn1$row <- NULL
 #join all
 
 merge1 <- merge(DO_stn1,WL_stn1,by="Date_Time")
-Stn1_Data <- merge(merge1, EC_stn1, by="Date_Time")
+Stn1_Data_2019_08_14 <- merge(merge1, EC_stn1, by="Date_Time")
 rm(merge1)
 
-write.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/DO/Last_Collection/EC_IRU1_XX2020-11-30")
+Stn1_Data_2019_08_14$DO_Temp <- NULL
+Stn1_Data_2019_08_14$WL_Temp <- NULL
+Stn1_Data_2019_08_14$EC_Temp <- NULL
+
+library(readr)
+write_csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-08-14_XX.csv")
