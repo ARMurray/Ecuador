@@ -6,6 +6,7 @@
 # stn 1:	72020436
 # stn 3:	72020421
 
+library(readr)
 library(here)
 
 #read in those files!!!
@@ -61,5 +62,4 @@ Stn1_Data_2019_08_14$DO_Temp <- NULL
 Stn1_Data_2019_08_14$WL_Temp <- NULL
 Stn1_Data_2019_08_14$EC_Temp <- NULL
 
-library(readr)
 write_csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-08-14_XX.csv")
