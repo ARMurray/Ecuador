@@ -6,6 +6,15 @@
 # stn 1:	72020436
 # stn 3:	72020421
 
+#DO notes
+#stn 1: 20645539
+#stn 2: 20645540
+#stn 3: 20645538
+
+#EC notes
+#stn 1: 20636125
+#stn 2: 20636127
+#stn 3: 20636126
 library(readr)
 library(here)
 
@@ -63,3 +72,57 @@ Stn1_Data_2019_08_14$WL_Temp <- NULL
 Stn1_Data_2019_08_14$EC_Temp <- NULL
 
 write_csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-08-14_XX.csv")
+
+
+### JANUARY DATA
+##Station 1
+WL_stn1 <- 
+  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020436_enero2020_compensated.csv",
+           skip=12, header = FALSE, sep = ",",
+           quote = "\"",dec = ".", fill = TRUE, comment.char = ""
+  )
+colnames(WL_stn1)=c("Date","Time","offset","WL_m","WL_Temp")
+WL_stn1 <- WL_stn1[,c(1:2,4:5)]
+
+WL_stn1$Date_Time <- paste(WL_stn1$Date, WL_stn1$Time)
+WL_stn1$Date_Time <- as.POSIXct(WL_stn1$Date_Time, format="%m/%d/%Y %H:%M:%S", tz="Etc/GMT-5")
+attr(WL_stn1$Date_Time,"tzone") <- "UTC"
+WL_stn1$Date <- NULL
+WL_stn1$Time <- NULL
+
+
+#Dissolved Oxygen
+DO_stn1 <- 
+  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv",
+           skip=2, header = FALSE, sep = ",",
+           quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+DO_stn1 <- DO_stn1[,1:4]
+colnames(DO_stn1)=c("row","Date_Time","DO_mgl","DO_Temp")
+DO_stn1$Date_Time <- as.POSIXct(DO_stn1$Date_Time, format="%m/%d/%y %H:%M:%S", tz="Etc/GMT-5")
+attr(DO_stn1$Date_Time,"tzone") <- "UTC"
+DO_stn1$DO_temp_c <- (DO_stn1$DO_Temp - 32) * 5/9
+DO_stn1$DO_Temp <- NULL 
+DO_stn1$row <- NULL
+
+#Specific Conductivity
+EC_stn1 <- 
+  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/EC/20636125_January_2020.csv",
+           skip=2, header = FALSE, sep = ",",
+           quote = "\"",dec = ".", fill = TRUE, comment.char = "")
+EC_stn1 <- EC_stn1[,1:4]
+colnames(EC_stn1)=c("row","Date_Time","EC_us","EC_Temp")
+EC_stn1$Date_Time <- as.POSIXct(EC_stn1$Date_Time, format="%m/%d/%y %H:%M:%S", tz="Etc/GMT-5")
+attr(EC_stn1$Date_Time,"tzone") <- "UTC"
+
+EC_stn1$row <- NULL
+
+#join all
+
+merge1 <- merge(DO_stn1,WL_stn1,by="Date_Time")
+Stn1_Data_2020_01_19 <- merge(merge1, EC_stn1, by="Date_Time")
+rm(merge1)
+
+#Read out
+
+write_csv(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv")
+
