@@ -24,6 +24,17 @@ library(tidyverse)
 
 #read in those files!!!
 
+####ALL_Data
+Other_Data <-read.csv("data_4_analysis/All_Stream_Data_2020-05-14.csv",
+                      header = TRUE)
+Other_Data <- Other_Data[which(Other_Data$Inj.x == "No" ),]
+Other_Data <- subset(Other_Data, select=c(DateTime, V1_adjusted, V2_adjusted, V3_adjusted, V4_adjusted, Turbidity_NTU, Chlorophylla_ug.L,
+                            CDOM_ppb, EC1_uS, EC2_uS, EC4_uS, stn1_Q))
+colnames(Other_Data) <- c("Date_Time", "CO2_ppm_1","CO2_ppm_2","CO2_ppm_3","CO2_ppm_4",
+         "Turbidity_NTU", "Chlorophylla_ug.L","CDOM_ppb","EC_uS_1", "EC2_uS_2", "EC4_uS_3", "Q_m3L")
+Other_Data$Date_Time <- as.POSIXct(Other_Data$Date_Time, format="%Y-%m-%d %H:%M:%S", tz="Etc/GMT-5")
+attr(Other_Data$Date_Time,"tzone") <- "UTC"
+
 #####weather station#####
 LaVirgin_p <- read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/M5025_Precipitacion_2019-01-06_2020-02-01.csv",
                      header = TRUE)
@@ -127,16 +138,21 @@ attr(EC_stn1$Date_Time,"tzone") <- "UTC"
 EC_stn1$EC_Temp <- (EC_stn1$EC_Temp - 32) * 5/9
 EC_stn1$row <- NULL
 
+#Add other data for station 1
+Other_Data_stn1 <- Other_Data[c("Date_Time", "CO2_ppm_1", "Turbidity_NTU",
+                                 "Chlorophylla_ug.L","CDOM_ppb", "Q_m3L")]
+
 #join all
 
 Stn1_Data_2019_08_14 <- full_join(DO_stn1,WL_stn1,by="Date_Time")
 Stn1_Data_2019_08_14 <- full_join(Stn1_Data_2019_08_14, EC_stn1, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Baro, by="Date_Time")
+Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Other_Data_stn1, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14,LaVirgin,  by="Date_Time")
 
 Stn1_Data_2019_08_14$Date_Time <- format(Stn1_Data_2019_08_14$Date_Time, usetz=TRUE)
 
-#write.csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv", row.names=FALSE)
+write.csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv", row.names=FALSE)
 
 
 ### JANUARY DATA
@@ -182,6 +198,9 @@ EC_stn1$Date_Time <- as.POSIXct(EC_stn1$Date_Time, format="%m/%d/%y %I:%M:%S %p"
 attr(EC_stn1$Date_Time,"tzone") <- "UTC"
 
 EC_stn1$row <- NULL
+
+#Other Data for station 1
+
 
 #join all
 
@@ -352,7 +371,11 @@ Stn3_Data_2019_08_14 <- full_join(EC_stn3,DO_stn3,by="Date_Time")
 Stn3_Data_2019_08_14 <- left_join(Stn3_Data_2019_08_14, Baro, by="Date_Time")
 Stn3_Data_2019_08_14 <- left_join(Stn3_Data_2019_08_14,LaVirgin, by="Date_Time")
 
-write_csv(Stn3_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv")
+
+Stn3_Data_2019_08_14$Date_Time <- format(Stn3_Data_2019_08_14$Date_Time, usetz=TRUE)
+
+write.csv(Stn3_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv", row.names=FALSE)
+
 
 #### no wl
 
