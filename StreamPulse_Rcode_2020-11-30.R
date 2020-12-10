@@ -21,10 +21,11 @@ library(here)
 library(dplyr)
 library(lubridate)
 library(tidyverse)
+library(readr)
 
 #read in those files!!!
 
-####ALL_Data
+####ALL_Data##########
 Other_Data <-read.csv("data_4_analysis/All_Stream_Data_2020-05-14.csv",
                       header = TRUE)
 Other_Data <- Other_Data[which(Other_Data$Inj.x == "No" ),]
@@ -150,10 +151,12 @@ Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Baro, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Other_Data_stn1, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14,LaVirgin,  by="Date_Time")
 
-Stn1_Data_2019_08_14$Date_Time <- format(Stn1_Data_2019_08_14$Date_Time, usetz=TRUE)
+#Stn1_Data_2019_08_14$Date_Time <- format(Stn1_Data_2019_08_14$Date_Time, usetz=TRUE)
 
-write.csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv", row.names=FALSE)
+#write_csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv")
 
+# Write table
+#write.table(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv", sep = ",", col.names = TRUE, row.names = FALSE)
 
 ### JANUARY DATA
 
@@ -165,6 +168,9 @@ WL_stn1 <-
   )
 colnames(WL_stn1)=c("Date","Time","offset","WL_m","WL_Temp")
 WL_stn1 <- WL_stn1[,c(1:2,4:5)]
+
+#1kpa = 0.102m
+WL_stn1$WL_m <- WL_stn1$WL_m*0.102 - .02
 
 WL_stn1$Date_Time <- paste(WL_stn1$Date, WL_stn1$Time)
 WL_stn1$Date_Time <- as.POSIXct(WL_stn1$Date_Time, format="%m/%d/%Y %I:%M:%S %p", tz="Etc/GMT-5")
@@ -211,9 +217,12 @@ Stn1_Data_2020_01_19 <- left_join(Stn1_Data_2020_01_19,LaVirgin, by="Date_Time")
 
 #Read out
 
-Stn1_Data_2020_01_19$Date_Time <- format(Stn1_Data_2020_01_19$Date_Time, usetz=TRUE)
+#Stn1_Data_2020_01_19$Date_Time <- format(Stn1_Data_2020_01_19$Date_Time, usetz=TRUE)
+#write_csv(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv")
 
-write.csv(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv", row.names=FALSE)
+#write.csv(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv", row.names=FALSE)
+
+write.table(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv", sep = ",", col.names = TRUE, row.names = FALSE)
 
 stn1_All <- rbind(Stn1_Data_2019_08_14,Stn1_Data_2020_01_19)
 
@@ -261,17 +270,21 @@ attr(EC_stn2$Date_Time,"tzone") <- "UTC"
 
 EC_stn2$row <- NULL
 
+#Add other data for station 2
+Other_Data_stn2 <- Other_Data[c("Date_Time", "CO2_ppm_2",  "Q_m3L")]
+
 #join stn2 or 3
 
 Stn2_Data_2019_08_14 <- full_join(DO_stn2,WL_stn2,by="Date_Time")
 Stn2_Data_2019_08_14 <- full_join(Stn2_Data_2019_08_14, EC_stn2, by="Date_Time")
+Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14, Other_Data_stn2, by="Date_Time")
 Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14, Baro, by="Date_Time")
 Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14,LaVirgin, by="Date_Time")
 
 #read out
-Stn2_Data_2019_08_14$Date_Time <- format(Stn2_Data_2019_08_14$Date_Time, usetz=TRUE)
+#Stn2_Data_2019_08_14$Date_Time <- format(Stn2_Data_2019_08_14$Date_Time, usetz=TRUE)
 
-write.csv(Stn2_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv", row.names=FALSE)
+write.csv(Stn2_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019-08-14_XX.csv", row.names=FALSE)
 
 
 
@@ -285,6 +298,9 @@ WL_stn2 <-
 colnames(WL_stn2)=c("Date","Time","offset","WL_m","WL_Temp")
 WL_stn2 <- WL_stn2[,c(1:2,4:5)]
 WL_stn2$Date_Time <- paste(WL_stn2$Date, WL_stn2$Time)
+
+#1kpa = 0.102m
+WL_stn2$WL_m <- WL_stn2$WL_m*0.102 - .01
 
 WL_stn2$Date_Time <- as.POSIXct(WL_stn2$Date_Time, format="%m/%d/%Y %I:%M:%S %p", tz="Etc/GMT-5")
 attr(WL_stn2$Date_Time,"tzone") <- "UTC"
@@ -325,8 +341,9 @@ Stn2_Data_2020_01_19 <- left_join(Stn2_Data_2020_01_19, Baro, by="Date_Time")
 Stn2_Data_2020_01_19 <- left_join(Stn2_Data_2020_01_19,LaVirgin, by="Date_Time")
 
 
-Stn2_Data_2020_01_19$Date_Time <- format(Stn2_Data_2020_01_19$Date_Time, usetz=TRUE)
-write.csv(Stn2_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2020_01_19_XX.csv", row.names=FALSE)
+#Stn2_Data_2020_01_19$Date_Time <- format(Stn2_Data_2020_01_19$Date_Time, usetz=TRUE)
+
+write.csv(Stn2_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2020-01-19_XX.csv", row.names=FALSE)
 
 stn2_All <- rbind(Stn2_Data_2019_08_14,Stn2_Data_2020_01_19)
 
@@ -372,9 +389,10 @@ Stn3_Data_2019_08_14 <- left_join(Stn3_Data_2019_08_14, Baro, by="Date_Time")
 Stn3_Data_2019_08_14 <- left_join(Stn3_Data_2019_08_14,LaVirgin, by="Date_Time")
 
 
-Stn3_Data_2019_08_14$Date_Time <- format(Stn3_Data_2019_08_14$Date_Time, usetz=TRUE)
+#Stn3_Data_2019_08_14$Date_Time <- format(Stn3_Data_2019_08_14$Date_Time, usetz=TRUE)
 
-write.csv(Stn3_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv", row.names=FALSE)
+write_csv(Stn3_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv")
+#write.csv(Stn3_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2019_08_14_XX.csv", row.names=FALSE)
 
 
 #### no wl

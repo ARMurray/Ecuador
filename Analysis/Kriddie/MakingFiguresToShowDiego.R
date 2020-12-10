@@ -16,8 +16,8 @@ fig4 <- plot_ly(data = DO_stn1, x = ~Date_Time, y = ~DO_Temp)
 
 ############
 
-fig <- plot_ly(stn3_All, x = ~Date_Time, y = ~DO_mgl, name = 'DO_mgl', 
-               type = 'scatter', mode = 'lines')
+fig <- plot_ly(stn2_All, x = ~Date_Time, y = ~WL_m, name = 'water level', 
+               type = 'scatter', mode = 'markers')
 fig <- fig %>% add_trace(y = ~DO_Temp, name = 'WaterTemp_DO', mode = 'lines')
 #fig <- fig %>% add_trace(y = ~Air_Temp_c, name = 'AirTemp', mode = 'lines+markers')
 #fig <- fig %>% add_trace(y = ~WL_m, name = 'waterlevel', mode = 'markers')
