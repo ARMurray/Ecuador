@@ -15,10 +15,10 @@ fig3 <- plot_ly(data = WL_stn1, x = ~Date_Time, y = ~WL_m)
 fig4 <- plot_ly(data = DO_stn1, x = ~Date_Time, y = ~DO_Temp)
 
 ############
-
-fig <- plot_ly(stn2_All, x = ~Date_Time, y = ~WL_m, name = 'water level', 
+Stn1_Data_2020_01_19$WL_m_unitless <- Stn1_Data_2020_01_19$WL_m * 10 
+fig <- plot_ly(Stn1_Data_2020_01_19, x = ~Date_Time, y = ~DO_mgl, name = 'DO mgL', 
                type = 'scatter', mode = 'markers')
-fig <- fig %>% add_trace(y = ~DO_Temp, name = 'WaterTemp_DO', mode = 'lines')
+fig <- fig %>% add_trace(y = ~WL_m_unitless, name = 'water level unitless', mode = 'lines')
 #fig <- fig %>% add_trace(y = ~Air_Temp_c, name = 'AirTemp', mode = 'lines+markers')
 #fig <- fig %>% add_trace(y = ~WL_m, name = 'waterlevel', mode = 'markers')
 
