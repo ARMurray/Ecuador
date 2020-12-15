@@ -3,6 +3,8 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(here)
+
 
 #rating curves with KW 
 
@@ -11,7 +13,7 @@ library(ggplot2)
 
 
 
-rating_curve <- read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Discharge/Discharge_KWCalc.csv", 
+rating_curve <- read.csv(here::here("Analysis/Discharge/Discharge_KWCalc.csv"), 
                          header=T, na.strings=c("","NA"))
 rating_curve$Level_m_compensated <-  as.numeric( as.character (rating_curve$Level_m_compensated))
 rating_curve$lvl_m_stn1 <-  as.numeric( as.character (rating_curve$lvl_m_stn1))
