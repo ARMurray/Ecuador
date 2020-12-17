@@ -24,19 +24,58 @@ library(tidyverse)
 library(readr)
 
 #read in those files!!!
+#######Discharge Rating Curve#########
+#discharge rating curve is based on WL from station 3 becuase station 1 level logger was out of the water
+#for a good long bit. 
+#first we merge all stn2 data
+WL_stn2_2019 <- 
+  read.csv(here::here("FieldData/LevelLogger/Last_Collection/lvlgr_2020421_2019-08-14Compensated.csv"),
+           skip=2, header = FALSE, sep = ",",
+           quote = "\"",dec = ".", fill = TRUE, comment.char = ""
+  )
+colnames(WL_stn2_2019)=c("Date","Time","offset","WL_m","WL_Temp")
+WL_stn2_2019 <- WL_stn2_2019[,c(1:2,4:5)]
+WL_stn2_2019$Date_Time <- paste(WL_stn2_2019$Date, WL_stn2_2019$Time)
+WL_stn2_2019$Date_Time <- as.POSIXct(WL_stn2_2019$Date_Time, format="%m/%d/%Y %H:%M:%S", tz="Etc/GMT-5")
+WL_stn2_2019$Date <- NULL
+WL_stn2_2019$Time <- NULL
 
-####ALL_Data##########
-Other_Data <-read.csv("data_4_analysis/All_Stream_Data_2020-05-14.csv",
+#### 
+WL_stn2_2020 <- 
+  read.csv(here::here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv"),
+           skip=12, header = FALSE, sep = ",",
+           quote = "\"",dec = ".", fill = TRUE, comment.char = ""
+  )
+colnames(WL_stn2_2020)=c("Date","Time","offset","WL_m","WL_Temp")
+WL_stn2_2020 <- WL_stn2_2020[,c(1:2,4:5)]
+WL_stn2_2020$Date_Time <- paste(WL_stn2_2020$Date, WL_stn2_2020$Time)
+#1kpa = 0.102m,
+#and after installation, dwl increased by 1cm
+WL_stn2_2020$WL_m <- WL_stn2_2020$WL_m*0.102 - .01 
+WL_stn2_2020$Date_Time <- as.POSIXct(WL_stn2_2020$Date_Time, format="%m/%d/%Y %I:%M:%S %p", tz="Etc/GMT-5")
+WL_stn2_2020$Date <- NULL
+WL_stn2_2020$Time <- NULL
+
+Discharge_Data <- rbind(WL_stn2_2019,WL_stn2_2020)
+#Discharge Rating Curve for station 2 : y = 0.8313x2 - 0.184x + 0.0107
+Discharge_Data$Q_m3s <- 0.8313*(Discharge_Data$WL_m)^2 - 0.184*(Discharge_Data$WL_m) + 0.0107
+Discharge_Data$WL_m <- NULL
+Discharge_Data$WL_Temp <- NULL
+
+
+####ALL_Data#########
+Other_Data <-read.csv(here::here("data_4_analysis/All_Stream_Data_2020-05-14.csv"),
                       header = TRUE)
 Other_Data <- Other_Data[which(Other_Data$Inj.x == "No" ),]
-Other_Data <- subset(Other_Data, select=c(DateTime, V1_adjusted, V2_adjusted, V3_adjusted, V4_adjusted, Turbidity_NTU, Chlorophylla_ug.L,
-                            CDOM_ppb, EC1_uS, EC2_uS, EC4_uS, stn1_Q))
-colnames(Other_Data) <- c("Date_Time", "CO2_ppm_1","CO2_ppm_2","CO2_ppm_3","CO2_ppm_4",
-         "Turbidity_NTU", "Chlorophylla_ug.L","CDOM_ppb","EC_uS_1", "EC2_uS_2", "EC4_uS_3", "Q_m3L")
+Other_Data <- subset(Other_Data, select=c(DateTime, V1_adjusted, V2_adjusted, V3_adjusted, V4_adjusted, 
+                                          lvl_421_m, Turbidity_NTU, Chlorophylla_ug.L,
+                            CDOM_ppb, EC1_uS, EC2_uS, EC4_uS))
+colnames(Other_Data) <- c("Date_Time", "CO2_ppm_1","CO2_ppm_2","CO2_ppm_3","CO2_ppm_4","lvl_stn3",
+         "Turbidity_NTU", "Chlorophylla_ug.L","CDOM_ppb","EC_uS_1", "EC2_uS_2", "EC4_uS_3")
 Other_Data$Date_Time <- as.POSIXct(Other_Data$Date_Time, format="%Y-%m-%d %H:%M:%S", tz="Etc/GMT-5")
 
 #####weather station#####
-LaVirgin_p <- read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/M5025_Precipitacion_2019-01-06_2020-02-01.csv",
+LaVirgin_p <- read.csv(here::here("FieldData/Esteban/M5025_Precipitacion_2019-01-06_2020-02-01.csv"),
                      header = TRUE)
 colnames(LaVirgin_p)=c("Date_Time","Precipt_cm")
 LaVirgin_p$Date_Time <- as.POSIXct(LaVirgin_p$Date_Time, format="%m/%d/%Y %H:%M", tz="Etc/GMT-5")
@@ -49,7 +88,7 @@ LaVirgin_sum <- LaVirgin_p %>%
   summarize(
     #    mean = mean(stn1_Q),
     Sum_precipt = sum(Precipt_cm))
-LaVirgin_sum <- LaVirgin_sum[which(LaVirgin_sum$Date > "2019-07-16" &
+LaVirgin_sum <- LaVirgin_sum[which(LaVirgin_sum$Date > "2019-06-01" &
                                       LaVirgin_sum$Date < "2020-01-18"), ]
 
 
@@ -66,7 +105,7 @@ LaVirgin <- LaVirgin_t
 #rm(LaVirgin_p,LaVirgin_t)
 
 ## Air temp
-Baro <- read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv",
+Baro <- read.csv(here::here("FieldData/LevelLogger/Last_Collection/brllgr_2019-08-14.csv"),
                  skip=12, header = FALSE, sep = ",",
                  quote = "\"",dec = ".", fill = TRUE, comment.char = ""
 )
@@ -96,7 +135,7 @@ Baro <- rbind(Baro, Baro_jan)
 
 #Water Level
 WL_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/LevelLogger/Last_Collection/lvlgr_2020436_2019-08-14Compensated.csv",
+  read.csv(here::here("FieldData/LevelLogger/Last_Collection/lvlgr_2020436_2019-08-14Compensated.csv"),
                                skip=2, header = FALSE, sep = ",",
                                quote = "\"",dec = ".", fill = TRUE, comment.char = ""
                       )
@@ -110,7 +149,7 @@ WL_stn1$Time <- NULL
 
 #Dissolved Oxygen
 DO_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/DO/Last_Collection/DO_1_2019-08-14.csv",
+  read.csv(here::here("FieldData/DO/Last_Collection/DO_1_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn1 <- DO_stn1[,1:4]
@@ -122,7 +161,7 @@ DO_stn1$row <- NULL
 
 #Specific Conductivity
 EC_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/EC/Last_Collection/EC1_2019-08-14.csv",
+  read.csv(here::here("FieldData/EC/Last_Collection/EC1_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn1 <- EC_stn1[,1:4]
@@ -133,29 +172,30 @@ EC_stn1$row <- NULL
 
 #Add other data for station 1
 Other_Data_stn1 <- Other_Data[c("Date_Time", "CO2_ppm_1", "Turbidity_NTU",
-                                 "Chlorophylla_ug.L","CDOM_ppb", "Q_m3L")]
+                                 "Chlorophylla_ug.L","CDOM_ppb")]
 
+ 
 #join all
 
 Stn1_Data_2019_08_14 <- full_join(DO_stn1,WL_stn1,by="Date_Time")
 Stn1_Data_2019_08_14 <- full_join(Stn1_Data_2019_08_14, EC_stn1, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Baro, by="Date_Time")
 Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Other_Data_stn1, by="Date_Time")
-Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14,LaVirgin,  by="Date_Time")
+Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14,LaVirgin_p,  by="Date_Time")
+Stn1_Data_2019_08_14$Date <- NULL
+Stn1_Data_2019_08_14 <- left_join(Stn1_Data_2019_08_14, Discharge_Data, by = "Date_Time")
 
 # Write table
 #Don't forget to change to UTC!
 
 #attr(Stn1_Data_2019_08_14$Date_Time,"tzone") <- "UTC"
-#write_csv(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv")
-
 #write.table(Stn1_Data_2019_08_14, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2019-08-14_XX.csv", sep = ",", col.names = TRUE, row.names = FALSE)
 
 ### JANUARY DATA
 
 ##Station 1
 WL_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020436_enero2020_compensated.csv",
+  read.csv(here::here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020436_enero2020_compensated.csv"),
            skip=12, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = ""
   )
@@ -173,7 +213,7 @@ WL_stn1$Time <- NULL
 
 #Dissolved Oxygen
 DO_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/DO/20645539_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn1 <- DO_stn1[,1:4]
@@ -186,7 +226,7 @@ DO_stn1 <- DO_stn1[ which(DO_stn1$DO_mgl > -100), ]
 
 #Specific Conductivity
 EC_stn1 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/EC/20636125_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/EC/20636125_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn1 <- EC_stn1[,1:4]
@@ -203,16 +243,13 @@ EC_stn1$row <- NULL
 Stn1_Data_2020_01_19 <- full_join(DO_stn1,WL_stn1,by="Date_Time")
 Stn1_Data_2020_01_19 <- full_join(Stn1_Data_2020_01_19, EC_stn1, by="Date_Time")
 Stn1_Data_2020_01_19 <- full_join(Stn1_Data_2020_01_19, Baro, by="Date_Time")
-Stn1_Data_2020_01_19 <- left_join(Stn1_Data_2020_01_19,LaVirgin, by="Date_Time")
+#Stn1_Data_2020_01_19 <- left_join(Stn1_Data_2020_01_19,LaVirgin, by="Date_Time")
+Stn1_Data_2020_01_19 <- left_join(Stn1_Data_2020_01_19, Discharge_Data, by="Date_Time")
 
 #Read out - don't forget to convert time zone for stream pulse
 
 #attr(Stn1_Data_2020_01_19$Date_Time,"tzone") <- "UTC"
-
-#Stn1_Data_2020_01_19$Date_Time <- format(Stn1_Data_2020_01_19$Date_Time, usetz=TRUE)
-#write_csv(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv")
-###use this one below
-#write.table(Stn1_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU1_2020-01-19_XX.csv", sep = ",", col.names = TRUE, row.names = FALSE)
+#write.table(Stn1_Data_2020_01_19, here::here("StreamPulse/EC_IRU1_2020-01-19_XX.csv"), sep = ",", col.names = TRUE, row.names = FALSE)
 
 stn1_All <- rbind(Stn1_Data_2019_08_14,Stn1_Data_2020_01_19)
 
@@ -221,7 +258,7 @@ stn1_All <- rbind(Stn1_Data_2019_08_14,Stn1_Data_2020_01_19)
 # Station 2 or 3
 
 WL_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/LevelLogger/Last_Collection/lvlgr_2020421_2019-08-14Compensated.csv",
+  read.csv(here::here("FieldData/LevelLogger/Last_Collection/lvlgr_2020421_2019-08-14Compensated.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = ""
   )
@@ -235,7 +272,7 @@ WL_stn2$Time <- NULL
 
 #Dissolved Oxygen
 DO_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/DO/Last_Collection/DO_2_2019-08-14.csv",
+  read.csv(here::here("FieldData/DO/Last_Collection/DO_2_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn2 <- DO_stn2[,1:4]
@@ -248,7 +285,7 @@ DO_stn2 <- DO_stn2[ which(DO_stn2$DO_mgl > -100), ]
 
 #Specific Conductivity
 EC_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/EC/Last_Collection/EC2_2019-08-14.csv",
+  read.csv(here::here("FieldData/EC/Last_Collection/EC2_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn2 <- EC_stn2[,1:4]
@@ -258,15 +295,15 @@ EC_stn2$Date_Time <- as.POSIXct(EC_stn2$Date_Time, format="%m/%d/%y %I:%M:%S %p"
 EC_stn2$row <- NULL
 
 #Add other data for station 2
-Other_Data_stn2 <- Other_Data[c("Date_Time", "CO2_ppm_2",  "Q_m3L")]
+Other_Data_stn2 <- Other_Data[c("Date_Time", "CO2_ppm_2")]
 
 #join stn2 or 3
-
+  
 Stn2_Data_2019_08_14 <- full_join(DO_stn2,WL_stn2,by="Date_Time")
 Stn2_Data_2019_08_14 <- full_join(Stn2_Data_2019_08_14, EC_stn2, by="Date_Time")
 Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14, Other_Data_stn2, by="Date_Time")
 Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14, Baro, by="Date_Time")
-Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14,LaVirgin, by="Date_Time")
+Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14,Discharge_Data, by="Date_Time")
 
 #read out
 
@@ -279,7 +316,7 @@ Stn2_Data_2019_08_14 <- left_join(Stn2_Data_2019_08_14,LaVirgin, by="Date_Time")
 
 #### 
 WL_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv",
+  read.csv(here::here("FieldData/Esteban/WaterLevel_BaroCompensated_csv/2020421_enero2020_compensated.csv"),
            skip=12, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = ""
   )
@@ -296,7 +333,7 @@ WL_stn2$Time <- NULL
 
 #Dissolved Oxygen
 DO_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/DO/20645540_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/DO/20645540_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn2 <- DO_stn2[,1:4]
@@ -309,7 +346,7 @@ DO_stn2 <- DO_stn2[ which(DO_stn2$DO_mgl > -100), ]
 
 #Specific Conductivity
 EC_stn2 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/EC/20636127_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/EC/20636127_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn2 <- EC_stn2[,1:4]
@@ -323,12 +360,11 @@ EC_stn2$row <- NULL
 Stn2_Data_2020_01_19 <- full_join(DO_stn2,WL_stn2,by="Date_Time")
 Stn2_Data_2020_01_19 <- full_join(Stn2_Data_2020_01_19, EC_stn2, by="Date_Time")
 Stn2_Data_2020_01_19 <- left_join(Stn2_Data_2020_01_19, Baro, by="Date_Time")
-Stn2_Data_2020_01_19 <- left_join(Stn2_Data_2020_01_19,LaVirgin, by="Date_Time")
+Stn2_Data_2020_01_19 <- left_join(Stn2_Data_2020_01_19,Discharge_Data, by="Date_Time")
 
 #write out
 
 #attr(Stn2_Data_2020_01_19$Date_Time,"tzone") <- "UTC"
-
 #write.csv(Stn2_Data_2020_01_19, "C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/StreamPulse/EC_IRU2_2020-01-19_XX.csv", row.names=FALSE)
 
 stn2_All <- rbind(Stn2_Data_2019_08_14,Stn2_Data_2020_01_19)
@@ -343,7 +379,7 @@ stn2_All <- rbind(Stn2_Data_2019_08_14,Stn2_Data_2020_01_19)
 #stn 3: 20636126
 #Dissolved Oxygen : 20645538
 DO_stn3 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/DO/Last_Collection/DO_3_2019-08-14.csv",
+  read.csv(here::here("FieldData/DO/Last_Collection/DO_3_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn3 <- DO_stn3[,1:4]
@@ -356,7 +392,7 @@ DO_stn3 <- DO_stn3[ which(DO_stn3$DO_mgl > -100), ]
 
 #Specific Conductivity: 20636126
 EC_stn3 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/EC/Last_Collection/EC3_2019-08-14.csv",
+  read.csv(here::here("FieldData/EC/Last_Collection/EC3_2019-08-14.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn3 <- EC_stn3[,1:4]
@@ -382,7 +418,7 @@ Stn3_Data_2019_08_14 <- left_join(Stn3_Data_2019_08_14,LaVirgin, by="Date_Time")
 
 #Dissolved Oxygen: 20645538
 DO_stn3 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/DO/20645538_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/DO/20645538_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 DO_stn3 <- DO_stn3[,1:4]
@@ -395,7 +431,7 @@ DO_stn3 <- DO_stn3[ which(DO_stn3$DO_mgl > -100), ]
 
 #Specific Conductivity
 EC_stn3 <- 
-  read.csv("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/Ecuador/FieldData/Esteban/HOBO_CSVs/EC/20636126_January_2020.csv",
+  read.csv(here::here("FieldData/Esteban/HOBO_CSVs/EC/20636126_January_2020.csv"),
            skip=2, header = FALSE, sep = ",",
            quote = "\"",dec = ".", fill = TRUE, comment.char = "")
 EC_stn3 <- EC_stn3[,1:4]
