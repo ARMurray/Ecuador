@@ -4,11 +4,50 @@ library(lubridate)
 library(tidyr)
 library(dplyr)
 
+##Run "StreamPulse_Rcode_2020-11-30" first
+#GPP units: g O2 m^-2 d^-1
+
+######LaVirgin Air Temp####
+LaVirgin$Date_asfactor <- as.Date(LaVirgin$Date_Time)
+LaVirgin_AirTemp_ave <- LaVirgin %>% 
+  group_by(Date_asfactor) %>% 
+  summarize(
+    AirTemp_DailyAve = mean(Air_Temp_LaVirgin))
+
+LaVirgin_AirTemp_rollingAve <- LaVirgin_AirTemp_ave %>%
+  dplyr::mutate(AirTemp_02da = zoo::rollmean(AirTemp_DailyAve, k = 2, fill = NA),
+                AirTemp_03da = zoo::rollmean(AirTemp_DailyAve, k = 3, fill = NA),
+                AirTemp_05da = zoo::rollmean(AirTemp_DailyAve, k = 5, fill = NA),
+                AirTemp_07da = zoo::rollmean(AirTemp_DailyAve, k = 7, fill = NA),
+                AirTemp_15da = zoo::rollmean(AirTemp_DailyAve, k = 15, fill = NA)) %>% 
+  dplyr::ungroup()
+
+LaVirgin_AirTemp_rollingAve <- LaVirgin_AirTemp_rollingAve %>%
+  mutate(AirTemp_DailyAve_previousDay=lag(AirTemp_DailyAve))
+
+
+########Precipitation######
+LaVirgin_sum_rollingAve <- LaVirgin_sum %>%
+  dplyr::mutate(precipt_03da = zoo::rollmean(Sum_precipt, k = 3, fill = NA),
+                precipt_05da = zoo::rollmean(Sum_precipt, k = 5, fill = NA),
+                precipt_07da = zoo::rollmean(Sum_precipt, k = 7, fill = NA),
+                precipt_15da = zoo::rollmean(Sum_precipt, k = 15, fill = NA),
+                precipt_30da = zoo::rollmean(Sum_precipt, k = 30, fill = NA)) %>% 
+  dplyr::ungroup()
+LaVirgin_sum_rollingAve <- LaVirgin_sum_rollingAve %>%
+  mutate(precipt_03da_previousDay=lag(precipt_03da))
+
+LaVirgin_sum_rollingAve$Date_asfactor <- as.Date(LaVirgin_sum_rollingAve$Date)
+
+
+##### Water Chemistry ######
 WaterChem_DOC <- read.csv(here::here("FieldData/WaterChem/DOC.csv"))
 colnames(WaterChem_DOC) <- c("SampleID", "date","DOC_mgL","TDN_mgL","PO4_mgL","NO3N_mgL")
 WaterChem_DOC$date <- mdy(WaterChem_DOC$date)
 WaterChem_DOC$Date_asfactor <- as.Date(WaterChem_DOC$date)
+WaterChem_DOC <- WaterChem_DOC %>% filter(SampleID == "Station1")
 
+####Stream Metaboliser predictions####
 stn2_predictions <- read.csv(here::here("Analysis/Kriddie/DO_2_Predictions_202011170031.csv"))
 stn2_predictions$date <- mdy(stn2_predictions$date)
 
@@ -16,6 +55,7 @@ stn1_predictions_summary <- read.csv(here::here("Analysis/Stream_Metabolism/Mode
 stn1_predictions_Init46.06 <- stn1_predctions_summary %>% filter(K600_init == 46.06)
 stn1_predctions_Init46.06$Date_asfactor <- as.Date(stn1_predctions_Init46.06$dateTime)
 
+#####Station 1 data####
 Stn1_Data_2019_08_14$Date_asfactor <- as.Date(Stn1_Data_2019_08_14$Date_Time)
 stn1_2019_08_14_chla <- Stn1_Data_2019_08_14 %>%
   filter(Chlorophylla_ug.L > 1.5)  %>%
@@ -34,10 +74,18 @@ stn1_2019_08_14_CDOM <- Stn1_Data_2019_08_14 %>%
   group_by(Date_asfactor) %>%
   summarize(mean_CDOM = mean(CDOM_ppb)
   )
+stn1_2019_08_14_Q <- Stn1_Data_2019_08_14 %>%
+  group_by(Date_asfactor) %>%
+  summarize(Q_DailySum = sum(Q_m3L)
+  )
 
-
-
+#####Join Data####
 stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_chla, stn1_predctions_Init46.06, by="Date_asfactor")
+stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_summary, WaterChem_DOC, by="Date_asfactor")
+stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_summary, stn1_2019_08_14_Q, by="Date_asfactor")
+stn1_2019_08_14_summary <- left_join(stn1_2019_08_14_summary, LaVirgin_sum_rollingAve, by="Date_asfactor")
+stn1_2019_08_14_summary <- left_join(stn1_2019_08_14_summary, LaVirgin_AirTemp_rollingAve, by="Date_asfactor")
+
 ########
 
 
@@ -87,8 +135,7 @@ fig_all <- subplot(fig3, fig1, #fig2,
                    nrows = 2, shareX = TRUE)
 
 ################# Plot Summer Data
-
-fig <- plot_ly(Stn1_Data_2019_08_14, x = ~Date_Time, y = ~DO_mgl, name = 'DO_mgl', 
+fig <- plot_ly(Stn1_Data_2019_08_14, x = ~Date_Time, y = ~WL_m, name = 'WL_m', 
                type = 'scatter', mode = 'lines')
 fig2 <- fig %>% add_trace(y = ~Turbidity_NTU, name = 'Turbidity_NTU', mode = 'markers')
 fig3 <- fig %>% add_trace(y = ~Chlorophylla_ug.L, name = 'Chlorophylla_ug.L', mode = 'lines+markers')
@@ -101,10 +148,47 @@ fig_all <- subplot(fig3, fig, fig2,
                    nrows = 3, shareX = TRUE)
 
 
-####These are kinda interesting
+#Staging ground
 
+fig <- plot_ly(Stn2_Data_2019_08_14, x = ~Date_Time, y = ~DO_Temp, name = 'WL_m', 
+               type = 'scatter', mode = 'lines')
+
+fig5 <- plot_ly(stn1_2019_08_14_summary, x = ~Date_asfactor, y = ~GPP, name = 'GPP', 
+        type = 'scatter', mode = 'markers + lines')
+
+fig_all <- subplot(fig, fig5, 
+                   nrows = 2, shareX = TRUE)
+
+stn1_2019_08_14_summary$precipt_03da_previousDay
+plot_ly(stn1_2019_08_14_summary, x = ~precipt_03da_previousDay, y = ~GPP, name = 'DO_mgl', 
+        type = 'scatter', mode = 'markers')
+########################################
+####These plots are kinda interesting
+########################################
+
+#GPP vs ER
 plot_ly(stn1_2019_08_14_summary, x = ~ER, y = ~GPP, name = 'DO_mgl', 
         type = 'scatter', mode = 'markers')
+
+#GPP vs precipt15
+plot_ly(stn1_2019_08_14_summary, x = ~precipt_15da, y = ~GPP, name = 'DO_mgl', 
+        type = 'scatter', mode = 'markers')
+
+#GPP vs Precipt03 previous day
+plot_ly(stn1_2019_08_14_summary, x = ~precipt_03da_previousDay, y = ~GPP, name = 'DO_mgl', 
+        type = 'scatter', mode = 'markers')
+
+#ER vs DOC
+plot_ly(stn1_2019_08_14_summary, x = ~ER, y = ~DOC_mgL, #name = 'DO_mgl', 
+        type = 'scatter', mode = 'markers')
+
+#GPP vs TDN
+plot_ly(stn1_2019_08_14_summary, x = ~GPP, y = ~TDN_mgL, #name = 'DO_mgl', 
+        type = 'scatter', mode = 'markers')
+
+
+#GPP vs chla
+#this needs some cleaning
 plot_ly(stn1_2019_08_14_summary, x = ~mean_Chla, y = ~GPP, name = 'DO_mgl', 
         type = 'scatter', mode = 'markers')
 
