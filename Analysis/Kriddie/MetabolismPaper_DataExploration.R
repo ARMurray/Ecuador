@@ -6,6 +6,32 @@ library(dplyr)
 
 ##Run "StreamPulse_Rcode_2020-11-30" first
 #GPP units: g O2 m^-2 d^-1
+#convert to ER
+
+######Sum CO2 and convert to gCO2 per day 
+Other_Data <-read.csv(here::here("data_4_analysis/All_Stream_Data_2020-05-14.csv"),
+                      header = TRUE)
+Other_Data <- Other_Data[which(Other_Data$Inj.x == "No" ),]
+Other_Data <- subset(Other_Data, select=c(DateTime, Flux_1_cleaned, V1_CO2_mgC.L, V3_CO2_mgC.L))
+colnames(Other_Data) <- c("Date_Time","Flux_1_cleaned","CO2_gm3_1","CO2_gm3_3") #note - mg per L is same as g per m3
+Other_Data$Date_asfactor <- as.Date(Other_Data$Date_Time)
+
+CO2_gm3 <- Other_Data %>% 
+  drop_na(CO2_gm3_3) %>%
+  group_by(Date_asfactor) %>% 
+  summarize(
+    CO2_gm3_1_DailyAve = mean(CO2_gm3_1),
+    CO2_gm3_3_DailyAve = mean(CO2_gm3_3))
+
+
+Flux_CO2 <- Other_Data %>% 
+  drop_na(Flux_1_cleaned) %>%
+  group_by(Date_asfactor) %>% 
+  summarize(
+    FluxCO2_umolm2_s1_DailyAve = mean(Flux_1_cleaned))
+Flux_CO2$FluxCO2_gCO2m2_d1_DailyAve <- 
+  Flux_CO2$FluxCO2_umolm2_s1_DailyAve * 1e-6 * 44 * 86400
+
 
 ######LaVirgin Air Temp####
 LaVirgin$Date_asfactor <- as.Date(LaVirgin$Date_Time)
@@ -48,12 +74,18 @@ WaterChem_DOC$Date_asfactor <- as.Date(WaterChem_DOC$date)
 WaterChem_DOC <- WaterChem_DOC %>% filter(SampleID == "Station1")
 
 ####Stream Metaboliser predictions####
+#######Calculate NEP and convert to gCO2 per day
 stn2_predictions <- read.csv(here::here("Analysis/Kriddie/DO_2_Predictions_202011170031.csv"))
 stn2_predictions$date <- mdy(stn2_predictions$date)
+stn2_predictions$NEP <- stn2_predictions$GPP + stn2_predictions$ER
+stn2_predictions$NEP_gCO2m2 <- abs(stn2_predictions$NEP * 44/16)
+
 
 stn1_predictions_summary <- read.csv(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_summary.csv"))
-stn1_predictions_Init46.06 <- stn1_predctions_summary %>% filter(K600_init == 46.06)
-stn1_predctions_Init46.06$Date_asfactor <- as.Date(stn1_predctions_Init46.06$dateTime)
+stn1_predictions_Init46.06 <- stn1_predictions_summary %>% filter(K600_init == 46.06)
+stn1_predictions_Init46.06$Date_asfactor <- as.Date(stn1_predictions_Init46.06$dateTime)
+stn1_predictions_Init46.06$NEP <- stn1_predictions_Init46.06$GPP + stn1_predictions_Init46.06$ER
+stn1_predictions_Init46.06$NEP_gCO2m2 <- abs(stn1_predictions_Init46.06$NEP * 22/16)
 
 #####Station 1 data####
 Stn1_Data_2019_08_14$Date_asfactor <- as.Date(Stn1_Data_2019_08_14$Date_Time)
@@ -80,11 +112,13 @@ stn1_2019_08_14_Q <- Stn1_Data_2019_08_14 %>%
   )
 
 #####Join Data####
-stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_chla, stn1_predctions_Init46.06, by="Date_asfactor")
+stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_chla, stn1_predictions_Init46.06, by="Date_asfactor")
 stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_summary, WaterChem_DOC, by="Date_asfactor")
-stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_summary, stn1_2019_08_14_Q, by="Date_asfactor")
+#stn1_2019_08_14_summary <- full_join(stn1_2019_08_14_summary, stn1_2019_08_14_Q, by="Date_asfactor")
 stn1_2019_08_14_summary <- left_join(stn1_2019_08_14_summary, LaVirgin_sum_rollingAve, by="Date_asfactor")
 stn1_2019_08_14_summary <- left_join(stn1_2019_08_14_summary, LaVirgin_AirTemp_rollingAve, by="Date_asfactor")
+stn1_2019_08_14_summary <- full_join(CO2_gm3, stn1_2019_08_14_summary, by="Date_asfactor")
+stn1_2019_08_14_summary <- full_join(Flux_CO2, stn1_2019_08_14_summary, by="Date_asfactor")
 
 ########
 
@@ -106,8 +140,8 @@ fig4 <- plot_ly(data = DO_stn1, x = ~Date_Time, y = ~DO_Temp)
 
 ############
 
-stn1_All$WL_m_log <- log10(stn1_All$WL_m*100)
-fig1 <- plot_ly(stn1_All, x = ~Date_Time, y = ~DO_mgl, name = 'Dissolved Oxygen mgL', 
+Stn1_Data_2020_01_19$WL_m_log <- log10(Stn1_Data_2020_01_19$WL_m*100)
+fig2 <- plot_ly(Stn1_Data_2020_01_19, x = ~Date_Time, y = ~WL_m, name = 'Water Level meters', 
                type = 'scatter', mode = 'lines')
 fig1 <- fig1 %>% add_trace(y = ~WL_m_log, name = 'water level unitless', mode = 'lines')
 #fig <- fig %>% add_trace(y = ~Air_Temp_c, name = 'AirTemp', mode = 'lines+markers')
@@ -131,7 +165,7 @@ fig3 <- plot_ly(stn2_predictions, x = ~date, y= ~GPP, name = 'GPP',
 fig3 <- fig3 %>% add_trace(y = ~ER, name = 'ER', mode = 'markers + lines')
 
 
-fig_all <- subplot(fig3, fig1, #fig2, 
+fig_all <- subplot(fig1, fig2, #fig2, 
                    nrows = 2, shareX = TRUE)
 
 ################# Plot Summer Data
@@ -171,7 +205,7 @@ plot_ly(stn1_2019_08_14_summary, x = ~ER, y = ~GPP, name = 'DO_mgl',
         type = 'scatter', mode = 'markers')
 
 #GPP vs precipt15
-plot_ly(stn1_2019_08_14_summary, x = ~precipt_15da, y = ~GPP, name = 'DO_mgl', 
+plot_ly(stn1_2019_08_14_summary, x = ~precipt_15da, y = ~NEP_gCO2m2, 
         type = 'scatter', mode = 'markers')
 
 #GPP vs Precipt03 previous day

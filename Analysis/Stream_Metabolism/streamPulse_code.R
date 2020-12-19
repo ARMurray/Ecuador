@@ -27,18 +27,18 @@ query_available_data(region='EC')
 # the variables returned here. If USGS data are available, they will be acquired
 # automatically when you use prep_metabolism below. Likewise, air pressure and
 # PAR estimates will be automatically acquired below, if necessary.
-query_available_data(region='AZ', site='OC')
-query_available_data(region='EC', site='IRU1')
+#query_available_data(region='AZ', site='OC')
+query_available_data(region='EC', site='IRU2')
 
 # Select site and date range for which to acquire StreamPULSE data.
 # site_code is a combination of regionID and siteID
-site_code = 'AZ_OC'
-start_date = '2018-06-01'
-end_date = '2018-07-01'
+#site_code = 'AZ_OC'
+#start_date = '2018-06-01'
+#end_date = '2018-07-01'
 
-site_code = 'EC_IRU1'
-start_date = '2019-07-12'
-end_date = '2019-08-14'
+site_code = 'EC_IRU2'
+start_date = '2019-08-20'
+end_date = '2019-12-30'
 token = '7c34ed468efbcae57cb6'
 
 
@@ -66,10 +66,10 @@ sp_data_prepped = prep_metabolism(d=sp_data, type=model_type,
 # functions: mm_name, specs, metab, predict_metab).
 model_fit = fit_metabolism(sp_data_prepped)
 
-# Plot results and diagnostics (Note that this may not work properly if your
+ # Plot results and diagnostics (Note that this may not work properly if your
 # data do not all occur within the same calendar year.)
 # You can explore all StreamPULSE model results at
 # http://data.streampulse.org:3838/streampulse_diagnostic_plots/
 plot_output(model_fit)
 
-write.csv(details, "C:/Users/kriddie/Documents/kriddie_personal/Ecuador Proyecto IRU/StreamPulse/details_arizona.csv")
+write.csv(model_fit$predictions, here::here("Analysis/Kriddie/ERU2_predictions_2019-07-12_2019-09-30.csv"))
