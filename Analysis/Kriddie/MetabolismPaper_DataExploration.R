@@ -184,10 +184,10 @@ fig_all <- subplot(fig3, fig, fig2,
 
 #Staging ground
 
-fig <- plot_ly(Stn2_Data_2019_08_14, x = ~Date_Time, y = ~DO_Temp, name = 'WL_m', 
+fig <- plot_ly(stn1_2019_08_14_summary, x = ~Date_asfactor, y = ~FluxCO2_gCO2m2_d1_DailyAve, name = 'CO2 flux gCO2 per m2 per day', 
                type = 'scatter', mode = 'lines')
 
-fig5 <- plot_ly(stn1_2019_08_14_summary, x = ~Date_asfactor, y = ~GPP, name = 'GPP', 
+fig5 <- plot_ly(stn1_2019_08_14_summary, x = ~Date_asfactor, y = ~NEP_gCO2m2, name = 'NEP gCO2 per m2 per day', 
         type = 'scatter', mode = 'markers + lines')
 
 fig_all <- subplot(fig, fig5, 
@@ -203,6 +203,13 @@ plot_ly(stn1_2019_08_14_summary, x = ~precipt_03da_previousDay, y = ~GPP, name =
 #GPP vs ER
 plot_ly(stn1_2019_08_14_summary, x = ~ER, y = ~GPP, name = 'DO_mgl', 
         type = 'scatter', mode = 'markers')
+
+#comparing flux with NEP
+
+fig <- plot_ly(stn1_2019_08_14_summary, x = ~Date_asfactor, y = ~FluxCO2_gCO2m2_d1_DailyAve, name = 'CO2 flux gCO2 per m2 per day', 
+               type = 'scatter', mode = 'lines')
+fig1 <- fig %>% add_trace(y = ~NEP_gCO2m2, name = 'NEP gCO2 per m2 per day', mode = 'lines')
+fig1
 
 #GPP vs precipt15
 plot_ly(stn1_2019_08_14_summary, x = ~precipt_15da, y = ~NEP_gCO2m2, 
