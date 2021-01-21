@@ -3,6 +3,7 @@
 install.packages("reshape")
 library(reshape)
 library(ggplot2)
+library(here)
 
 #set wd
 setwd("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecuador/K600_calculations/Nehemiah")
@@ -11,7 +12,8 @@ setwd("C:/Users/whitm/OneDrive - University of North Carolina at Chapel Hill/Ecu
 
 #read in data
 
-df <- read.csv("Kinematic K Versus Effective K.csv")
+df <- read.csv(here("Outputs/Gas Transfer Velocity/Effective K/Kinematic K Versus Effective K.csv"))
+
 df$Date <- as.Date(df$Date)
 df$Date_ascharacter <- as.character(df$Date)
 
@@ -57,7 +59,7 @@ g<-ggplot(df.outlierRemoved, aes(x=variable, y=value,fill=Date_ascharacter)) +
   geom_boxplot(show.legend = FALSE) + 
   facet_wrap(~Date_ascharacter)+
   
-  labs(title= "Kinemativ K vs Effective K by Date",
+  labs(title= "Kinematic K vs Effective K by Date",
        y="K (m/d)", x = "")+
   theme_bw()
 g

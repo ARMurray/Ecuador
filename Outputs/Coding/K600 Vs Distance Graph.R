@@ -5,7 +5,7 @@ library(plotly)
 library(scales)
 
 ##Uploading K600 Total
-K600Total<-read.csv("C:/Users/nehemiah/Documents/CarbonShed Lab/Gas Transfer Velocity/Outputs/Outputs/Gas Transfer Velocity/Raymond Method/Raymond Method Total.csv")
+K600Total<-read.csv("C:/Users/14434/Desktop/Ecuador/Outputs/Gas Transfer Velocity/Raymond Method/Raymond Method Total.csv")
 
 Jul18K<-data.frame(x=Distance,y=K600Total$X18.Jul)
 Distance<-K600Total$Dist..From.Upstream

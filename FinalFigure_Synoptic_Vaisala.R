@@ -26,7 +26,8 @@ plot <- ggplot(Synoptics) +
         legend.title = element_text(size = 14,face="bold"),
         legend.text = element_text(size = 12)) +
   theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid')) +
-  theme(panel.border = element_rect(fill=NA, colour = "black", size=1.5))
+  theme(panel.border = element_rect(fill=NA, colour = "black", size=1.5
+                                    ))
 
 plot
 
