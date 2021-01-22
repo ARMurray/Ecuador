@@ -112,12 +112,12 @@ fulltime1 <- data.frame(solar.time=seq.POSIXt(df2$solar.time[1], df2$solar.time[
 
 # Set the output folder
 #dir.create(here::here("Analysis/Stream_Metabolism/ModelOutputs/stn1_outputs"))   
-folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs_JAN")    
+folder <- here::here("Analysis/Stream_Metabolism/ModelOutputs/stn2_outputs_JAN_k60")    
 
-date <- 202011190032            # UPDATE THIS!!!!
+date <- 202101210001            # UPDATE THIS!!!!
 
 for(n in 1:100){
-  rk600 <- round(runif(1,0.5,400),2)  # Set random K600 between 0.5 and 400
+  rk600 <- round(runif(1,0.5,60),2)  # Set random K600 between 0.5 and 400
   
   rBurnIn <- round(runif(1,100,400),0)  # Set random burn in steps 100-400
   
