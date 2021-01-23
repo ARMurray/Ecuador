@@ -22,6 +22,7 @@ library(plotly)
 #Opening Handheld Vaisala Data
 Handheld<-read.csv("C:/Users/14434/Desktop/Ecuador/FieldData/Quick CO2 Comparison/synoptic.Viasala_2021-01-08.csv")
 Station<-read.csv("C:/Users/14434/Desktop/Ecuador/FieldData/Quick CO2 Comparison/StationViasalaData_adjusted_2020-01-08.csv")
+
 Station$DateTime <- as.POSIXct(Station$DateTime, format="%m/%d/%Y %H:%M", tz="UTC")
 
 ##Making July 18th Station Table
@@ -41,9 +42,18 @@ colnames(July18V2)<-c("CO2")
 colnames(July18V1)<-c("CO2")
 July18SB<-data.frame(rbind(July18V4,July18V3,July18V2,July18V1))
 July18F<-cbind(July18HH,July18SB)
+July18F$Error<-((July18F$CO2-July18F$CO2_ppm)/July18F$CO2)
 write.csv(July18F,"C:/Users/14434/Desktop/Ecuador/FieldData/Quick CO2 Comparison/July18 Final.csv", col.names = TRUE, row.names = FALSE)                
 
+Plot<-ggplot()+ geom_point(data=July18F, aes(x=dist.m,y=CO2_ppm),shape=2, color="green")+
+  geom_point(data=July18F, aes(x=dist.m, y=CO2), shape= 4, color="red")+
+  xlab("Distance")+
+  ylab("CO2 PPM")+
+  ggtitle("July 18th\nCO2 Comparisons")+
+  scale_fill_discrete(name="CO2 Comparisons", labels=c("Handheld","Station"))
 
+  
+Plot
 ##Making July 29th Station Table
 July29HH<-Handheld[(73:103),]
 July25S<-Station[seq()]
