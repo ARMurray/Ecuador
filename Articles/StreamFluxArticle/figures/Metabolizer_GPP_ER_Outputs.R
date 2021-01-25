@@ -32,29 +32,31 @@ df$dateTime <- ymd(df$dateTime)
 
 dfMean <- df%>%
   group_by(dateTime)%>%
-  mutate(meanGPP = mean(GPP))%>%
-  select(dateTime, meanGPP)%>%
+  mutate(meanGPP = mean(GPP),
+         meanER = mean(ER))%>%
+  select(dateTime, meanGPP, meanER)%>%
   distinct()
 
 # GPP
-gpp1a <- ggplot(df)+
+gpp1 <- ggplot(df)+
   geom_line(aes(x=dateTime,y=GPP, group = ID),color = "black",alpha = 0.2)+
-  geom_bernie(data = dfMean, aes(x = dateTime, y = meanGPP, fill = "Predicted Bernie [GPP]"), bernie = "bernie1", size = .4)+
+  geom_line(data = dfMean, aes(x = dateTime, y = meanGPP), color = "red", size = .4)+
   labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 GPP")+
-  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn1Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -.8, label = paste0("N = ",length(stn1Files))), size = 6)+
   ylim(ymin = -1, ymax = 2)+
   geom_hline(yintercept = 0)+
   labs(fill = "Mean Daily Bernie")
-gpp1a
+gpp1
 
 # ER
-er1a <- ggplot(df)+
+er1 <- ggplot(df)+
   geom_line(aes(x=dateTime,y=ER, group = ID),color = "black", alpha = 0.2)+
+  geom_line(data = dfMean, aes(x = dateTime, y = meanER), color = "red", size = .4)+
   labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 1 ER")+
-  geom_text(aes(x=ymd("20190810"), y = -5.5, label = paste0("N = ",length(stn1Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -10, label = paste0("N = ",length(stn1Files))), size = 6)+
   ylim(ymin = -15, ymax = 2)+
   geom_hline(yintercept = 0)
-er1a
+er1
 
 #############
 # STATION 2 #
@@ -92,7 +94,7 @@ gpp2 <- ggplot(df2)+
   geom_line(aes(x=dateTime,y=GPP, group = ID),color = "black",alpha = 0.2)+
   geom_line(data = df2Mean, aes(x = dateTime, y = meanGPP, color = "Mean Predicted"),color = 'red', size = .4)+
   labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 2 GPP")+
-  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn2Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -.8, label = paste0("N = ",length(stn2Files))), size = 6)+
   ylim(ymin = -1, ymax = 2)+
   geom_hline(yintercept = 0)+
   labs(fill = "Mean Daily Bernie")
@@ -103,7 +105,7 @@ er2 <- ggplot(df2)+
   geom_line(aes(x=dateTime,y=ER, group = ID),color = "black", alpha = 0.2)+
   geom_line(data = df2Mean, aes(x = dateTime, y = meanER, color = "Mean Predicted"),color = 'red', size = .4)+
   labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 2 ER")+
-  geom_text(aes(x=ymd("20190810"), y = -5.5, label = paste0("N = ",length(stn2Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -10, label = paste0("N = ",length(stn2Files))), size = 6)+
   ylim(ymin = -15, ymax = 2)+
   geom_hline(yintercept = 0)
 er2
@@ -144,7 +146,7 @@ gpp4 <- ggplot(df4)+
   geom_line(aes(x=dateTime,y=GPP, group = ID),color = "black",alpha = 0.2)+
   geom_line(data = df4Mean, aes(x = dateTime, y = meanGPP, color = "Mean Predicted"),color = 'red', size = .4)+
   labs(x = "", y = bquote('GPP ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 4 GPP")+
-  geom_text(aes(x=ymd("20190810"), y = -.5, label = paste0("N = ",length(stn2Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -.8, label = paste0("N = ",length(stn4Files))), size = 6)+
   ylim(ymin = -1, ymax = 2)+
   geom_hline(yintercept = 0)+
   labs(fill = "Mean Daily Bernie")
@@ -152,11 +154,15 @@ gpp4
 
 # ER
 er4 <- ggplot(df4)+
-  geom_line(aes(x=dateTime,y=ER, group = ID),color = "black", alpha = 0.2)+
+  geom_line(aes(x=dateTime,y=ER, group = ID, color = "Iterations"),color = "black", alpha = 0.2)+
   geom_line(data = df4Mean, aes(x = dateTime, y = meanER, color = "Mean Predicted"),color = 'red', size = .4)+
   labs(x = "", y = bquote('ER ['*g~ O[2]~ m^-2~d^-1*']'), title = "Station 4 ER")+
-  geom_text(aes(x=ymd("20190810"), y = -5.5, label = paste0("N = ",length(stn2Files))), size = 8)+
+  geom_text(aes(x=ymd("20190910"), y = -10, label = paste0("N = ",length(stn4Files))), size = 6)+
   ylim(ymin = -15, ymax = 2)+
   geom_hline(yintercept = 0)
 er4
+
+
+plot_grid(gpp1,gpp2,gpp4,
+          er1,er2,er4, nrow = 2)
 
