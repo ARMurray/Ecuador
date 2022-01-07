@@ -77,10 +77,10 @@ Sensors in use:
 
 |Logger|Longitude|Latitude|Serial| Description |
 |:----:|:-------:|:------:|:----:|:-----------:|
-|1| 78.2004711°W | 0.3282020°S | | Station 1 |
-|2| 78.2005817°W | 0.3285909°S | | Station 3 |
-|3| | | | |
-|4| | | | |
+|1| 78.2004711°W | 0.3282020°S | 72020436 | Station 1 |
+|2| 78.2005817°W | 0.3285909°S | 72020421 | Station 3 |
+|3| -78.199505°W | -0.321633°S | 72020430 | Center West Peatland (Esteban Well) |
+|4| -78.19899°W | -0.321251°S | 72020425 | Side of West Peatland (Esteban Well) |
 |5| | | | |
 |6| -78.199684 | -0.327155 | 0072020442 | by the hill |
 |7| -78.198828 | -0.322832 | 0072020437 | upper peatland downstream from lake |
